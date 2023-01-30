@@ -1,0 +1,60 @@
+{
+  "calendarEvents": [
+    {
+      "allDay": true,
+      "end": "2023-01-24T15:00:00.000Z",
+      "id": "984563eb-6213-42b3-a90f-ff4c5346e606",
+      "start": "2023-01-22T15:00:00.000Z",
+      "title": "오후 미팅",
+      "resourceEditable": true
+    },
+    {
+      "allDay": true,
+      "end": "2023-01-25T15:00:00.000Z",
+      "id": "2d4545fa-9e29-44a5-847c-281bcc959fd5",
+      "start": "2023-01-24T15:00:00.000Z",
+      "title": "김싸피",
+      "resourceEditable": true
+    },
+    {
+      "allDay": true,
+      "end": "2023-01-19T15:00:00.000Z",
+      "id": "4bd46dcc-02c0-4d42-942b-3a068c7acb4f",
+      "start": "2023-01-18T15:00:00.000Z",
+      "title": "생성",
+      "resourceEditable": true
+    },
+    {
+      "allDay": true,
+      "end": "2023-01-27",
+      "id": "c8a8114d-93fd-4826-8f54-00f48d0c63c3",
+      "start": "2023-01-26",
+      "title": "test",
+      "resourceEditable": true
+    },
+    {
+      "allDay": true,
+      "end": "2023-01-18T15:00:00.000Z",
+      "id": "d6a345bb-fab1-4c82-b803-10dd1dd57b14",
+      "start": "2023-01-17T15:00:00.000Z",
+      "title": "test!!!",
+      "resourceEditable": true
+    },
+    {
+      "allDay": true,
+      "end": "2023-01-31",
+      "id": "9df7a163-1c7f-44e7-98df-a5459efd4d90",
+      "start": "2023-01-30",
+      "title": "ghj",
+      "resourceEditable": true
+    },
+    {
+      "allDay": true,
+      "end": "2023-01-31",
+      "id": "85b54219-9e5a-4bcd-bd31-9035c1f8aba8",
+      "start": "2023-01-30",
+      "title": "vgjh",
+      "resourceEditable": true
+    }
+  ]
+}

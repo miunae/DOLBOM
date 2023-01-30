@@ -13,7 +13,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
-import { CalendPage } from './pages/CalendarPage';
+import { CalendarPage } from './pages/CalendarPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/calendar',
-    element: <CalendPage />,
+    element: <CalendarPage />,
   },
   {
     path: '/video',
