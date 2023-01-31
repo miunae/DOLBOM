@@ -1,4 +1,4 @@
-package com.c103.dolbom.user;
+package com.c103.dolbom.user.controller;
 
 import java.util.Map;
 

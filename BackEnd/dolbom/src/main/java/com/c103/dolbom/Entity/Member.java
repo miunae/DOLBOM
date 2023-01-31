@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Member extends BaseTimeEntity{
     @Column(nullable = false, updatable = false, length = 45)
     private String email;
-    @Column(nullable = false, length = 45)
+    @Column(nullable = false, length = 100)
     private String password;
     @Column(nullable = false, length = 100)
     private String name;
@@ -23,13 +23,16 @@ public class Member extends BaseTimeEntity{
     @Column(length = 20)
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Lob
+    @Column(columnDefinition = "text")
     private String content;
     @Column
     private LocalDate birth;
     @Column(nullable = false)
     private String phone;
 
+    public void setUserPassword(String password) {
+        this.password = password;
+    }
 
 
 }

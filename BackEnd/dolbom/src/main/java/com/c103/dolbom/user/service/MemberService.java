@@ -1,21 +1,31 @@
 package com.c103.dolbom.user.service;
 
+import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-//    public Long createMember(MemberRequest request) {
+    public void createMember(Member member) {
+        member.setUserPassword(passwordEncoder.encode(member.getPassword()));
+        memberRepository.save(member);
+    }
+
+//    public void update(Member oldUser, Member newUser) {
 //
+//        oldUser.updateUser(newUser);
+//        memberRepository.save(oldUser);
 //    }
 }
