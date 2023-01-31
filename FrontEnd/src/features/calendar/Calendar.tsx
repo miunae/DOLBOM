@@ -4,17 +4,22 @@ import {
   EventClickArg,
   EventContentArg,
 } from '@fullcalendar/core';
-import allLocales from '@fullcalendar/core/locales-all';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
+import { useModalControl } from '../../hooks/useModalControl';
 import { createEventId, INITIAL_EVENTS } from './event-utils';
+import { EventModal } from './EventModal';
 
-function Calendar() {
+export const Calendar = () => {
   const [events, setEvents] = useState([]);
+  const modalControl = useModalControl(false);
+  const [eventInfos, setEventInfos] = useState();
+  const [clickInfos, setClickInfos] = useState();
+  const [isEditCard, setIsEditCard] = useState<boolean>(false);
   //드롭
   const eventDrop = (info: any) => {
     console.log(info.event);
@@ -33,8 +38,10 @@ function Calendar() {
     });
     console.log('랜더링');
   }, []);
+
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
+  //날짜 선택시 이벤트 모달 오픈, 이벤트 추가
   const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
     const title = prompt('타이틀 입력')?.trim();
     const calendarApi = selectInfo.view.calendar;
@@ -49,13 +56,25 @@ function Calendar() {
       });
     }
   }, []);
+  const dateSelect = (selectInfo: any) => {
+    setIsEditCard(false);
+    setEventInfos(selectInfo);
+    modalControl.handleOpen();
+  };
   const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     if (window.confirm(`${clickInfo.event.title}를 삭제하시겠습니까?`)) {
       clickInfo.event.remove();
     }
   }, []);
   return (
-    <div className="demo-app">
+    <div className="Calendar">
+      <EventModal
+        open={modalControl.isOpen}
+        handleClose={modalControl.handleClose}
+        eventInfos={eventInfos}
+        clickInfos={clickInfos}
+        isEditCard={isEditCard}
+      />
       <div className="demo-app-main">
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin]}
@@ -65,13 +84,11 @@ function Calendar() {
           events={events}
           locale="kr"
           eventsSet={handleEvents}
-          select={handleDateSelect}
+          select={dateSelect}
           eventClick={handleEventClick}
           eventDrop={eventDrop}
         />
       </div>
     </div>
   );
-}
-
-export default Calendar;
+};

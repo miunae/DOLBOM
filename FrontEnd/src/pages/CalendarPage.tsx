@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
-import Calendar from '../features/calendar/Calendar';
+import { Calendar } from '../features/calendar/Calendar';
 import { SideBar } from '../features/sideBar/SideBar';
 export const CalendarPage = () => {
   return (

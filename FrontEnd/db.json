@@ -34,9 +34,9 @@
     },
     {
       "allDay": true,
-      "end": "2023-01-18T15:00:00.000Z",
+      "end": "2023-01-17T15:00:00.000Z",
       "id": "d6a345bb-fab1-4c82-b803-10dd1dd57b14",
-      "start": "2023-01-17T15:00:00.000Z",
+      "start": "2023-01-16T15:00:00.000Z",
       "title": "test!!!",
       "resourceEditable": true
     },
@@ -55,6 +55,24 @@
       "start": "2023-01-30",
       "title": "vgjh",
       "resourceEditable": true
+    }
+  ],
+  "users":[
+    {
+      "userName":"이충무",
+      "userColor":"green"
+    },
+    {
+      "userName":"박현우",
+      "userColor":"pink"
+    },
+    {
+      "userName":"박현수",
+      "userColor":"pink"
+    },
+    {
+      "userName":"이재훈",
+      "userColor":"red"
     }
   ]
 }
