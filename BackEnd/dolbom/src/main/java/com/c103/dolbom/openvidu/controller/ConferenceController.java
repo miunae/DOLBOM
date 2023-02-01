@@ -32,19 +32,21 @@ public class ConferenceController {
     }
 
     /**
+     * Session 생성
      * @param params The Session properties
      * @return The Session ID
      */
     @PostMapping("/api/sessions")
     public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
-        System.out.println(params.get("customSessionId"));
+        System.out.println("SessionId: "+params.get("customSessionId"));
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
     }
 
     /**
+     * 방 참가
      * @param sessionId The Session in which to create the Connection
      * @param params    The Connection properties
      * @return The Token associated to the Connection
