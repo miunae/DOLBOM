@@ -1,8 +1,9 @@
 package com.c103.dolbom.drive;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.c103.dolbom.client.dto.ClientDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/drive")
@@ -16,8 +17,9 @@ public class DriveController {
     //파일 삭제
     //폴더 삭제
     //파일 이동
-    //파일 및 폴더 보여주기 이때 해당 상담자내담자의 폴더가 없으면 생성하는 로직 추가
+    //파일 및 폴더 보여주기
 
     //파일 다운로드
     //임시 폴더 만들기
+
 }

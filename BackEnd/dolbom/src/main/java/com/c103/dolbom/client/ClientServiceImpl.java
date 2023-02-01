@@ -31,6 +31,7 @@ public class ClientServiceImpl implements ClientService{
                     .id(mc.getClient().getId())
                     .name(mc.getClient().getName())
                     .phone(mc.getClient().getPhone())
+                    .email(mc.getClient().getEmail())
                     .build();
             clientList.add(dto);
         }
@@ -49,6 +50,7 @@ public class ClientServiceImpl implements ClientService{
                     .id(member.getId())
                     .name(member.getName())
                     .phone(member.getPhone())
+                    .email(member.getEmail())
                     .build();
             clientDtoList.add(dto);
         }
