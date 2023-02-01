@@ -4,7 +4,7 @@ import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Role;
 import com.c103.dolbom.client.dto.ClientJoinDto;
-import com.c103.dolbom.client.dto.ClientModifiedDto;
+import com.c103.dolbom.client.dto.ClientDto;
 import com.c103.dolbom.client.dto.ClientSimpleDto;
 import com.c103.dolbom.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +56,22 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
+    public ClientDto getClient(Long clientId) {
+        Member clientEntity = memberRepository.findById(clientId).get();
+        ClientDto dto = ClientDto.builder()
+                .id(clientId)
+                .content(clientEntity.getContent())
+                .birth(clientEntity.getBirth())
+                .email(clientEntity.getEmail())
+                .name(clientEntity.getName())
+                .phone(clientEntity.getPhone())
+                .build();
+
+
+        return dto;
+    }
+
+    @Override
     public Long joinClient(ClientJoinDto dto) {
         //같은 이메일이 존재하다면 예외 발생
 
@@ -97,7 +113,7 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Long modifyClient(ClientModifiedDto dto) {
+    public Long modifyClient(ClientDto dto) {
         Member client = memberRepository.findById(dto.getId()).get();
 
         client.changName(dto.getName());
