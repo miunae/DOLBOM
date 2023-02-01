@@ -8,9 +8,11 @@ import com.c103.dolbom.client.dto.ClientModifiedDto;
 import java.util.List;
 
 public interface ClientService {
-    List<Member> getMemberListByMemberId(Long memberId);
+    List<Member> getClientListByMemberId(Long memberId);
+    List<Member> getClientListByName(String name);
     Long joinClient(ClientJoinDto dto);
-//    Long modifyClient()
+    Long joinRegisteredClient(Long client_id, Long member_id);
+
     Long modifyClient(ClientModifiedDto dto);
     int deleteClient(Long clientId,Long memberId);
 }

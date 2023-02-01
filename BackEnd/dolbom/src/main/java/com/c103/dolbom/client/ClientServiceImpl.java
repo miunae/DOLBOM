@@ -20,7 +20,7 @@ public class ClientServiceImpl implements ClientService{
     private final MemberClientRepository memberClientRepository;
     private final MemberRepository memberRepository;
     @Override
-    public List<Member> getMemberListByMemberId(Long memberId) {
+    public List<Member> getClientListByMemberId(Long memberId) {
         List<MemberClient> list = memberClientRepository.findByMemberId(memberId);
 
         List<Member> clientList = new ArrayList<>();
@@ -28,6 +28,12 @@ public class ClientServiceImpl implements ClientService{
         for(MemberClient mc : list){
             clientList.add(mc.getClient());
         }
+        return clientList;
+    }
+
+    @Override
+    public List<Member> getClientListByName(String name) {
+        List<Member> clientList = memberRepository.findByName(name);
         return clientList;
     }
 
@@ -53,6 +59,22 @@ public class ClientServiceImpl implements ClientService{
                 .build();
 
         Long memberClientId = memberClientRepository.save(memberClient).getId();
+        return memberClientId;
+    }
+
+    @Override
+    public Long joinRegisteredClient(Long client_id, Long member_id) {
+        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
+        Member client = memberRepository.findById(client_id).get();
+        Member member = memberRepository.findById(member_id).get();
+
+        MemberClient memberClient = MemberClient.builder()
+                .member(member)
+                .client(client)
+                .build();
+
+        Long memberClientId = memberClientRepository.save(memberClient).getId();
+
         return memberClientId;
     }
 
