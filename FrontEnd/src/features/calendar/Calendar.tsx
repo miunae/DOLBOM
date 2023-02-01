@@ -7,6 +7,7 @@ import {
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
+import timeGridPlugin from '@fullcalendar/timegrid';
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -42,30 +43,17 @@ export const Calendar = () => {
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);
   //날짜 선택시 이벤트 모달 오픈, 이벤트 추가
-  const handleDateSelect = useCallback((selectInfo: DateSelectArg) => {
-    const title = prompt('타이틀 입력')?.trim();
-    const calendarApi = selectInfo.view.calendar;
-    calendarApi.unselect();
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-    }
-  }, []);
   const dateSelect = (selectInfo: any) => {
     setIsEditCard(false);
     setEventInfos(selectInfo);
     modalControl.handleOpen();
   };
-  const handleEventClick = useCallback((clickInfo: EventClickArg) => {
-    if (window.confirm(`${clickInfo.event.title}를 삭제하시겠습니까?`)) {
-      clickInfo.event.remove();
-    }
-  }, []);
+  //이벤트 클릭 시
+  const handleEventClick = (selectInfo: any) => {
+    setIsEditCard(true);
+    setEventInfos(selectInfo);
+    modalControl.handleOpen();
+  };
   return (
     <div className="Calendar">
       <EventModal
@@ -77,7 +65,12 @@ export const Calendar = () => {
       />
       <div className="demo-app-main">
         <FullCalendar
-          plugins={[dayGridPlugin, interactionPlugin]}
+          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay',
+          }}
           initialView="dayGridMonth"
           selectable={true}
           editable={true}
