@@ -4,6 +4,7 @@ import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.client.dto.ClientCounselorDto;
 import com.c103.dolbom.client.dto.ClientJoinDto;
 import com.c103.dolbom.client.dto.ClientModifiedDto;
+import com.c103.dolbom.client.dto.ClientSimpleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
     //상담자의 등록된 내담자 전체 정보 불러오기
     @GetMapping("/{id}")
     public ResponseEntity<?> getClientListByMember(@PathVariable("id") Long memberId){
-        List<Member> clientList = clientService.getClientListByMemberId(memberId);
+        List<ClientSimpleDto> clientList = clientService.getClientListByMemberId(memberId);
         return new ResponseEntity<>(clientList, HttpStatus.OK);
     }
     //내담자 상세정보는 memberController에서 대신 상담사 정보와는 다르게 일부정보만 가져오도록
@@ -45,7 +46,7 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
     //등록 전 이름으로 내담자 검색
     @GetMapping("/name/{name}")
     public ResponseEntity<?> memberGetByName(@PathVariable("name") String name){
-        List<Member> clientList = clientService.getClientListByName(name);
+        List<ClientSimpleDto> clientList = clientService.getClientListByName(name);
         return new ResponseEntity<>(clientList, HttpStatus.OK);
     }
     //이미 있는 내담자 등록

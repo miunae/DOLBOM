@@ -5,6 +5,7 @@ import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Role;
 import com.c103.dolbom.client.dto.ClientJoinDto;
 import com.c103.dolbom.client.dto.ClientModifiedDto;
+import com.c103.dolbom.client.dto.ClientSimpleDto;
 import com.c103.dolbom.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,21 +21,38 @@ public class ClientServiceImpl implements ClientService{
     private final MemberClientRepository memberClientRepository;
     private final MemberRepository memberRepository;
     @Override
-    public List<Member> getClientListByMemberId(Long memberId) {
+    public List<ClientSimpleDto> getClientListByMemberId(Long memberId) {
         List<MemberClient> list = memberClientRepository.findByMemberId(memberId);
 
-        List<Member> clientList = new ArrayList<>();
+        List<ClientSimpleDto> clientList = new ArrayList<>();
 
         for(MemberClient mc : list){
-            clientList.add(mc.getClient());
+            ClientSimpleDto dto = ClientSimpleDto.builder()
+                    .id(mc.getClient().getId())
+                    .name(mc.getClient().getName())
+                    .phone(mc.getClient().getPhone())
+                    .build();
+            clientList.add(dto);
         }
         return clientList;
     }
 
     @Override
-    public List<Member> getClientListByName(String name) {
+    public List<ClientSimpleDto> getClientListByName(String name) {
         List<Member> clientList = memberRepository.findByName(name);
-        return clientList;
+
+
+        List<ClientSimpleDto> clientDtoList = new ArrayList<>();
+
+        for(Member member : clientList){
+            ClientSimpleDto dto = ClientSimpleDto.builder()
+                    .id(member.getId())
+                    .name(member.getName())
+                    .phone(member.getPhone())
+                    .build();
+            clientDtoList.add(dto);
+        }
+        return clientDtoList;
     }
 
     @Override
