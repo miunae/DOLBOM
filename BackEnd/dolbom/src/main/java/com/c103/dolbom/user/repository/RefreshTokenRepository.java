@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-
+@Repository
 public class RefreshTokenRepository {
 
     private RedisTemplate redisTemplate;
@@ -20,19 +20,22 @@ public class RefreshTokenRepository {
     }
 
     public void save(final RefreshToken refreshToken) {
-        ValueOperations<String, Long> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(refreshToken.getRefreshToken(), refreshToken.getMemberId());
-        redisTemplate.expire(refreshToken.getRefreshToken(), JwtProperties.REFRESH_EXP_TIME/1000, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(
+                refreshToken.getEmail(),
+                refreshToken.getRefreshToken(),
+                JwtProperties.REFRESH_EXP_TIME,
+                TimeUnit.MILLISECONDS
+        );
     }
 
     public Optional<RefreshToken> findById(final String refreshToken) {
-        ValueOperations<String, Long> valueOperations = redisTemplate.opsForValue();
-        Long memberId = valueOperations.get(refreshToken);
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String email = valueOperations.get(refreshToken);
 
-        if (Objects.isNull(memberId)) {
+        if (Objects.isNull(email)) {
             return Optional.empty();
         }
 
-        return Optional.of(new RefreshToken(refreshToken, memberId));
+        return Optional.of(new RefreshToken(refreshToken, email));
     }
 }

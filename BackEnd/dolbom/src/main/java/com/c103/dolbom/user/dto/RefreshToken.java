@@ -5,20 +5,20 @@ import javax.persistence.Id;
 public class RefreshToken {
 
     @Id
+    private String email;
+
     private String refreshToken;
 
-    private Long memberId;
-
-    public RefreshToken(final String refreshToken, final Long memberId) {
+    public RefreshToken(String email, String refreshToken) {
+        this.email = email;
         this.refreshToken = refreshToken;
-        this.memberId = memberId;
     }
 
     public String getRefreshToken() {
         return refreshToken;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public String getEmail() {
+        return email;
     }
 }

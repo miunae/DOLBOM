@@ -22,10 +22,4 @@ public class MemberService {
         member.setUserPassword(passwordEncoder.encode(member.getPassword()));
         memberRepository.save(member);
     }
-
-//    public void update(Member oldUser, Member newUser) {
-//
-//        oldUser.updateUser(newUser);
-//        memberRepository.save(oldUser);
-//    }
 }
