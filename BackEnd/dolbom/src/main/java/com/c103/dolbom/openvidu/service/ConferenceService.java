@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 
 public interface ConferenceService {
 
-
+//    Long createConference(String )
 
 }

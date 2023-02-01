@@ -22,6 +22,6 @@ public class Conference extends BaseEntity {
     @Column(updatable = false)
     private LocalDateTime createAt;
 
-    @Column(length=20)
-    private String status;
+    @Column(name="")
+    private String sessionId;
 }

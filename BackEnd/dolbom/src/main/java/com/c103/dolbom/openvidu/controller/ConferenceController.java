@@ -1,5 +1,6 @@
 package com.c103.dolbom.openvidu.controller;
 
+import com.c103.dolbom.client.ClientService;
 import com.c103.dolbom.openvidu.service.ConferenceService;
 import io.openvidu.java.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class ConferenceController {
 
     @Autowired
     ConferenceService conferenceService;
+
+    @Autowired
+    ClientService clientService;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -39,7 +43,9 @@ public class ConferenceController {
     @PostMapping("/api/sessions")
     public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
+        System.out.println("방 생성");
         System.out.println("SessionId: "+params.get("customSessionId"));
+        System.out.println("보내야 할 이메일 : ");
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
@@ -56,6 +62,11 @@ public class ConferenceController {
                                                    @RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openvidu.getActiveSession(sessionId);
+        System.out.println("연결되었음");
+        System.out.println(params.entrySet());
+        for (Map.Entry<String, Object> entrySet : params.entrySet()) {
+            System.out.println(entrySet.getKey() + " : " + entrySet.getValue());
+        }
         if (session == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
