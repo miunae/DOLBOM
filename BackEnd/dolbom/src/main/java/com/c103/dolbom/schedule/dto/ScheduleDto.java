@@ -3,17 +3,34 @@ package com.c103.dolbom.schedule.dto;
 
 import lombok.*;
 
-@Setter
-@Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class ScheduleDto {
 
-    Long scheduleId;
-    Long counselorId;
-    Long clientId;
-    String startTime;
-    String endTime;
-    String content;
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class Basic {
+        private Long scheduleId;
+        private Long counselorId;
+        private Long clientId;
+        private String startTime;
+        private String endTime;
+        private String content;
+    }
+
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class Detail {
+
+        private Long scheduleId;
+        private Long counselorId;
+        private Long clientId;
+        private String startTime;
+        private String endTime;
+        private String content;
+        private String counselorName;
+        private String clientName;
+
+    }
 }

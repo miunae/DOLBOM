@@ -6,11 +6,14 @@ import java.time.LocalDateTime;
 
 public interface ScheduleService {
 
-    long createSchedule(ScheduleDto scheduleDto);
+    ScheduleDto.Detail getScheduleDetail(long scheduleId);
+    long createSchedule(ScheduleDto.Basic scheduleDto);
 
-    LocalDateTime setTimeFormat(String ISODateTime);
+    LocalDateTime setISOToLocalDateTime(String ISODateTime);
 
-    long updateSchedule(ScheduleDto scheduleDto);
+    String setLocalDateTimeToISO(LocalDateTime localDateTime);
+
+    long updateSchedule(ScheduleDto.Basic scheduleDto);
 
     long deleteSchedule(long scheduleId);
 }

@@ -1,19 +1,23 @@
 package com.c103.dolbom.schedule.service;
 
-import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Schedule;
 import com.c103.dolbom.client.MemberClientRepository;
-import com.c103.dolbom.repository.MemberRepository;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -21,24 +25,40 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    private final MemberRepository memberRepository;
-
     private final MemberClientRepository memberClientRepository;
 
     @Override
-    public long createSchedule(ScheduleDto scheduleDto) {
+    public ScheduleDto.Detail getScheduleDetail(long scheduleId) {
 
-//        Member counselor = memberRepository.findById(scheduleDto.getCounselorId())
-//                .orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));
-//
-//        Member client = memberRepository.findById(scheduleDto.getClientId())
-//                .orElseThrow(() -> new IllegalArgumentException("user doesn't exist"));;
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new IllegalArgumentException("schedule doesn't exist"));
+
+        MemberClient mc = memberClientRepository.findById(schedule.getMemberClientId().getId())
+                .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
+
+        // 나중에 Member 테이블로 들어가는 쿼리 2방(내담자, 상담자)을 1방으로 줄일 수도 있을듯
+        ScheduleDto.Detail detailScheduleDto = ScheduleDto.Detail.builder()
+                .scheduleId(schedule.getId())
+                .counselorId(mc.getMember().getId())
+                .clientId(mc.getClient().getId())
+                .startTime(setLocalDateTimeToISO(schedule.getStartTime()))
+                .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
+                .content(schedule.getContent())
+                .clientName(mc.getClient().getName())
+                .counselorName(mc.getMember().getName())
+                .build();
+        return detailScheduleDto;
+    }
+
+    @Override
+    public long createSchedule(ScheduleDto.Basic scheduleDto) {
 
         MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
 
-        LocalDateTime startTime = setTimeFormat(scheduleDto.getStartTime());
-        LocalDateTime endTime = setTimeFormat(scheduleDto.getEndTime());
+        LocalDateTime startTime = setISOToLocalDateTime(scheduleDto.getStartTime());
+        LocalDateTime endTime = setISOToLocalDateTime(scheduleDto.getEndTime());
+
         Schedule schedule = Schedule.builder()
                 .memberClientId(memberClient)
                 .startTime(startTime)
@@ -51,13 +71,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public long updateSchedule(ScheduleDto scheduleDto) {
+    public long updateSchedule(ScheduleDto.Basic scheduleDto) {
 
         Schedule schedule = scheduleRepository.findById(scheduleDto.getScheduleId())
                 .orElseThrow(() -> new IllegalArgumentException("schedule doesn't exist"));
 
         schedule.updateSchedule(
-                setTimeFormat(scheduleDto.getStartTime()), setTimeFormat(scheduleDto.getEndTime()), scheduleDto.getContent());
+                setISOToLocalDateTime(scheduleDto.getStartTime()), setISOToLocalDateTime(scheduleDto.getEndTime()), scheduleDto.getContent());
 
         scheduleRepository.save(schedule);
         return schedule.getId();
@@ -74,7 +94,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public LocalDateTime setTimeFormat(String ISODateTime) {
+    public LocalDateTime setISOToLocalDateTime(String ISODateTime) {
 
         // 파씽 오류시 DateTimeParseException 예외 발생
         // 추후에 ControllerAdvice로 예외처리 필요
@@ -85,6 +105,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
 
         return dateTime;
+    }
+
+    @Override
+    public String setLocalDateTimeToISO(LocalDateTime localDateTime) {
+
+        String ISOTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime);
+
+        return ISOTime;
     }
 
 }

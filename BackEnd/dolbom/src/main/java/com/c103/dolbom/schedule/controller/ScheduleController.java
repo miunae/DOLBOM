@@ -1,16 +1,10 @@
 package com.c103.dolbom.schedule.controller;
 
-import com.c103.dolbom.Entity.Member;
-import com.c103.dolbom.Entity.Role;
-import com.c103.dolbom.repository.MemberRepository;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/api/schedule")
@@ -19,10 +13,16 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    private final MemberRepository memberRepository;
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<?> getScheduleDetail(@PathVariable long scheduleId) {
+
+        ScheduleDto.Detail scheduleDto = scheduleService.getScheduleDetail(scheduleId);
+        return ResponseEntity.ok(scheduleDto);
+    }
+
     // 스케줄 등록
     @PostMapping
-    public ResponseEntity<?> createSchedule(@RequestBody ScheduleDto scheduleDto) {
+    public ResponseEntity<?> createSchedule(@RequestBody ScheduleDto.Basic scheduleDto) {
 
         long scheduleId = scheduleService.createSchedule(scheduleDto);
 
@@ -30,7 +30,7 @@ public class ScheduleController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateSchedule(@RequestBody ScheduleDto scheduleDto) {
+    public ResponseEntity<?> updateSchedule(@RequestBody ScheduleDto.Basic scheduleDto) {
 
         long scheduleId = scheduleService.updateSchedule(scheduleDto);
 
