@@ -22,7 +22,7 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
         List<ClientSimpleDto> clientList = clientService.getClientListByMemberId(memberId);
         return new ResponseEntity<>(clientList, HttpStatus.OK);
     }
-    //내담자 상세정보
+    //내담자 상세정보 + 맴버클라이언트아이디도 같이 리턴해줘야함
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> getClient(@PathVariable("id") Long clientId){
         ClientDto dto = clientService.getClient(clientId);
