@@ -92,7 +92,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                                     null, // 패스워드는 모르니까 null 처리
                                     principalDetails.getAuthorities());
 
-                    System.out.println("principal : " + principalDetails);
                     for (GrantedAuthority ga : principalDetails.getAuthorities()) {
                         log.debug("role : {}", ga.toString());
                     }
@@ -120,8 +119,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 Optional<RefreshToken> optMember = refreshTokenRepository.findById(email);
 
                 if(!token.equals(optMember.get().getRefreshToken())) {
-                    System.out.println(token);
-                    System.out.println(optMember.get().getRefreshToken());
                     logger.info("CustomAuthorizationFilter : Token이 이상합니다.");
                     response.setContentType(APPLICATION_JSON_VALUE);
                     response.setCharacterEncoding("utf-8");
@@ -132,7 +129,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     String accessToken = JWT.create()
                             .withSubject(member.getEmail())
                             .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_EXP_TIME))
-                            .withClaim("email", member.getEmail()) // 비공개 claim
                             .withClaim("name", member.getName())
 //                .withClaim("role", principalDetails.getMember().getRole().toString())
                             .sign(Algorithm.HMAC512(JwtProperties.SECRET_KEY));
@@ -145,7 +141,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                                     null, // 패스워드는 모르니까 null 처리
                                     principalDetails.getAuthorities());
 
-                    System.out.println("principal : " + principalDetails);
                     for (GrantedAuthority ga : principalDetails.getAuthorities()) {
                         log.debug("role : {}", ga.toString());
                     }
