@@ -1,6 +1,7 @@
 package com.c103.dolbom.Entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Conference extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,6 +24,6 @@ public class Conference extends BaseEntity {
     @Column(updatable = false)
     private LocalDateTime createAt;
 
-    @Column(name="")
+    @Column(length= 20)
     private String sessionId;
 }

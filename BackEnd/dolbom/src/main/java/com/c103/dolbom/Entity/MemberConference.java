@@ -1,6 +1,7 @@
 package com.c103.dolbom.Entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import javax.persistence.ManyToOne;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class MemberConference extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
