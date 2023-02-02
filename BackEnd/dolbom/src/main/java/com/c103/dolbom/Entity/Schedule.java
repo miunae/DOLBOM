@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 public class Schedule extends BaseTimeEntity{
 
     @ManyToOne
-    @JoinColumn(name = "id")
-    private MemberClient memberClient;
+    @JoinColumn(name = "member_client_id")
+    private MemberClient memberClientId;
 
     @Column(name="start_time")
     private LocalDateTime startTime;
