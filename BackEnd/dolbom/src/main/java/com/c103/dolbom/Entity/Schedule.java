@@ -1,5 +1,6 @@
 package com.c103.dolbom.Entity;
 
+import com.c103.dolbom.schedule.dto.ScheduleDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,4 +30,11 @@ public class Schedule extends BaseTimeEntity{
     @Column(columnDefinition = "text")
     private String content;
 
+    public void updateSchedule(
+            LocalDateTime startTime, LocalDateTime endTime, String content) {
+
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.content = content;
+    }
 }

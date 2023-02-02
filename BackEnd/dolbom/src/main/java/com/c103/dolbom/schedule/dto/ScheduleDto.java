@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 public class ScheduleDto {
 
+    Long scheduleId;
     Long counselorId;
     Long clientId;
     String startTime;

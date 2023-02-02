@@ -9,4 +9,6 @@ public interface ScheduleService {
     long createSchedule(ScheduleDto scheduleDto);
 
     LocalDateTime setTimeFormat(String ISODateTime);
+
+    long updateSchedule(ScheduleDto scheduleDto);
 }

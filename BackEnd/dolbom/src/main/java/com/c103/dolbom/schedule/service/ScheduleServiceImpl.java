@@ -51,6 +51,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public long updateSchedule(ScheduleDto scheduleDto) {
+
+        Schedule schedule = scheduleRepository.findById(scheduleDto.getScheduleId())
+                .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
+
+        schedule.updateSchedule(
+                setTimeFormat(scheduleDto.getStartTime()), setTimeFormat(scheduleDto.getEndTime()), scheduleDto.getContent());
+
+        scheduleRepository.save(schedule);
+        return schedule.getId();
+    }
+
+    @Override
     public LocalDateTime setTimeFormat(String ISODateTime) {
 
         // 파씽 오류시 DateTimeParseException 예외 발생

@@ -8,10 +8,7 @@ import com.c103.dolbom.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 
@@ -28,6 +25,14 @@ public class ScheduleController {
     public ResponseEntity<?> createSchedule(@RequestBody ScheduleDto scheduleDto) {
 
         long scheduleId = scheduleService.createSchedule(scheduleDto);
+
+        return ResponseEntity.ok(scheduleId);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateSchedule(@RequestBody ScheduleDto scheduleDto) {
+
+        long scheduleId = scheduleService.updateSchedule(scheduleDto);
 
         return ResponseEntity.ok(scheduleId);
     }
