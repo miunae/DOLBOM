@@ -28,8 +28,8 @@ export const Calendar = () => {
     axios.get(`http://localhost:3003/calendarEvents/${updateId}`).then((res) => {
       axios.put(`http://localhost:3003/calendarEvents/${updateId}`, {
         ...res.data,
-        start: info.event.start.toISOString(),
-        end: info.event.end.toISOString(),
+        start: info.event.startStr,
+        end: info.event.endStr,
       });
     });
   };
