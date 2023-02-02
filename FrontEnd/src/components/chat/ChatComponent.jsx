@@ -128,14 +128,19 @@ export default class ChatComponent extends Component {
 
           <div id="messageInput">
             <input
-              placeholder="Send a messge"
+              placeholder="채팅을 입력하세요"
               id="chatInput"
               value={this.state.message}
               onChange={this.handleChange}
               onKeyPress={this.handlePressKey}
             />
             <Tooltip title="Send message">
-              <Fab size="small" id="sendButton" onClick={this.sendMessage}>
+              <Fab
+                size="small"
+                color="secondary"
+                id="sendButton"
+                onClick={this.sendMessage}
+              >
                 <Send />
               </Fab>
             </Tooltip>

@@ -74,8 +74,6 @@ export default class ToolbarComponent extends Component {
       <AppBar className="toolbar" id="header">
         <Toolbar className="toolbar">
           <div id="navSessionInfo">
-            <img id="header_img" alt="OpenVidu Logo" src={logo} />
-
             {this.props.sessionId && (
               <div id="titleContent">
                 <span id="session-title">{mySessionId}</span>
@@ -124,9 +122,9 @@ export default class ToolbarComponent extends Component {
               </IconButton>
             )}
 
-            <IconButton color="inherit" className="navButton" onClick={this.switchCamera}>
+            {/* <IconButton color="inherit" className="navButton" onClick={this.switchCamera}>
               <SwitchVideoIcon />
-            </IconButton>
+            </IconButton> */}
             <IconButton
               color="inherit"
               className="navButton"
@@ -138,6 +136,13 @@ export default class ToolbarComponent extends Component {
                 <Fullscreen />
               )}
             </IconButton>
+
+            <IconButton color="inherit" onClick={this.toggleChat} id="navChatButton">
+              {this.props.showNotification && <div id="point" className="" />}
+              <Tooltip title="Chat">
+                <QuestionAnswer />
+              </Tooltip>
+            </IconButton>
             <IconButton
               color="secondary"
               className="navButton"
@@ -145,12 +150,6 @@ export default class ToolbarComponent extends Component {
               id="navLeaveButton"
             >
               <PowerSettingsNew />
-            </IconButton>
-            <IconButton color="inherit" onClick={this.toggleChat} id="navChatButton">
-              {this.props.showNotification && <div id="point" className="" />}
-              <Tooltip title="Chat">
-                <QuestionAnswer />
-              </Tooltip>
             </IconButton>
           </div>
         </Toolbar>
