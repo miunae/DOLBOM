@@ -34,16 +34,15 @@ export const EventModal = ({
   isEditCard,
 }: EventModalProps) => {
   //기존 내담자 리스트
+  console.log(eventInfos);
   const [list, setList] = useState([]);
   //선정된 내담자
-  const [client, setClient] = useState<null | HTMLElement>(null);
+  const [client, setClient] = useState(null);
   //예약 내용
   const [content, setContent] = useState('');
   //시작시간
-  const [initialStartTime, setInitialStartTime] = useState('10:00');
   const [startTime, setStartTime] = useState('10:00');
   //종료 시간
-  const [InitialEndTime, setInitialEndTime] = useState('13:00');
   const [endTime, setEndTime] = useState('13:00');
   // autocomplete 목록 불러오기
   useEffect(() => {
@@ -55,28 +54,12 @@ export const EventModal = ({
     if (isEditCard) {
       console.log(eventInfos?.event);
       const endPoint = eventInfos?.event.startStr.indexOf(':');
-      console.log(eventInfos?.event.startStr.slice(endPoint - 2, endPoint + 3));
-      setInitialStartTime(eventInfos?.event.startStr.slice(endPoint - 2, endPoint + 3));
-      setInitialEndTime(eventInfos?.event.startStr.slice(endPoint - 2, endPoint + 3));
+
       axios
         .get(`http://localhost:3003/calendarEvents/${eventInfos?.event?._def?.publicId}`)
         .then((res) => {
           setClient(res.data?.title);
           setContent(res.data?.content);
-          const timeStr = new Date(res.data?.start).toString();
-          const stend = timeStr.lastIndexOf(':');
-          setInitialStartTime(
-            `${timeStr[stend - 5]}${timeStr[stend - 4]}:${timeStr[stend - 2]}${
-              timeStr[stend - 1]
-            }`,
-          );
-          const timeEnd = new Date(res.data?.end).toString();
-          const enend = timeEnd.lastIndexOf(':');
-          setInitialEndTime(
-            `${timeEnd[enend - 5]}${timeEnd[enend - 4]}:${timeEnd[enend - 2]}${
-              timeEnd[enend - 1]
-            }`,
-          );
         })
         .catch((e) => console.log(e));
       // setClient(eventInfos?.event?.title);
@@ -96,7 +79,7 @@ export const EventModal = ({
     calendarApi.addEvent(data);
     axios.post('http://localhost:3003/calendarEvents', data);
 
-    setClient(null);
+    setClient('');
     setContent('');
     handleClose();
   };
@@ -133,11 +116,10 @@ export const EventModal = ({
           Modal
         </Typography>
         <Autocomplete
-          disablePortal
           options={list}
+          // freeSolo={true}
           value={client}
-          onChange={(e, value) => setClient(value)}
-          // defaultValue={client}
+          onChange={(e, value: string) => setClient(value)}
           renderInput={(params) => (
             <TextField
               {...params}
