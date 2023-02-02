@@ -54,13 +54,23 @@ public class ScheduleServiceImpl implements ScheduleService {
     public long updateSchedule(ScheduleDto scheduleDto) {
 
         Schedule schedule = scheduleRepository.findById(scheduleDto.getScheduleId())
-                .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
+                .orElseThrow(() -> new IllegalArgumentException("schedule doesn't exist"));
 
         schedule.updateSchedule(
                 setTimeFormat(scheduleDto.getStartTime()), setTimeFormat(scheduleDto.getEndTime()), scheduleDto.getContent());
 
         scheduleRepository.save(schedule);
         return schedule.getId();
+    }
+
+    @Override
+    public long deleteSchedule(long scheduleId) {
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new IllegalArgumentException("schedule doesn't exist"));
+        scheduleRepository.delete(schedule);
+
+        return scheduleId;
     }
 
     @Override

@@ -37,6 +37,14 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleId);
     }
 
+    // 추후에 로그인 기능과 합치면 spring security 에서 받아온 유저가 주인이 맞는지 확인하고 삭제하기
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<?> deleteSchedule(@PathVariable long scheduleId) {
+
+        scheduleId = scheduleService.deleteSchedule(scheduleId);
+
+        return ResponseEntity.ok(scheduleId);
+    }
 //    @PostConstruct
 //    public void init() {
 //        Member member1 = Member.builder()

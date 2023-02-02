@@ -11,4 +11,6 @@ public interface ScheduleService {
     LocalDateTime setTimeFormat(String ISODateTime);
 
     long updateSchedule(ScheduleDto scheduleDto);
+
+    long deleteSchedule(long scheduleId);
 }
