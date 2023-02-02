@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import { useFetchData } from '../../hooks/useFetchData';
+
 const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -52,7 +53,11 @@ export const EventModal = ({
   //isEdit => true 일때 정보 불러오기
   useEffect(() => {
     if (isEditCard) {
-      console.log('edit');
+      console.log(eventInfos?.event);
+      const endPoint = eventInfos?.event.startStr.indexOf(':');
+      console.log(eventInfos?.event.startStr.slice(endPoint - 2, endPoint + 3));
+      setInitialStartTime(eventInfos?.event.startStr.slice(endPoint - 2, endPoint + 3));
+      setInitialEndTime(eventInfos?.event.startStr.slice(endPoint - 2, endPoint + 3));
       axios
         .get(`http://localhost:3003/calendarEvents/${eventInfos?.event?._def?.publicId}`)
         .then((res) => {
@@ -75,38 +80,43 @@ export const EventModal = ({
         })
         .catch((e) => console.log(e));
       // setClient(eventInfos?.event?.title);
-      // setContent(event.)
     }
   }, [eventInfos]);
 
-  //evet db에 전달
+  //evet 추가 함수
   const addEvent = () => {
     const calendarApi = eventInfos.view.calendar;
-    calendarApi.addEvent({
-      title: client,
-      start: startTime,
-      end: endTime,
-    });
-    axios.post('http://localhost:3003/calendarEvents', {
-      title: client,
-      start: startTime,
-      end: endTime,
-      content,
-    });
-    setClient(null);
 
+    const data = {
+      title: client == null ? '제목없음' : client,
+      start: new Date(`${eventInfos.startStr.substr(0, 10)} ${startTime}`).toISOString(),
+      end: new Date(`${eventInfos.startStr.substr(0, 10)} ${endTime}`).toISOString(),
+      content,
+    };
+    calendarApi.addEvent(data);
+    axios.post('http://localhost:3003/calendarEvents', data);
+
+    setClient(null);
+    setContent('');
     handleClose();
   };
   const editEvent = () => {
     const calendarApi = eventInfos.view.calendar;
     const currentEvent = calendarApi.getEventById(eventInfos.event.id);
-    currentEvent.setProp('title', client);
-    axios.put(`http://localhost:3003/calendarEvents/${eventInfos.event._def.publicId}`, {
-      title: client,
-      start: startTime,
-      end: endTime,
+
+    console.log(eventInfos);
+    console.log(currentEvent);
+    const data = {
+      title: client == null ? '제목없음' : client,
+      start: new Date(`${eventInfos.event.startStr.substr(0, 10)} ${startTime}`),
+      end: new Date(`${eventInfos.event.startStr.substr(0, 10)} ${endTime}`),
       content,
-    });
+    };
+    axios.put(`http://localhost:3003/calendarEvents/${currentEvent._def.publicId}`, data);
+    if (currentEvent) {
+      currentEvent.setProp('title', client !== null ? client : '무제');
+      currentEvent.setDates(data.start, data.end);
+    }
     handleClose();
   };
   const removeEvent = () => {
@@ -142,7 +152,7 @@ export const EventModal = ({
         <TextField
           label="상담 시작 시간"
           type="time"
-          value={initialStartTime}
+          value={startTime}
           InputLabelProps={{
             shrink: true,
           }}
@@ -151,25 +161,15 @@ export const EventModal = ({
           }}
           sx={{ width: 150 }}
           onChange={(e) => {
-            {
-              isEditCard
-                ? setStartTime(
-                    new Date(
-                      `${eventInfos.event.startStr.substr(0, 10)} ${e.target.value}`,
-                    ).toISOString(),
-                  )
-                : setStartTime(
-                    new Date(`${eventInfos.startStr} ${e.target.value}`).toISOString(),
-                  );
-            }
-            setInitialStartTime(e.target.value);
+            setStartTime(e.target.value);
+            console.log(e.target.value);
           }}
           // eventInfos.startStr
         />
         <TextField
           label="상담 종료 시간"
           type="time"
-          value={InitialEndTime}
+          value={endTime}
           InputLabelProps={{
             shrink: true,
           }}
@@ -178,24 +178,13 @@ export const EventModal = ({
           }}
           sx={{ width: 150 }}
           onChange={(e) => {
-            {
-              isEditCard
-                ? setEndTime(
-                    new Date(
-                      `${eventInfos.event.startStr.substr(0, 10)} ${e.target.value}`,
-                    ).toISOString(),
-                  )
-                : setEndTime(
-                    new Date(`${eventInfos.startStr} ${e.target.value}`).toISOString(),
-                  );
-            }
-            setInitialEndTime(e.target.value);
+            setEndTime(e.target.value);
           }}
         />
         <TextField
           label="메모"
           multiline
-          defaultValue={content}
+          value={content}
           rows={4}
           onChange={(e) => setContent(e.target.value)}
         />
