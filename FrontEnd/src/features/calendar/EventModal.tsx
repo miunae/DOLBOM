@@ -37,7 +37,7 @@ export const EventModal = ({
   console.log(eventInfos);
   const [list, setList] = useState([]);
   //선정된 내담자
-  const [client, setClient] = useState(null);
+  const [client, setClient] = useState('');
   //예약 내용
   const [content, setContent] = useState('');
   //시작시간
@@ -53,8 +53,6 @@ export const EventModal = ({
   useEffect(() => {
     if (isEditCard) {
       console.log(eventInfos?.event);
-      const endPoint = eventInfos?.event.startStr.indexOf(':');
-
       axios
         .get(`http://localhost:3003/calendarEvents/${eventInfos?.event?._def?.publicId}`)
         .then((res) => {
@@ -100,6 +98,8 @@ export const EventModal = ({
       currentEvent.setProp('title', client !== null ? client : '무제');
       currentEvent.setDates(data.start, data.end);
     }
+    setClient('');
+    setContent('');
     handleClose();
   };
   const removeEvent = () => {
@@ -107,6 +107,8 @@ export const EventModal = ({
     axios.delete(
       `http://localhost:3003/calendarEvents/${eventInfos.event._def.publicId}`,
     );
+    setClient('');
+    setContent('');
     handleClose();
   };
   return (
@@ -118,8 +120,8 @@ export const EventModal = ({
         <Autocomplete
           options={list}
           // freeSolo={true}
-          value={client}
-          onChange={(e, value: string) => setClient(value)}
+          value={client ? client : ''}
+          onInputChange={(e, value: string) => setClient(value)}
           renderInput={(params) => (
             <TextField
               {...params}
