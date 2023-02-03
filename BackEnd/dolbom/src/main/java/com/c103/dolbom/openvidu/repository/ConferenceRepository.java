@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 
-    Conference findConferenceBySessionId(String sessionId);
-
 }

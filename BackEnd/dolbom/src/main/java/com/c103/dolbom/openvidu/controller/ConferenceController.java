@@ -44,19 +44,20 @@ public class ConferenceController {
 
     /**
      * Session 생성
-     * @param params The COUNSELOR's id
+     * @param params The CLIENT's id
      * @param params The Session properties
-     * @param id The CLIENT's id
+     * @param id The COUNSELOR's id
      * @return The Session ID
      */
     @PostMapping("/api/sessions/{id}")
     public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params
-                                                    ,@PathVariable("id") Long id)
+                                                    ,@PathVariable("id") String id)
             throws OpenViduJavaClientException, OpenViduHttpException {
-        Long clientId = (Long)params.get("clientId");
+        Long clientId = Long.parseLong(String.valueOf(params.get("clientId")));
         String sessionId = (String)params.get("customSessionId");
         ClientDto client = clientService.getClient(clientId);
-        conferenceService.createConference(id,sessionId);
+        Long counselorId = Long.parseLong(String.valueOf(id));
+        Long conferenceId = conferenceService.createConference(counselorId,sessionId);
         //내담자 이메일 발송
         Email email = new SimpleEmail();
         email.setHostName("smtp.naver.com");
@@ -67,7 +68,7 @@ public class ConferenceController {
         try{
             email.setFrom("miunae@naver.com", "이재훈");
             email.setSubject("DOLBOM 화상회의 초대 링크 전송");
-            email.setMsg("회의 링크: "+"www.localhost:3000"+"\n"+"참여 코드: " +sessionId);
+            email.setMsg("회의 링크: "+"http://localhost:3000/clientcheck"+"\n"+"방 번호: "+conferenceId+"\n"+"참여 코드: " +sessionId);
             email.addTo(client.getEmail(), client.getName()); // 보낼 사람
             email.send();
         }catch (EmailException e){
@@ -80,9 +81,10 @@ public class ConferenceController {
     }
 
     /**
-     * 방 참가
+     * 상담사 방 참가
      * @param sessionId The Session in which to create the Connection
-     * @param params    The Connection properties
+     * @param params    CLIENT's email  내담자 이메일
+     * @param params    conferenceId    방 번호
      * @return The Token associated to the Connection
      */
     @PostMapping("/api/sessions/{sessionId}/connections")
@@ -90,7 +92,31 @@ public class ConferenceController {
                                                    @RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openvidu.getActiveSession(sessionId);
-        System.out.println("연결되었음");
+        System.out.println("상담사 연결되었음");
+        if (session == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
+        Connection connection = session.createConnection(properties);
+        return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+    }
+
+    /**
+     * 내담자 방 참가
+     * @param sessionId The Session in which to create the Connection
+     * @param params    CLIENT's email  내담자 이메일
+     * @param params    conferenceId    방 번호
+     * @return The Token associated to the Connection
+     */
+    @PostMapping("/api/sessions/{sessionId}/client/connections")
+    public ResponseEntity<String> createClientConnection(@PathVariable("sessionId") String sessionId,
+                                                   @RequestBody(required = false) Map<String, Object> params)
+            throws OpenViduJavaClientException, OpenViduHttpException {
+        Session session = openvidu.getActiveSession(sessionId);
+        Long conferenceId = Long.parseLong(String.valueOf(params.get("conferenceId")));
+        String clientEmail = (String)params.get("email");
+        Long memberConferenceId = conferenceService.createMemberConference(conferenceId, clientEmail);
+        System.out.println("내담자 연결되었음");
 
         if (session == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

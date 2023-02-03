@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public interface ConferenceService {
 
     Long createConference(Long memberId, String sessionId);
-    Long createMemberConference(String email, String sessionId);
+    Long createMemberConference(Long conferenceId, String email);
     Long createConferenceHistory(Long clientId, Long conferenceId);
 
 

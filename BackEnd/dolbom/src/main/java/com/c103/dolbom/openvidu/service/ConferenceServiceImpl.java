@@ -4,6 +4,7 @@ import com.c103.dolbom.Entity.Conference;
 import com.c103.dolbom.Entity.ConferenceHistory;
 import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberConference;
+import com.c103.dolbom.openvidu.repository.ConferenceHistoryRepository;
 import com.c103.dolbom.openvidu.repository.ConferenceRepository;
 import com.c103.dolbom.openvidu.repository.MemberConferenceRepository;
 import com.c103.dolbom.repository.MemberRepository;
@@ -24,6 +25,9 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Autowired
     MemberConferenceRepository memberConferenceRepository;
 
+    @Autowired
+    ConferenceHistoryRepository conferenceHistoryRepository;
+
     @Override
     public Long createConference(Long memberId, String sessionId) {
         Member entityMember = memberRepository.findById(memberId).get();
@@ -42,10 +46,11 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     // 내담자가 세션에 연결했을때
+    // 리턴 값: memberConferenceId
     @Override
-    public Long createMemberConference(String email, String sessionId) {
+    public Long createMemberConference(Long conferenceId, String email) {
         Member entityClient = memberRepository.findMemberByEmail(email);
-        Conference entityConference = conferenceRepository.findConferenceBySessionId(sessionId);
+        Conference entityConference = conferenceRepository.findById(conferenceId).get();
 
         MemberConference memberConference = MemberConference.builder()
                 .member(entityClient)
@@ -60,6 +65,8 @@ public class ConferenceServiceImpl implements ConferenceService {
                 .counselor(entityCounselor)
                 .conference(entityConference)
                 .build();
+
+        Long conferenceHistoryId = conferenceHistoryRepository.save(entityConferenceHistory).getId();
         return memberConferenceId;
     }
 

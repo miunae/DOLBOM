@@ -10,7 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name="member_conference")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
