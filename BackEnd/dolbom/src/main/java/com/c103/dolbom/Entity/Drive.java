@@ -1,7 +1,5 @@
 package com.c103.dolbom.Entity;
 
-import com.c103.dolbom.Entity.BaseEntity;
-import com.c103.dolbom.Entity.MemberClient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,5 +25,9 @@ public class Drive extends BaseEntity {
     private String savedName;
     @Column(columnDefinition = "text")
     private String path;
+
+    public void changePath(String path){
+        this.path = path;
+    }
 
 }

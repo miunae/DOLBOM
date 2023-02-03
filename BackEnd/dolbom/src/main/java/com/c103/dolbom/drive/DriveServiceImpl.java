@@ -3,13 +3,21 @@ package com.c103.dolbom.drive;
 import com.c103.dolbom.Entity.Drive;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.client.MemberClientRepository;
+import com.c103.dolbom.drive.dto.FileResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -17,8 +25,9 @@ import java.util.UUID;
 public class DriveServiceImpl implements DriveService{
     private final MemberClientRepository memberClientRepository;
     private final DriveRepository driveRepository;
-    @Value("${file.dir}")
-    String absolutePath;
+//    @Value("${file.dir}")
+//    String absolutePath;
+    private final String absolutePath = "C:"+ File.separator +"test";
     @Override
     public boolean memberClientFolder(Long memberClientId) {
         StringBuilder saveFolderBuilder = new StringBuilder();
@@ -55,7 +64,6 @@ public class DriveServiceImpl implements DriveService{
 
         for(int i=0; i<pathArr.length;i++){
             saveFolderBuilder.append(File.separator).append(pathArr[i]);
-            System.out.println(pathArr[i]);
         }
         return saveFolderBuilder.toString();
     }
@@ -63,7 +71,6 @@ public class DriveServiceImpl implements DriveService{
     @Override
     public Long pathFileSave(Long memberClientId, String path, MultipartFile file) throws IOException {
         String savePath = extractPath(memberClientId, path);
-        System.out.println(savePath);
         File folder = new File(savePath);
         if (!folder.exists()){
             return -1L;
@@ -91,6 +98,104 @@ public class DriveServiceImpl implements DriveService{
 
         return result.getId();
     }
+
+    @Override
+    public byte[] pahtFileDownload(Long fileId) throws IOException {
+        Drive drive = driveRepository.findById(fileId).get();
+
+        byte[] fileByte = Files.readAllBytes(Paths.get(drive.getPath()));
+
+        return fileByte;
+    }
+
+    @Override
+    public List<FileResponseDto> openFolder(Long memberClientId, String path) {
+        String savePath = extractPath(memberClientId, path);
+        File folder = new File(savePath);
+
+        String[] fileList = folder.list();
+        List<FileResponseDto> fileResponseDto = new ArrayList<>();
+
+        for(String str : fileList){
+            File file = new File(savePath,str);
+            //폴더인 경우
+            if(file.isDirectory()){
+                FileResponseDto dto = FileResponseDto.builder()
+                        .id(null)
+                        .name(str)
+                        .build();
+                fileResponseDto.add(dto);
+
+            }
+            //파일인 경우
+            else if(file.isFile()){
+                //repository에서 가져오는 방식
+                Drive drive = driveRepository.findBySavedName(str);
+
+                FileResponseDto dto = FileResponseDto.builder()
+                        .id(drive.getId())
+                        .name(drive.getOriginName())
+                        .build();
+                fileResponseDto.add(dto);
+            }
+
+        }
+
+        return fileResponseDto;
+    }
+
+    @Override
+    public boolean moveFile(Long memberClientId, String path, Long id) throws IOException {
+        Drive drive = driveRepository.findById(id).get();
+
+        Path oldPath = Paths.get(drive.getPath());
+
+        String savePath = extractPath(memberClientId, path);
+        Path newPath = Paths.get(savePath + File.separator + drive.getSavedName());
+
+        Files.move(oldPath,newPath, StandardCopyOption.ATOMIC_MOVE);
+
+        drive.changePath(savePath + File.separator + drive.getSavedName());
+        driveRepository.save(drive);
+
+        return true;
+    }
+
+    @Override
+    public boolean deleteFile(Long memberClientId, String path, Long id) {
+        String savePath = extractPath(memberClientId, path);
+        Drive drive = driveRepository.findById(id).get();
+        File file = new File(savePath,drive.getSavedName());
+        driveRepository.deleteById(id);
+        file.delete();
+
+        return true;
+    }
+
+
+
+    @Override
+    @Transactional
+    public boolean deleteFolder(Long memberClientId, String path) {
+        String savePath = extractPath(memberClientId, path);
+        List<Drive> driveList = driveRepository.findByPathStartsWith(savePath);
+        driveRepository.deleteByPathStartsWith(savePath);
+
+        File baseDir = new File(savePath);
+        try {
+            Files.walk(baseDir.toPath()).sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach((file) -> {
+                        file.delete();
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return true;
+    }
+
 
 
 }
