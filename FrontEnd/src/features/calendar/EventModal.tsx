@@ -14,9 +14,10 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 500,
+  height: 430,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  // border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -58,6 +59,14 @@ export const EventModal = ({
         .then((res) => {
           setClient(res.data?.title);
           setContent(res.data?.content);
+          const startString: any = new Date(res.data?.start).toString();
+          const startmid = startString.indexOf(':');
+          const endString: any = new Date(res.data?.end).toString();
+          const endtmid: number = startString.indexOf(':');
+          console.log(typeof startString);
+          console.log(startmid);
+          setStartTime(startString.substring(startmid - 2, startmid + 3));
+          setEndTime(endString.substring(endtmid - 2, endtmid + 3));
         })
         .catch((e) => console.log(e));
       // setClient(eventInfos?.event?.title);
@@ -111,8 +120,13 @@ export const EventModal = ({
     setContent('');
     handleClose();
   };
+  const onCloseandReset = () => {
+    setClient('');
+    setContent('');
+    handleClose();
+  };
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={onCloseandReset}>
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Modal
@@ -127,55 +141,73 @@ export const EventModal = ({
               {...params}
               label="예약자 찾기"
               sx={{
-                width: 350,
-                margin: '10px auto',
+                width: 'transparent',
+                margin: '15px auto',
               }}
             />
           )}
         />
-        <TextField
-          label="상담 시작 시간"
-          type="time"
-          value={startTime}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            step: 300, // 5 min
-          }}
-          sx={{ width: 150 }}
-          onChange={(e) => {
-            setStartTime(e.target.value);
-            console.log(e.target.value);
-          }}
-          // eventInfos.startStr
-        />
-        <TextField
-          label="상담 종료 시간"
-          type="time"
-          value={endTime}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          inputProps={{
-            step: 300, // 5 min
-          }}
-          sx={{ width: 150 }}
-          onChange={(e) => {
-            setEndTime(e.target.value);
-          }}
-        />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <TextField
+            label="상담 시작 시간"
+            type="time"
+            value={startTime}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              step: 300, // 5 min
+            }}
+            sx={{ width: 200 }}
+            onChange={(e) => {
+              setStartTime(e.target.value);
+              console.log(e.target.value);
+            }}
+            // eventInfos.startStr
+          />
+          <TextField
+            label="상담 종료 시간"
+            type="time"
+            value={endTime}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            inputProps={{
+              step: 300, // 5 min
+            }}
+            sx={{ width: 200 }}
+            onChange={(e) => {
+              setEndTime(e.target.value);
+            }}
+          />
+        </Box>
         <TextField
           label="메모"
           multiline
           value={content}
           rows={4}
+          fullWidth
+          sx={{
+            margin: '15px auto',
+          }}
           onChange={(e) => setContent(e.target.value)}
         />
-        <Button onClick={isEditCard ? editEvent : addEvent}>
-          {isEditCard ? '수정하기' : '등록하기'}
-        </Button>
-        {isEditCard && <Button onClick={removeEvent}>이벤트 삭제</Button>}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'row-reverse',
+          }}
+        >
+          <Button onClick={isEditCard ? editEvent : addEvent} variant="contained">
+            {isEditCard ? '수정하기' : '등록하기'}
+          </Button>
+          {isEditCard && (
+            <Button onClick={removeEvent} variant="contained" color="error">
+              이벤트 삭제
+            </Button>
+          )}
+        </Box>
       </Box>
     </Modal>
   );

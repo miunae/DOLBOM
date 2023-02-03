@@ -12,7 +12,6 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useModalControl } from '../../hooks/useModalControl';
-import { createEventId, INITIAL_EVENTS } from './event-utils';
 import { EventModal } from './EventModal';
 
 export const Calendar = () => {
