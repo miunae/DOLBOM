@@ -82,7 +82,6 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Long joinRegisteredClient(Long client_id, Long member_id) {
-        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
         Member client = memberRepository.findById(client_id).get();
         Member member = memberRepository.findById(member_id).get();
 
