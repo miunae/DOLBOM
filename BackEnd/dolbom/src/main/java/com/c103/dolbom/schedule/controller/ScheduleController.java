@@ -26,7 +26,7 @@ public class ScheduleController {
 
         long scheduleId = scheduleService.createSchedule(scheduleDto);
 
-        return ResponseEntity.ok(scheduleId);
+        return ResponseEntity.ok(new ScheduleDto.Id(scheduleId));
     }
 
     @PutMapping
@@ -34,7 +34,7 @@ public class ScheduleController {
 
         long scheduleId = scheduleService.updateSchedule(scheduleDto);
 
-        return ResponseEntity.ok(scheduleId);
+        return ResponseEntity.ok(new ScheduleDto.Id(scheduleId));
     }
 
     // 추후에 로그인 기능과 합치면 spring security 에서 받아온 유저가 주인이 맞는지 확인하고 삭제하기
@@ -43,27 +43,6 @@ public class ScheduleController {
 
         scheduleId = scheduleService.deleteSchedule(scheduleId);
 
-        return ResponseEntity.ok(scheduleId);
+        return ResponseEntity.ok(new ScheduleDto.Id(scheduleId));
     }
-//    @PostConstruct
-//    public void init() {
-//        Member member1 = Member.builder()
-//                .email("ssafy1@ssafy")
-//                .name("kim")
-//                .password("fasdfa")
-//                .phone("01001010101")
-//                .role(Role.COUNSELOR)
-//                .build();
-//
-//        Member member2 = Member.builder()
-//                .email("nana@naver.com")
-//                .name("park")
-//                .password("fasdfa")
-//                .phone("01022220101")
-//                .role(Role.CLIENT)
-//                .build();
-//
-//        memberRepository.save(member1);
-//        memberRepository.save(member2);
-//    }
 }

@@ -7,6 +7,12 @@ public class ScheduleDto {
 
     @Getter
     @AllArgsConstructor
+    public static class Id {
+        private Long scheduleId;
+    }
+
+    @Getter
+    @AllArgsConstructor
     @Builder
     public static class Basic {
         private Long scheduleId;

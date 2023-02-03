@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
@@ -98,11 +95,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         // 파씽 오류시 DateTimeParseException 예외 발생
         // 추후에 ControllerAdvice로 예외처리 필요
-        LocalDateTime dateTime = LocalDateTime.from(
-                Instant.from(
-                        DateTimeFormatter.ISO_DATE_TIME.parse(ISODateTime)
-                ).atZone(ZoneId.of("Asia/Seoul"))
-        );
+
+        // 한국 시간으로 파싱하는 경우
+//        LocalDateTime dateTime = LocalDateTime.from(
+//                Instant.from(
+//                        DateTimeFormatter.ISO_DATE_TIME.parse(ISODateTime)
+//                ).atZone(ZoneId.of("Asia/Seoul"))
+//        );
+
+        Instant instant = Instant.parse(ISODateTime);
+
+        //Convert instant to LocalDateTime, no timezone, add a zero offset / UTC+0
+        LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
 
         return dateTime;
     }
@@ -110,8 +114,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public String setLocalDateTimeToISO(LocalDateTime localDateTime) {
 
-        String ISOTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime);
-
+//        String ISOTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(localDateTime);
+        Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
+        String ISOTime = instant.toString();
         return ISOTime;
     }
 
