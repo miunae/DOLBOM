@@ -1,3 +1,4 @@
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -5,9 +6,11 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import React from 'react';
 import { useEffect, useState } from 'react';
 
 import { useFetchData } from '../../hooks/useFetchData';
+import { ChildModal } from './ChildModal';
 
 const style = {
   position: 'absolute' as const,
@@ -125,90 +128,113 @@ export const EventModal = ({
     setContent('');
     handleClose();
   };
+  // Child Modal 관련 메서드
+  // Child Modal 관련 메서드
+  // Child Modal 관련 메서드
+  const [childOpen, setChildOpen] = React.useState(false);
+  const handleChildOpen = () => {
+    setChildOpen(true);
+  };
+  const handleChildClose = () => {
+    setChildOpen(false);
+  };
+
   return (
-    <Modal open={open} onClose={onCloseandReset}>
-      <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Modal
-        </Typography>
-        <Autocomplete
-          options={list}
-          // freeSolo={true}
-          value={client ? client : ''}
-          onInputChange={(e, value: string) => setClient(value)}
-          renderInput={(params) => (
+    <>
+      <ChildModal childOpen={childOpen} handleChildClose={handleChildClose} />
+      <Modal open={open} onClose={onCloseandReset}>
+        <Box sx={style}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexDirection: 'row-reverse',
+            }}
+          >
+            <PersonAddIcon className="cursor-pointer" onClick={handleChildOpen} />
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Modal
+            </Typography>
+          </Box>
+          <Autocomplete
+            options={list}
+            // freeSolo={true}
+            value={client ? client : ''}
+            onInputChange={(e, value: string) => setClient(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="예약자 찾기"
+                sx={{
+                  width: 'transparent',
+                  margin: '15px auto',
+                }}
+              />
+            )}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <TextField
-              {...params}
-              label="예약자 찾기"
-              sx={{
-                width: 'transparent',
-                margin: '15px auto',
+              label="상담 시작 시간"
+              type="time"
+              value={startTime}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                step: 300, // 5 min
+              }}
+              sx={{ width: 200 }}
+              onChange={(e) => {
+                setStartTime(e.target.value);
+                console.log(e.target.value);
+              }}
+              // eventInfos.startStr
+            />
+            <TextField
+              label="상담 종료 시간"
+              type="time"
+              value={endTime}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                step: 300, // 5 min
+              }}
+              sx={{ width: 200 }}
+              onChange={(e) => {
+                setEndTime(e.target.value);
               }}
             />
-          )}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          </Box>
           <TextField
-            label="상담 시작 시간"
-            type="time"
-            value={startTime}
-            InputLabelProps={{
-              shrink: true,
+            label="메모"
+            multiline
+            value={content}
+            rows={4}
+            fullWidth
+            sx={{
+              margin: '15px auto',
             }}
-            inputProps={{
-              step: 300, // 5 min
-            }}
-            sx={{ width: 200 }}
-            onChange={(e) => {
-              setStartTime(e.target.value);
-              console.log(e.target.value);
-            }}
-            // eventInfos.startStr
+            onChange={(e) => setContent(e.target.value)}
           />
-          <TextField
-            label="상담 종료 시간"
-            type="time"
-            value={endTime}
-            InputLabelProps={{
-              shrink: true,
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexDirection: 'row-reverse',
             }}
-            inputProps={{
-              step: 300, // 5 min
-            }}
-            sx={{ width: 200 }}
-            onChange={(e) => {
-              setEndTime(e.target.value);
-            }}
-          />
-        </Box>
-        <TextField
-          label="메모"
-          multiline
-          value={content}
-          rows={4}
-          fullWidth
-          sx={{
-            margin: '15px auto',
-          }}
-          onChange={(e) => setContent(e.target.value)}
-        />
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: 'row-reverse',
-          }}
-        >
-          <Button onClick={isEditCard ? editEvent : addEvent} variant="contained">
-            {isEditCard ? '수정하기' : '등록하기'}
-          </Button>
-          {isEditCard && (
-            <Button onClick={removeEvent} variant="contained" color="error">
-              이벤트 삭제
+          >
+            <Button onClick={isEditCard ? editEvent : addEvent} variant="contained">
+              {isEditCard ? '수정하기' : '등록하기'}
             </Button>
-          )}
+            {isEditCard && (
+              <Button onClick={removeEvent} variant="contained" color="error">
+                이벤트 삭제
+              </Button>
+            )}
+          </Box>
         </Box>
-      </Box>
-    </Modal>
+      </Modal>
+    </>
   );
 };
