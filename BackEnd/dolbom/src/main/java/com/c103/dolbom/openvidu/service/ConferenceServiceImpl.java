@@ -4,10 +4,12 @@ import com.c103.dolbom.Entity.Conference;
 import com.c103.dolbom.Entity.ConferenceHistory;
 import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberConference;
+import com.c103.dolbom.openvidu.dto.JoinSessionDto;
 import com.c103.dolbom.openvidu.repository.ConferenceHistoryRepository;
 import com.c103.dolbom.openvidu.repository.ConferenceRepository;
 import com.c103.dolbom.openvidu.repository.MemberConferenceRepository;
 import com.c103.dolbom.repository.MemberRepository;
+import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,9 +50,15 @@ public class ConferenceServiceImpl implements ConferenceService {
     // 내담자가 세션에 연결했을때
     // 리턴 값: memberConferenceId
     @Override
-    public Long createMemberConference(Long conferenceId, String email) {
-        Member entityClient = memberRepository.findMemberByEmail(email);
-        Conference entityConference = conferenceRepository.findById(conferenceId).get();
+    public Long createMemberConference(JoinSessionDto dto) {
+        Optional<Member> optionalClient = memberRepository.findByEmail(dto.getEmail());
+        Member entityClient;
+        if(optionalClient.isPresent()){
+            entityClient = optionalClient.get();
+        } else {
+            return null;
+        }
+        Conference entityConference = conferenceRepository.findById(dto.getConferenceId()).get();
 
         MemberConference memberConference = MemberConference.builder()
                 .member(entityClient)
@@ -71,7 +79,7 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public Long createConferenceHistory(Long clientId, Long conferenceId) {
+    public Long recordConferenceHistory(Long clientId, Long conferenceId) {
         return null;
     }
 }

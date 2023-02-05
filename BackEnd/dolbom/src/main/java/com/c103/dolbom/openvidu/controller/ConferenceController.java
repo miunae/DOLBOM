@@ -3,12 +3,12 @@ package com.c103.dolbom.openvidu.controller;
 import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.client.ClientService;
 import com.c103.dolbom.client.dto.ClientDto;
+import com.c103.dolbom.openvidu.dto.CreateSessionResDto;
+import com.c103.dolbom.openvidu.dto.JoinSessionDto;
+import com.c103.dolbom.openvidu.dto.MailDto;
 import com.c103.dolbom.openvidu.service.ConferenceService;
+import com.c103.dolbom.openvidu.service.MailService;
 import io.openvidu.java.client.*;
-import org.apache.commons.mail.DefaultAuthenticator;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.SimpleEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -28,6 +28,9 @@ public class ConferenceController {
 
     @Autowired
     ClientService clientService;
+
+    @Autowired
+    MailService mailService;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -50,7 +53,7 @@ public class ConferenceController {
      * @return The Session ID
      */
     @PostMapping("/api/sessions/{id}")
-    public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params
+    public ResponseEntity<?> initializeSession(@RequestBody(required = false) Map<String, Object> params
                                                     ,@PathVariable("id") String id)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Long clientId = Long.parseLong(String.valueOf(params.get("clientId")));
@@ -58,33 +61,28 @@ public class ConferenceController {
         ClientDto client = clientService.getClient(clientId);
         Long counselorId = Long.parseLong(String.valueOf(id));
         Long conferenceId = conferenceService.createConference(counselorId,sessionId);
-        //내담자 이메일 발송
-        Email email = new SimpleEmail();
-        email.setHostName("smtp.naver.com");
-        email.setSmtpPort(587);
-        email.setCharset("utf-8"); // 인코딩 설정(utf-8, euc-kr)
-        email.setAuthenticator(new DefaultAuthenticator("miunae", "Wogns161541#"));
-        email.setSSL(true);
-        try{
-            email.setFrom("miunae@naver.com", "이재훈");
-            email.setSubject("DOLBOM 화상회의 초대 링크 전송");
-            email.setMsg("회의 링크: "+"http://localhost:3000/clientcheck"+"\n"+"방 번호: "+conferenceId+"\n"+"참여 코드: " +sessionId);
-            email.addTo(client.getEmail(), client.getName()); // 보낼 사람
-            email.send();
-        }catch (EmailException e){
-            e.printStackTrace();
+        MailDto mailDto = MailDto.builder()
+                .email(client.getEmail())
+                .title("DOLBOM 화상회의 초대 링크 전송")
+                .conferenceId(conferenceId)
+                .link("http://localhost:3000/clientcheck")
+                .sessionId(sessionId)
+                .build();
+        if(mailService.sendEmail(mailDto) == 1) {
+            System.out.println("메일 발송 완료");
         }
-
         SessionProperties properties = SessionProperties.fromJson(params).build();
         Session session = openvidu.createSession(properties);
-        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+        CreateSessionResDto dto = CreateSessionResDto.builder()
+                .conferenceId(conferenceId)
+                .sessionId(sessionId)
+                .build();
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     /**
      * 상담사 방 참가
      * @param sessionId The Session in which to create the Connection
-     * @param params    CLIENT's email  내담자 이메일
-     * @param params    conferenceId    방 번호
      * @return The Token associated to the Connection
      */
     @PostMapping("/api/sessions/{sessionId}/connections")
@@ -104,20 +102,22 @@ public class ConferenceController {
     /**
      * 내담자 방 참가
      * @param sessionId The Session in which to create the Connection
-     * @param params    CLIENT's email  내담자 이메일
-     * @param params    conferenceId    방 번호
+     * @param dto    내담자 이름, 이메일, 참여할 참여코드, 회의 ID
+
      * @return The Token associated to the Connection
      */
     @PostMapping("/api/sessions/{sessionId}/client/connections")
     public ResponseEntity<String> createClientConnection(@PathVariable("sessionId") String sessionId,
-                                                   @RequestBody(required = false) Map<String, Object> params)
+                                                         @RequestBody JoinSessionDto dto,
+                                                         @RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openvidu.getActiveSession(sessionId);
-        Long conferenceId = Long.parseLong(String.valueOf(params.get("conferenceId")));
-        String clientEmail = (String)params.get("email");
-        Long memberConferenceId = conferenceService.createMemberConference(conferenceId, clientEmail);
+        System.out.println(session.toString());
+        Long memberConferenceId = conferenceService.createMemberConference(dto);
+        if(memberConferenceId == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         System.out.println("내담자 연결되었음");
-
         if (session == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Entity
+@EntityListeners(value = AuditingEntityListener.class)
 @Builder
 public class Member extends BaseTimeEntity{
     @Column(nullable = false, updatable = false, length = 45,unique = true)
