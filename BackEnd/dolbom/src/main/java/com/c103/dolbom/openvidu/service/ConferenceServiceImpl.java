@@ -5,6 +5,7 @@ import com.c103.dolbom.Entity.ConferenceHistory;
 import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberConference;
 import com.c103.dolbom.openvidu.dto.JoinSessionDto;
+import com.c103.dolbom.openvidu.dto.MemoDto;
 import com.c103.dolbom.openvidu.repository.ConferenceHistoryRepository;
 import com.c103.dolbom.openvidu.repository.ConferenceRepository;
 import com.c103.dolbom.openvidu.repository.MemberConferenceRepository;
@@ -13,6 +14,7 @@ import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,7 +81,15 @@ public class ConferenceServiceImpl implements ConferenceService {
     }
 
     @Override
-    public Long recordConferenceHistory(Long clientId, Long conferenceId) {
-        return null;
+    public int saveMemo(MemoDto dto) {
+        List<ConferenceHistory> conferenceHistoryList
+                = conferenceHistoryRepository.findAllByConferenceId(dto.getConferenceId());
+        if(conferenceHistoryList.isEmpty()){
+            return 0;
+        }
+
+        return 1;
     }
+
+
 }

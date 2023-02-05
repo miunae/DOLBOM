@@ -6,6 +6,7 @@ import com.c103.dolbom.client.dto.ClientDto;
 import com.c103.dolbom.openvidu.dto.CreateSessionResDto;
 import com.c103.dolbom.openvidu.dto.JoinSessionDto;
 import com.c103.dolbom.openvidu.dto.MailDto;
+import com.c103.dolbom.openvidu.dto.MemoDto;
 import com.c103.dolbom.openvidu.service.ConferenceService;
 import com.c103.dolbom.openvidu.service.MailService;
 import io.openvidu.java.client.*;
@@ -125,6 +126,18 @@ public class ConferenceController {
         Connection connection = session.createConnection(properties);
         System.out.println("Token: "+ connection.getToken());
         return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+    }
+
+    /**
+     * 회의 메모 파일 저장
+     * @param dto    내담자 이름, 이메일, 참여할 참여코드, 회의 ID
+
+     * @return The Token associated to the Connection
+     */
+    @PostMapping("/api/sessions/{sessionId}/client/connections")
+    public ResponseEntity<?> createClientConnection(@RequestBody MemoDto dto) {
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
