@@ -1,9 +1,8 @@
 package com.c103.dolbom.client;
 
-import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.client.dto.ClientCounselorDto;
 import com.c103.dolbom.client.dto.ClientJoinDto;
-import com.c103.dolbom.client.dto.ClientModifiedDto;
+import com.c103.dolbom.client.dto.ClientDto;
 import com.c103.dolbom.client.dto.ClientSimpleDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,12 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
         List<ClientSimpleDto> clientList = clientService.getClientListByMemberId(memberId);
         return new ResponseEntity<>(clientList, HttpStatus.OK);
     }
-    //내담자 상세정보는 memberController에서 대신 상담사 정보와는 다르게 일부정보만 가져오도록
+    //내담자 상세정보 + 맴버클라이언트아이디도 같이 리턴해줘야함
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getClient(@PathVariable("id") Long clientId){
+        ClientDto dto = clientService.getClient(clientId);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
     //기존에 없는 내담자 등록
     @PostMapping
     public ResponseEntity<?> clientJoin(@RequestBody ClientJoinDto dto){
@@ -32,7 +36,7 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
     }
     //내담자 수정
     @PatchMapping
-    public ResponseEntity<?> clientModify(@RequestBody ClientModifiedDto dto){
+    public ResponseEntity<?> clientModify(@RequestBody ClientDto dto){
         Long clientId = clientService.modifyClient(dto);
         return new ResponseEntity<>(clientId, HttpStatus.OK);
     }
@@ -55,4 +59,12 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
         Long memberClientId = clientService.joinRegisteredClient(dto.getClientId(),dto.getCounselorId());
         return new ResponseEntity<>(memberClientId, HttpStatus.OK);
     }
+
+    //상담사 내담자 관계 아이디 조회
+    @GetMapping("/{client_id}/{counselor_id}")
+    public ResponseEntity<?> getClientCounselorId(@PathVariable("client_id") Long clientId,@PathVariable("counselor_id") Long counselorId){
+        Long id = clientService.getClientMemberId(clientId,counselorId);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
 }
