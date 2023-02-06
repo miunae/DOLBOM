@@ -42,14 +42,14 @@ public class MemberController {
     public ResponseEntity<?> checkIdDuplicated(@PathVariable String email) {
         Map<String, Boolean> map = new HashMap<>();
         map.put("isExist", memberService.checkIdDuplicated(email));
-        return ResponseEntity.ok(map);
+        return new ResponseEntity<Map>(map, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody MemberDto.Basic memberDto) {
         Long memberId = memberService.createMember(memberDto);
 
-        return ResponseEntity.ok(new MemberDto.Id(memberId));
+        return new ResponseEntity<Long>(memberId, HttpStatus.OK);
     }
 
     @PutMapping
@@ -58,7 +58,7 @@ public class MemberController {
 
         Long userMemberId = memberService.updateUser(authUser, memberDto);
 
-        return ResponseEntity.ok(new MemberDto.Id(userMemberId));
+        return new ResponseEntity<Long>(userMemberId, HttpStatus.OK);
     }
 
     @DeleteMapping
