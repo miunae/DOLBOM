@@ -4,7 +4,7 @@ import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Role;
 import com.c103.dolbom.client.dto.ClientJoinDto;
-import com.c103.dolbom.client.dto.ClientModifiedDto;
+import com.c103.dolbom.client.dto.ClientDto;
 import com.c103.dolbom.client.dto.ClientSimpleDto;
 import com.c103.dolbom.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,7 @@ public class ClientServiceImpl implements ClientService{
                     .id(mc.getClient().getId())
                     .name(mc.getClient().getName())
                     .phone(mc.getClient().getPhone())
+                    .email(mc.getClient().getEmail())
                     .build();
             clientList.add(dto);
         }
@@ -49,10 +50,27 @@ public class ClientServiceImpl implements ClientService{
                     .id(member.getId())
                     .name(member.getName())
                     .phone(member.getPhone())
+                    .email(member.getEmail())
                     .build();
             clientDtoList.add(dto);
         }
         return clientDtoList;
+    }
+
+    @Override
+    public ClientDto getClient(Long clientId) {
+        Member clientEntity = memberRepository.findById(clientId).get();
+        ClientDto dto = ClientDto.builder()
+                .id(clientId)
+                .content(clientEntity.getContent())
+                .birth(clientEntity.getBirth())
+                .email(clientEntity.getEmail())
+                .name(clientEntity.getName())
+                .phone(clientEntity.getPhone())
+                .build();
+
+
+        return dto;
     }
 
     @Override
@@ -96,7 +114,7 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Long modifyClient(ClientModifiedDto dto) {
+    public Long modifyClient(ClientDto dto) {
         Member client = memberRepository.findById(dto.getId()).get();
 
         client.changName(dto.getName());
@@ -114,6 +132,12 @@ public class ClientServiceImpl implements ClientService{
     public int deleteClient(Long clientId,Long memberId) {
         memberClientRepository.deleteByClientIdAndMemberId(clientId, memberId);
         return 1;
+    }
+
+    @Override
+    public Long getClientMemberId(Long client_id, Long member_id) {
+        MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
+        return memberClient.getId();
     }
 
     private String randomString(){
