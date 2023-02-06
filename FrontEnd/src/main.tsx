@@ -14,11 +14,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
 import { CalendarPage } from './pages/CalendarPage';
+import { ClientManagementPage } from './pages/ClientManagementPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SignupPage } from './pages/SignupPage';
-import { UserProfilePage } from './pages/UserProfilePage';
 import { VideoPage } from './pages/VideoPage';
 const router = createBrowserRouter([
   {
@@ -51,8 +51,8 @@ const router = createBrowserRouter([
     element: <VideoPage />,
   },
   {
-    path: '/userprofile',
-    element: <UserProfilePage />,
+    path: '/clientmanagement',
+    element: <ClientManagementPage />,
   },
 ]);
 
