@@ -4,6 +4,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { green } from '@mui/material/colors';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 
 interface ClientCardProps {
@@ -27,7 +28,9 @@ export const ClientCard = ({ userName, userEmail, userNumber }: ClientCardProps)
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Link href="/clientdetail" underline="hover">
+          Learn More
+        </Link>
       </CardActions>
     </Card>
   );
