@@ -23,5 +23,4 @@ public class MemberClient extends BaseEntity{
     @JoinColumn(name = "client_id")
     private Member client;
 
-
 }
