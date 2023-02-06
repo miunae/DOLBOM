@@ -99,7 +99,7 @@ public class ClientServiceImpl implements ClientService{
     public Long modifyClient(ClientModifiedDto dto) {
         Member client = memberRepository.findById(dto.getId()).get();
 
-        client.changName(dto.getName());
+        client.changeName(dto.getName());
         client.changeBirth(dto.getBirth());
         client.changeContent(dto.getContent());
         client.changePhone(dto.getPhone());
