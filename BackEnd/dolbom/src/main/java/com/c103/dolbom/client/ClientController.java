@@ -59,4 +59,12 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
         Long memberClientId = clientService.joinRegisteredClient(dto.getClientId(),dto.getCounselorId());
         return new ResponseEntity<>(memberClientId, HttpStatus.OK);
     }
+
+    //상담사 내담자 관계 아이디 조회
+    @GetMapping("/{client_id}/{counselor_id}")
+    public ResponseEntity<?> getClientCounselorId(@PathVariable("client_id") Long clientId,@PathVariable("counselor_id") Long counselorId){
+        Long id = clientService.getClientMemberId(clientId,counselorId);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
 }

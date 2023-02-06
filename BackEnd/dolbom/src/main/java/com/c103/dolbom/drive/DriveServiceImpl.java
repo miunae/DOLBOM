@@ -100,16 +100,24 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public byte[] pahtFileDownload(Long fileId) throws IOException {
+    public File pahtFileDownload(Long fileId) throws IOException {
         Drive drive = driveRepository.findById(fileId).get();
+        File file = new File(drive.getPath());
 
-        byte[] fileByte = Files.readAllBytes(Paths.get(drive.getPath()));
-
-        return fileByte;
+        return file;
     }
 
     @Override
     public List<FileResponseDto> openFolder(Long memberClientId, String path) {
+
+        StringBuilder saveFolderBuilder = new StringBuilder();
+        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
+        File rootFolder = new File(saveFolderBuilder.toString());
+        if(!rootFolder.exists()){//존재x
+            rootFolder.mkdir();
+            return null;
+        }
+
         String savePath = extractPath(memberClientId, path);
         File folder = new File(savePath);
 
@@ -176,21 +184,18 @@ public class DriveServiceImpl implements DriveService{
 
     @Override
     @Transactional
-    public boolean deleteFolder(Long memberClientId, String path) {
+    public boolean deleteFolder(Long memberClientId, String path) throws IOException {
         String savePath = extractPath(memberClientId, path);
         List<Drive> driveList = driveRepository.findByPathStartsWith(savePath);
         driveRepository.deleteByPathStartsWith(savePath);
 
         File baseDir = new File(savePath);
-        try {
-            Files.walk(baseDir.toPath()).sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach((file) -> {
-                        file.delete();
-                    });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Files.walk(baseDir.toPath()).sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach((file) -> {
+                    file.delete();
+                });
+
 
 
         return true;

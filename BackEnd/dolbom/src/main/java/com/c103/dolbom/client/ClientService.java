@@ -16,4 +16,5 @@ public interface ClientService {
 
     Long modifyClient(ClientDto dto);
     int deleteClient(Long clientId,Long memberId);
+    Long getClientMemberId(Long client_id, Long member_id);
 }

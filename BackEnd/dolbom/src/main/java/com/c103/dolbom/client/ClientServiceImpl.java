@@ -100,7 +100,6 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Long joinRegisteredClient(Long client_id, Long member_id) {
-        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
         Member client = memberRepository.findById(client_id).get();
         Member member = memberRepository.findById(member_id).get();
 
@@ -133,6 +132,12 @@ public class ClientServiceImpl implements ClientService{
     public int deleteClient(Long clientId,Long memberId) {
         memberClientRepository.deleteByClientIdAndMemberId(clientId, memberId);
         return 1;
+    }
+
+    @Override
+    public Long getClientMemberId(Long client_id, Long member_id) {
+        MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
+        return memberClient.getId();
     }
 
     private String randomString(){
