@@ -76,10 +76,30 @@
       "userColor": "red"
     }
   ],
-  "clients":[
+  "clients": [
     {
       "clientName": "김옥지",
       "clientEmail": "angimozzi@naver.com"
+    }
+  ],
+  "defaultFolder": [
+    {
+      "ud": 1,
+      "folderName": "ddd",
+      "id": 1
+    },
+    {
+      "ud": null,
+      "id": 2
+    },
+    {
+      "ud": null,
+      "id": 3
+    },
+    {
+      "ud": null,
+      "folderName": "asdf",
+      "id": 4
     }
   ]
 }

@@ -6,7 +6,6 @@ import CardContent from '@mui/material/CardContent';
 import { green } from '@mui/material/colors';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-
 interface ClientCardProps {
   userName: string;
   userEmail: string;
