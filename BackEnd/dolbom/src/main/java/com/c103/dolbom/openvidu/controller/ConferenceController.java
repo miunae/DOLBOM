@@ -51,7 +51,7 @@ public class ConferenceController {
      * @param params The CLIENT's id
      * @param params The Session properties
      * @param id The COUNSELOR's id
-     * @return The Session ID
+     * @return The Session ID, The Conferece ID (JSON 형태)
      */
     @PostMapping("/api/sessions/{id}")
     public ResponseEntity<?> initializeSession(@RequestBody(required = false) Map<String, Object> params
@@ -61,6 +61,7 @@ public class ConferenceController {
         String sessionId = (String)params.get("customSessionId");
         ClientDto client = clientService.getClient(clientId);
         Long counselorId = Long.parseLong(String.valueOf(id));
+        // Conference DB 및 MemberConference DB에 저장
         Long conferenceId = conferenceService.createConference(counselorId,sessionId);
         MailDto mailDto = MailDto.builder()
                 .email(client.getEmail())
@@ -69,6 +70,7 @@ public class ConferenceController {
                 .link("http://localhost:3000/clientcheck")
                 .sessionId(sessionId)
                 .build();
+        // 내담자에게 이메일 발송
         if(mailService.sendEmail(mailDto) == 1) {
             System.out.println("메일 발송 완료");
         }
@@ -113,7 +115,7 @@ public class ConferenceController {
                                                          @RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openvidu.getActiveSession(sessionId);
-        System.out.println(session.toString());
+        // MemberConferece DB 저장 및 ConferenceHistory DB 저장
         Long memberConferenceId = conferenceService.createMemberConference(dto);
         if(memberConferenceId == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -130,13 +132,21 @@ public class ConferenceController {
 
     /**
      * 회의 메모 파일 저장
-     * @param dto    내담자 이름, 이메일, 참여할 참여코드, 회의 ID
-
-     * @return The Token associated to the Connection
+     * @param dto The Conferece ID, 메모 내용(textarea로 넘김)
+     * @return OK, FAIL
      */
-    @PostMapping("/api/sessions/{sessionId}/client/connections")
-    public ResponseEntity<?> createClientConnection(@RequestBody MemoDto dto) {
+    @PostMapping("/api/sessions/memo")
+    public ResponseEntity<?> saveMemo(@RequestBody MemoDto dto) {
+        conferenceService.saveMemo(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    /**
+     * 회의 STT 파일 저장
+     * @param dto The Conferece ID, STT 음성 파일
+     */
+    @PostMapping("/api/sessions/stt")
+    public ResponseEntity<?> saveStt(@RequestBody MemoDto dto) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

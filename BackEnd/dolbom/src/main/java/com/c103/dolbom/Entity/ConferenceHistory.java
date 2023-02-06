@@ -1,5 +1,6 @@
 package com.c103.dolbom.Entity;
 
+import com.c103.dolbom.openvidu.dto.SaveMemoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,5 +56,11 @@ public class ConferenceHistory extends BaseEntity{
     @Column(columnDefinition="text")
     private String sttPath;
 
+    public void saveMemo(SaveMemoDto dto) {
+        this.memoOriginName = dto.getOriginName();
+        this.memoSavedName = dto.getSavedName();
+        this.memoPath = dto.getPath();
+        this.endedTime = dto.getSaveTime();
+    }
 
 }
