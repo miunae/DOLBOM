@@ -27,7 +27,7 @@ export const ClientCard = ({ userName, userEmail, userNumber }: ClientCardProps)
         </Typography>
       </CardContent>
       <CardActions>
-        <Link href="/clientdetail" underline="hover">
+        <Link href={`/clientdetail/${userName}/null`} underline="hover">
           Learn More
         </Link>
       </CardActions>

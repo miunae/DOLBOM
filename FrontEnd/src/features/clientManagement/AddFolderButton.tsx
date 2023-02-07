@@ -6,8 +6,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useState } from 'react';
-
-export const AddFolderButton = () => {
+type folderInfo = {
+  folderPath: string;
+  update: () => void;
+};
+export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   const [open, setOpen] = useState(false);
   const [folderName, setFolderName] = useState('새폴더');
   const openModal = () => {
@@ -20,11 +23,13 @@ export const AddFolderButton = () => {
     e.preventDefault();
     axios
       .post('http://localhost:3003/defaultFolder', {
-        ud: null,
         folderName,
+        path: folderPath,
       })
       .then((res) => console.log(res))
       .catch((error) => console.log(error));
+    update();
+    setOpen(false);
     //폴더 생성 매서드
   };
   return (

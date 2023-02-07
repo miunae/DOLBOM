@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     element: <ClientManagementPage />,
   },
   {
-    path: '/clientdetail',
+    path: '/clientdetail/:userName/null/',
     element: <ClientDetailPage />,
   },
 ]);
