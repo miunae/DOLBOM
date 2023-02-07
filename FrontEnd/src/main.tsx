@@ -14,6 +14,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
 import { CalendPage } from './pages/CalendarPage';
+import { ClientCheckPage } from './pages/ClientCheckPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
   {
     path: '/userprofile',
     element: <UserProfilePage />,
+  },
+  {
+    path: '/clientcheck',
+    element: <ClientCheckPage />,
   },
 ]);
 

@@ -60,7 +60,8 @@ export default class StreamComponent extends Component {
   render() {
     return (
       <div className="OT_widget-container">
-        <div className="pointer nickname">
+        {/* username 또한 토큰 발급할때는 필요 but 깔끔하지 않아서 지운다 */}
+        {/* <div className="pointer nickname">
           {this.state.showForm ? (
             <FormControl id="nicknameForm">
               <IconButton
@@ -95,10 +96,10 @@ export default class StreamComponent extends Component {
           ) : (
             <div onClick={this.toggleNicknameForm}>
               <span id="nickname">{this.props.user.getNickname()}</span>
-              {this.props.user.isLocal() && <span id=""> (edit)</span>}
+              {this.props.user.isLocal() && <span id=""> (본인)</span>}
             </div>
           )}
-        </div>
+        </div> */}
 
         {this.props.user !== undefined &&
         this.props.user.getStreamManager() !== undefined ? (

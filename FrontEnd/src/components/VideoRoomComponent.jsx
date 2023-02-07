@@ -3,13 +3,18 @@ import './VideoRoomComponent.css';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import React, { Component } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import OpenViduLayout from '../layout/openvidu-layout';
 import UserModel from '../models/user-model';
 import ChatComponent from './chat/ChatComponent';
 import DialogExtensionComponent from './dialog-extension/DialogExtension';
+import TextareaDec from './memo/TextareaDec';
 import StreamComponent from './stream/StreamComponent';
 import ToolbarComponent from './toolbar/ToolbarComponent';
+import WithRouter from './withRouter';
+
+// import SideBar from '../features/sideBar';
 
 var localUser = new UserModel();
 const APPLICATION_SERVER_URL =
@@ -224,7 +229,7 @@ class VideoRoomComponent extends Component {
     this.setState({
       session: undefined,
       subscribers: [],
-      mySessionId: 'SessionA',
+      mySessionId: undefined,
       myUserName: 'OpenVidu_User' + Math.floor(Math.random() * 100),
       localUser: undefined,
     });
@@ -485,6 +490,7 @@ class VideoRoomComponent extends Component {
     this.updateLayout();
   }
 
+  // chat toggle
   toggleChat(property) {
     let display = property;
 
@@ -516,6 +522,13 @@ class VideoRoomComponent extends Component {
   }
 
   render() {
+    // const client = useLocation();
+    // const [test, setTest] = React.useState(location.state?.clientData);
+
+    // console.log(test1);
+    console.log('location : ' + this.props.location);
+    // location.state.clientData
+
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
     var chatDisplay = { display: this.state.chatDisplay };
@@ -562,6 +575,9 @@ class VideoRoomComponent extends Component {
               />
             </div>
           )}
+          <div>
+            <TextareaDec />
+          </div>
         </div>
       </div>
     );
@@ -589,13 +605,14 @@ class VideoRoomComponent extends Component {
 
   async createSession(sessionId) {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions',
-      { customSessionId: sessionId },
+      APPLICATION_SERVER_URL + 'api/sessions/1',
+      { customSessionId: sessionId, clientId: 2 },
       {
         headers: { 'Content-Type': 'application/json' },
       },
     );
-    return response.data; // The sessionId
+    console.log(response.data.conferenceId);
+    return response.data.sessionId; // The sessionId
   }
 
   async createToken(sessionId) {
@@ -609,4 +626,4 @@ class VideoRoomComponent extends Component {
     return response.data; // The token
   }
 }
-export default VideoRoomComponent;
+export default WithRouter(VideoRoomComponent);

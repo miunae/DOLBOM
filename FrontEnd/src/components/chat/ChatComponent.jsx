@@ -1,6 +1,6 @@
 import './ChatComponent.css';
 
-import { Tooltip } from '@material-ui/core';
+import { Divider, Tooltip } from '@material-ui/core';
 import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
 import HighlightOff from '@material-ui/icons/HighlightOff';
@@ -14,6 +14,7 @@ export default class ChatComponent extends Component {
       messageList: [],
       message: '',
     };
+
     this.chatScroll = React.createRef();
 
     this.handleChange = this.handleChange.bind(this);
@@ -93,9 +94,7 @@ export default class ChatComponent extends Component {
       <div id="chatContainer">
         <div id="chatComponent" style={styleChat}>
           <div id="chatToolbar">
-            <span>
-              {this.props.user.getStreamManager().stream.session.sessionId} - CHAT
-            </span>
+            <span>채팅</span>
             <IconButton id="closeButton" onClick={this.close}>
               <HighlightOff color="secondary" />
             </IconButton>
@@ -115,7 +114,7 @@ export default class ChatComponent extends Component {
                 <canvas id={'userImg-' + i} width="60" height="60" className="user-img" />
                 <div className="msg-detail">
                   <div className="msg-info">
-                    <p> {data.nickname}</p>
+                    <p> name </p>
                   </div>
                   <div className="msg-content">
                     <span className="triangle" />
@@ -135,17 +134,14 @@ export default class ChatComponent extends Component {
               onKeyPress={this.handlePressKey}
             />
             <Tooltip title="Send message">
-              <Fab
-                size="small"
-                color="secondary"
-                id="sendButton"
-                onClick={this.sendMessage}
-              >
+              <Fab size="small" id="sendButton" onClick={this.sendMessage}>
                 <Send />
               </Fab>
             </Tooltip>
           </div>
         </div>
+
+        <br />
       </div>
     );
   }

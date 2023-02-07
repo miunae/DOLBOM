@@ -17,8 +17,9 @@ import SwitchVideoIcon from '@material-ui/icons/SwitchVideo';
 import Videocam from '@material-ui/icons/Videocam';
 import VideocamOff from '@material-ui/icons/VideocamOff';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-const logo = import('../../assets/images/openvidu_logo.png');
+// const logo = import('../../assets/images/openvidu_logo.png');
 
 export default class ToolbarComponent extends Component {
   constructor(props) {
@@ -70,16 +71,20 @@ export default class ToolbarComponent extends Component {
   render() {
     const mySessionId = this.props.sessionId;
     const localUser = this.props.user;
+
     return (
       <AppBar className="toolbar" id="header">
         <Toolbar className="toolbar">
-          <div id="navSessionInfo">
+          {/* openvidu logo && sessionid 는 보여질 필요 x */}
+          {/* <div id="navSessionInfo">
+            <img id="header_img" alt="OpenVidu Logo" src={logo} />
+
             {this.props.sessionId && (
               <div id="titleContent">
                 <span id="session-title">{mySessionId}</span>
               </div>
             )}
-          </div>
+          </div> */}
 
           <div className="buttonsContent">
             <IconButton
@@ -125,6 +130,7 @@ export default class ToolbarComponent extends Component {
             {/* <IconButton color="inherit" className="navButton" onClick={this.switchCamera}>
               <SwitchVideoIcon />
             </IconButton> */}
+
             <IconButton
               color="inherit"
               className="navButton"
@@ -137,19 +143,24 @@ export default class ToolbarComponent extends Component {
               )}
             </IconButton>
 
+            <Link to="/calendar">
+              <IconButton
+                color="secondary"
+                className="navButton"
+                onClick={() => {
+                  this.leaveSession();
+                }}
+                id="navLeaveButton"
+              >
+                <PowerSettingsNew />
+              </IconButton>
+            </Link>
+
             <IconButton color="inherit" onClick={this.toggleChat} id="navChatButton">
               {this.props.showNotification && <div id="point" className="" />}
               <Tooltip title="Chat">
                 <QuestionAnswer />
               </Tooltip>
-            </IconButton>
-            <IconButton
-              color="secondary"
-              className="navButton"
-              onClick={this.leaveSession}
-              id="navLeaveButton"
-            >
-              <PowerSettingsNew />
             </IconButton>
           </div>
         </Toolbar>

@@ -19,8 +19,8 @@ import Modal from '@mui/material/Modal';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
 import { useAppDispatch } from '../../app/hooks';
@@ -29,7 +29,7 @@ import { clearUser } from '../auth/userSlice';
 
 const drawerWidth = 240;
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute' as const,
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -57,9 +57,24 @@ export const SideBar = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const getClient = async () => {
-    const client = await axios.get('https://localhost:3000/api/client/{id}');
-    console.log(client.data);
+  const [clientData, setClientData] = useState([]);
+
+  // clientData 요청을 받기 위한 axios
+  async function getData() {
+    try {
+      const response = await axios.get('http://localhost:5000/api/client/1');
+      setClientData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const navigate = useNavigate();
+
+  const onNavigateHandler = () => {
+    navigate('/video', {
+      state: { clientData },
+    });
   };
 
   return (
@@ -118,8 +133,8 @@ export const SideBar = () => {
                 <div>
                   <Button
                     onClick={() => {
-                      getClient();
                       handleOpen();
+                      getData();
                     }}
                   >
                     Video
@@ -136,29 +151,34 @@ export const SideBar = () => {
                       </Typography>
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         내담자 선택 :
-                        <select name="client">
-                          <option value="park">김다미</option>
-                          <option value="cool">김태리</option>
-                          <option value="cool">금태록</option>
+                        <select>
+                          {clientData.map((it, idx) => (
+                            <option key={idx} value={it.id}>
+                              {it.name} : {it.phone}
+                            </option>
+                          ))}
                         </select>
                       </Typography>
                       <div>
                         <Typography id="modal-modal-session" sx={{ mt: 2 }}>
-                          세션 번호
+                          코드
                         </Typography>
-                        <input defaultValue={'정수 값'} />
+                        <input defaultValue={'정수를 입력하세요'} />
                       </div>
 
-                      <Typography id="modal-modal-button" variant="h6" component="h2">
-                        <Link to="/video">
-                          <button>세션 생성</button>
-                        </Link>
-                      </Typography>
-                      <Typography id="modal-modal-button" variant="h6" component="h2">
-                        <Link to="/calendar ">
-                          <button onClick={handleClose}>뒤로가기</button>
-                        </Link>
-                      </Typography>
+                      <div>
+                        <Typography id="modal-modal-button" variant="h6" component="h2">
+                          <Link to="/video">
+                            <Button color="secondary" onClick={onNavigateHandler}>
+                              세션 생성
+                            </Button>
+                          </Link>
+
+                          <Link to="/calendar ">
+                            <button onClick={handleClose}>뒤로가기</button>
+                          </Link>
+                        </Typography>
+                      </div>
                     </Box>
                   </Modal>
                 </div>
