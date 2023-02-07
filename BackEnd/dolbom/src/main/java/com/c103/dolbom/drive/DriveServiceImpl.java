@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +59,8 @@ public class DriveServiceImpl implements DriveService{
     }
 
     private String extractPath(Long memberClientId, String path) {
-        String[] pathArr = path.split("/");
+        String splitRegex = Pattern.quote(System.getProperty("file.separator"));
+        String[] pathArr = path.split(splitRegex);
         StringBuilder saveFolderBuilder = new StringBuilder();
         saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
 
@@ -108,8 +110,7 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public List<FileResponseDto> openFolder(Long memberClientId, String path) {
-
+    public List<FileResponseDto> getFileList(Long memberClientId, String path) {
         StringBuilder saveFolderBuilder = new StringBuilder();
         saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
         File rootFolder = new File(saveFolderBuilder.toString());
@@ -120,29 +121,20 @@ public class DriveServiceImpl implements DriveService{
 
         String savePath = extractPath(memberClientId, path);
         File folder = new File(savePath);
-
         String[] fileList = folder.list();
+
         List<FileResponseDto> fileResponseDto = new ArrayList<>();
 
         for(String str : fileList){
             File file = new File(savePath,str);
-            //폴더인 경우
-            if(file.isDirectory()){
-                FileResponseDto dto = FileResponseDto.builder()
-                        .id(null)
-                        .name(str)
-                        .build();
-                fileResponseDto.add(dto);
-
-            }
             //파일인 경우
-            else if(file.isFile()){
+            if(file.isFile()){
                 //repository에서 가져오는 방식
                 Drive drive = driveRepository.findBySavedName(str);
 
                 FileResponseDto dto = FileResponseDto.builder()
-                        .id(drive.getId())
-                        .name(drive.getOriginName())
+                        .fileId(drive.getId())
+                        .fileName(drive.getOriginName())
                         .build();
                 fileResponseDto.add(dto);
             }
@@ -150,6 +142,32 @@ public class DriveServiceImpl implements DriveService{
         }
 
         return fileResponseDto;
+    }
+
+    @Override
+    public List<String> getFolderList(Long memberClientId, String path) {
+        StringBuilder saveFolderBuilder = new StringBuilder();
+        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
+        File rootFolder = new File(saveFolderBuilder.toString());
+        if(!rootFolder.exists()){//존재x
+            rootFolder.mkdir();
+            return null;
+        }
+
+        String savePath = extractPath(memberClientId, path);
+        File folder = new File(savePath);
+        String[] fileList = folder.list();
+        List<String> folderNameList = new ArrayList<>();
+        for(String str : fileList){
+            File file = new File(savePath,str);
+            //폴더인 경우
+            if(file.isDirectory()){
+                folderNameList.add(str);
+
+            }
+        }
+        return folderNameList;
+
     }
 
     @Override

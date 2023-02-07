@@ -13,7 +13,8 @@ public interface DriveService {
     boolean pathFolder(Long memberClientId,String path);
     Long pathFileSave(Long memberClientId, String path, MultipartFile file) throws IOException;
     File pahtFileDownload(Long fileId) throws IOException;
-    List<FileResponseDto> openFolder(Long memberClientId, String path);
+    List<FileResponseDto> getFileList(Long memberClientId, String path);
+    List<String> getFolderList(Long memberClientId, String path);
     boolean moveFile(Long memberClientId,String path,Long id) throws IOException;
     boolean deleteFile(Long memberClientId,String path,Long id);
     boolean deleteFolder(Long memberClientId,String path) throws IOException;//재귀 or Stream
