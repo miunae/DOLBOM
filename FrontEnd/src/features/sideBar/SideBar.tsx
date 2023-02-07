@@ -44,9 +44,6 @@ export const SideBar = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
 
-  // const [modal, setModal] = useState(false);
-  // console.log(modal);
-
   const logOut = () => {
     dispatch(clearUser());
     sessionStorage.removeItem('access-token');
@@ -57,25 +54,21 @@ export const SideBar = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [clientData, setClientData] = useState([]);
+  // makeSessionData (세션에서 client 분리를 위한 데이터)
+  const [makeSessionData, setMakeSessionData] = useState([]);
 
-  // clientData 요청을 받기 위한 axios
-  async function getData() {
+  // input으로 입력한 세션 코드를 저장해주기 위한 state
+  const [sessionCode, setSessionCode] = useState('');
+
+  // 해당 상담자에 대한 내담자 리스트를 요청을 받기 위한 axios
+  async function getClientData() {
     try {
-      const response = await axios.get('http://localhost:5000/api/client/1');
-      setClientData(response.data);
+      const response = await axios.get('http://localhost:5000/api/client/1'); // client/{id} 를 통해 호출
+      setMakeSessionData(response.data);
     } catch (error) {
       console.log(error);
     }
   }
-
-  const navigate = useNavigate();
-
-  const onNavigateHandler = () => {
-    navigate('/video', {
-      state: { clientData },
-    });
-  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -114,6 +107,7 @@ export const SideBar = () => {
           </Typography>
         </Link>
         <Divider />
+
         <List>
           <Link to="/calendar" style={{ textDecoration: 'none', color: 'inherit' }}>
             <ListItem key="calendar" disablePadding>
@@ -133,8 +127,8 @@ export const SideBar = () => {
                 <div>
                   <Button
                     onClick={() => {
-                      handleOpen();
-                      getData();
+                      handleOpen(); // 모달 열리는 것
+                      getClientData(); // 모달 열릴 때 axios로 counselor에 해당하는 client들 호출
                     }}
                   >
                     Video
@@ -152,7 +146,7 @@ export const SideBar = () => {
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         내담자 선택 :
                         <select>
-                          {clientData.map((it, idx) => (
+                          {makeSessionData.map((it, idx) => (
                             <option key={idx} value={it.id}>
                               {it.name} : {it.phone}
                             </option>
@@ -163,15 +157,25 @@ export const SideBar = () => {
                         <Typography id="modal-modal-session" sx={{ mt: 2 }}>
                           코드
                         </Typography>
-                        <input defaultValue={'정수를 입력하세요'} />
+                        <input
+                          defaultValue={'정수를 입력하세요'}
+                          onChange={(e) => {
+                            setSessionCode(e.target.value);
+                          }}
+                        />
                       </div>
 
                       <div>
                         <Typography id="modal-modal-button" variant="h6" component="h2">
-                          <Link to="/video">
-                            <Button color="secondary" onClick={onNavigateHandler}>
-                              세션 생성
-                            </Button>
+                          {/* 링크를 타고 들어갈 때 해당 링크로 DATA 전송 */}
+                          <Link
+                            to={`/video`}
+                            state={{
+                              makeSessionData: makeSessionData,
+                              sessionCode: sessionCode,
+                            }}
+                          >
+                            <Button color="secondary">세션 생성</Button>
                           </Link>
 
                           <Link to="/calendar ">

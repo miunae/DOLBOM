@@ -2,7 +2,7 @@ import './VideoRoomComponent.css';
 
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import OpenViduLayout from '../layout/openvidu-layout';
@@ -12,7 +12,7 @@ import DialogExtensionComponent from './dialog-extension/DialogExtension';
 import TextareaDec from './memo/TextareaDec';
 import StreamComponent from './stream/StreamComponent';
 import ToolbarComponent from './toolbar/ToolbarComponent';
-import WithRouter from './withRouter';
+// import VideoRoomData from './VideoRoomData';
 
 // import SideBar from '../features/sideBar';
 
@@ -522,13 +522,6 @@ class VideoRoomComponent extends Component {
   }
 
   render() {
-    // const client = useLocation();
-    // const [test, setTest] = React.useState(location.state?.clientData);
-
-    // console.log(test1);
-    console.log('location : ' + this.props.location);
-    // location.state.clientData
-
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
     var chatDisplay = { display: this.state.chatDisplay };
@@ -611,7 +604,8 @@ class VideoRoomComponent extends Component {
         headers: { 'Content-Type': 'application/json' },
       },
     );
-    console.log(response.data.conferenceId);
+
+    // console.log(response.data.conferenceId);
     return response.data.sessionId; // The sessionId
   }
 
@@ -626,4 +620,4 @@ class VideoRoomComponent extends Component {
     return response.data; // The token
   }
 }
-export default WithRouter(VideoRoomComponent);
+export default VideoRoomComponent;

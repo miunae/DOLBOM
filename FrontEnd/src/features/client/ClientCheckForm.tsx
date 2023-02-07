@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -15,10 +16,15 @@ export const ClientCheckForm = () => {
   const [code, setCode] = useState('');
   const [roomNumber, setRoomNumber] = useState('');
 
-  console.log(name);
-  // console.log(email);
-  // console.log(code);
-  // console.log(roomNumber);
+  // 데이터를 넘기기 편하게 묶는다.
+  const clientJoinData = {
+    name,
+    email,
+    code,
+    roomNumber,
+  };
+
+  // console.log(clientJoinData);
 
   return (
     <ThemeProvider theme={theme}>
@@ -76,9 +82,16 @@ export const ClientCheckForm = () => {
               value={roomNumber}
               onChange={(e) => setRoomNumber(e.target.value)}
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              세션 입장
-            </Button>
+            <Link
+              to={`/video`}
+              state={{
+                clientJoinData: clientJoinData,
+              }}
+            >
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                세션 입장
+              </Button>
+            </Link>
           </Box>
         </Box>
       </Container>

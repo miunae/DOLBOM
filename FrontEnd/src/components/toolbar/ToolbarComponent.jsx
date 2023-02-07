@@ -13,7 +13,7 @@ import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import ScreenShare from '@material-ui/icons/ScreenShare';
 import StopScreenShare from '@material-ui/icons/StopScreenShare';
-import SwitchVideoIcon from '@material-ui/icons/SwitchVideo';
+// import SwitchVideoIcon from '@material-ui/icons/SwitchVideo';
 import Videocam from '@material-ui/icons/Videocam';
 import VideocamOff from '@material-ui/icons/VideocamOff';
 import React, { Component } from 'react';
@@ -71,6 +71,8 @@ export default class ToolbarComponent extends Component {
   render() {
     const mySessionId = this.props.sessionId;
     const localUser = this.props.user;
+    // const test = { id: 1 };
+    // console.log(test);
 
     return (
       <AppBar className="toolbar" id="header">
