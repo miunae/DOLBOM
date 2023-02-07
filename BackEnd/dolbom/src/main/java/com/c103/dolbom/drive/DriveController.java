@@ -55,14 +55,21 @@ public class DriveController {
 
     //파일 및 폴더 보여주기
     @GetMapping("/folder")
-    public ResponseEntity<?> open(@RequestParam("id") Long memberClientId,@RequestParam("path") String path){
-        List<FileResponseDto> fileList = driveService.openFolder(memberClientId, path);
+    public ResponseEntity<?> getFolderList(@RequestParam("id") Long memberClientId,@RequestParam("path") String path){
+        List<String> fileList = driveService.getFolderList(memberClientId, path);
 
         return new ResponseEntity<>(fileList, HttpStatus.OK);
 
 
     }
+    @GetMapping("/file")
+    public ResponseEntity<?> getFileList(@RequestParam("id") Long memberClientId,@RequestParam("path") String path){
+        List<FileResponseDto> fileList = driveService.getFileList(memberClientId, path);
 
+        return new ResponseEntity<>(fileList, HttpStatus.OK);
+
+
+    }
     //파일을 폴더 안에 넣기 ->실제 파일 이동 후 db에서 path변경
     @PatchMapping("/file")
     public ResponseEntity<?> moveFile(@RequestParam("id") Long memberClientId,@RequestParam("path") String path,@RequestParam("file_id") Long fileId){

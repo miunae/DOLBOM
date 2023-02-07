@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class FileResponseDto {
-    private Long id;
-    private String name;
+    private Long fileId;
+    private String fileName;
 }
