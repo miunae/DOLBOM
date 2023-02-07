@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -136,8 +137,8 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Long getClientMemberId(Long client_id, Long member_id) {
-        MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
-        return memberClient.getId();
+        Optional<MemberClient> memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
+        return memberClient.get().getId();
     }
 
     private String randomString(){
