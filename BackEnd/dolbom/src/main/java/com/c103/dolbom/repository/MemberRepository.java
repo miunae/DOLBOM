@@ -4,9 +4,12 @@ import com.c103.dolbom.Entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
+import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmailAndPassword(String email, String password);
     Optional<Member> findByEmail(String email);
+    List<Member> findByName(String name);
+
 }
