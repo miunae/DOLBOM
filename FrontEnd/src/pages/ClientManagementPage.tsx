@@ -18,7 +18,6 @@ export const ClientManagementPage = () => {
     axios.get('http://localhost:3003/users/').then((res) => {
       setData(res.data);
     });
-    console.log('랜더링');
   }, []);
   return (
     <>

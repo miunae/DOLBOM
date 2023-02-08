@@ -3,10 +3,11 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
+import { useAppSelector } from '../../app/hooks';
 import { AddFileButton } from './AddFileButton';
 import { AddFolderButton } from './AddFolderButton';
+import dashboardSlice from './dashboardSlice';
 import { Folder } from './Folder';
-
 export const Dashboard = () => {
   // const { folderId } = useParams() as { folderId: string };
   const slash: number = useLocation().pathname.lastIndexOf('null');

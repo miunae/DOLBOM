@@ -10,7 +10,6 @@ export const AddFileButton = () => {
     e.preventDefault();
     const files = e.target.files[0];
     // setFilesToUpload(files);
-    console.log(files);
     const formData = new FormData();
     const data = {
       name: files.name,
@@ -27,7 +26,7 @@ export const AddFileButton = () => {
       url: URL,
       data: formData,
       headers: { 'Content-Type': 'multipart/form-data' },
-    }).then((res) => console.log(formData));
+    }).then((res) => console.log(res));
   };
   return (
     <>

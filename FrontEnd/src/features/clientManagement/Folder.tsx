@@ -8,7 +8,6 @@ interface Folderdata {
 export const Folder = ({ folderName }: Folderdata) => {
   const location = useLocation();
   const userParam = location.state.userParam;
-  console.log(userParam);
   const parentPath = location.state.parantPath;
   const currentFolder = parentPath + '_' + folderName;
   const navigate = useNavigate();

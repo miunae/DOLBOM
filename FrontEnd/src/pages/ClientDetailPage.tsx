@@ -8,7 +8,9 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
+import { useAppSelector } from '../app/hooks';
 import { Dashboard } from '../features/clientManagement/Dashboard';
+import { selectDashboard } from '../features/clientManagement/dashboardSlice';
 import { SideBar } from '../features/sideBar/SideBar';
 // 내담자 정보
 interface ClientCardProps {
@@ -18,13 +20,13 @@ interface ClientCardProps {
   id: number | string;
 }
 export const ClientDetailPage = () => {
+  const currentState = useAppSelector(selectDashboard);
+  const currentPath = currentState.path;
+  const currentName = currentState.name;
+  console.log(currentName);
+  console.log(currentPath);
   const { userName } = useParams();
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    axios.get('http://localhost:3003/defaultFolder/').then((res) => {
-      setData(res.data);
-    });
-  }, []);
+
   return (
     <>
       <Grid container spacing={2}>
