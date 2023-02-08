@@ -13,12 +13,13 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
-import { CalendPage } from './pages/CalendarPage';
+import { CalendarPage } from './pages/CalendarPage';
+import { ClientDetailPage } from './pages/ClientDetailPage';
+import { ClientManagementPage } from './pages/ClientManagementPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SignupPage } from './pages/SignupPage';
-import { UserProfilePage } from './pages/UserProfilePage';
 import { VideoPage } from './pages/VideoPage';
 const router = createBrowserRouter([
   {
@@ -44,15 +45,19 @@ const router = createBrowserRouter([
   },
   {
     path: '/calendar',
-    element: <CalendPage />,
+    element: <CalendarPage />,
   },
   {
     path: '/video',
     element: <VideoPage />,
   },
   {
-    path: '/userprofile',
-    element: <UserProfilePage />,
+    path: '/clientmanagement',
+    element: <ClientManagementPage />,
+  },
+  {
+    path: '/clientdetail/:userName/:folderPath/',
+    element: <ClientDetailPage />,
   },
 ]);
 
