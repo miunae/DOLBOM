@@ -156,7 +156,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 logger.info("CustomAuthorizationFilter : JWT 토큰이 잘못되었습니다. message : " + e.getMessage());
                 response.setContentType(APPLICATION_JSON_VALUE);
                 response.setCharacterEncoding("utf-8");
-                new ObjectMapper().writeValue(response.getWriter(), new ResponseEntity<String>("Access Token이 만료되었습니다.", HttpStatus.BAD_REQUEST));
+                new ObjectMapper().writeValue(response.getWriter(), new ResponseEntity<String>("인가필터 : " + e.getMessage(), HttpStatus.BAD_REQUEST));
             }
         }
 

@@ -4,7 +4,7 @@ import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Role;
 import com.c103.dolbom.client.dto.ClientJoinDto;
-import com.c103.dolbom.client.dto.ClientModifiedDto;
+import com.c103.dolbom.client.dto.ClientDto;
 import com.c103.dolbom.client.dto.ClientSimpleDto;
 import com.c103.dolbom.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -31,6 +32,7 @@ public class ClientServiceImpl implements ClientService{
                     .id(mc.getClient().getId())
                     .name(mc.getClient().getName())
                     .phone(mc.getClient().getPhone())
+                    .email(mc.getClient().getEmail())
                     .build();
             clientList.add(dto);
         }
@@ -49,6 +51,7 @@ public class ClientServiceImpl implements ClientService{
                     .id(member.getId())
                     .name(member.getName())
                     .phone(member.getPhone())
+                    .email(member.getEmail())
                     .build();
             clientDtoList.add(dto);
         }
@@ -56,7 +59,23 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Long joinClient(ClientJoinDto dto) {
+    public ClientDto getClient(Long clientId) {
+        Member clientEntity = memberRepository.findById(clientId).get();
+        ClientDto dto = ClientDto.builder()
+                .id(clientId)
+                .content(clientEntity.getContent())
+                .birth(clientEntity.getBirth())
+                .email(clientEntity.getEmail())
+                .name(clientEntity.getName())
+                .phone(clientEntity.getPhone())
+                .build();
+
+
+        return dto;
+    }
+
+    @Override
+    public Long joinClient(ClientJoinDto dto,Long counselorId) {
         //같은 이메일이 존재하다면 예외 발생
 
         Member entityMember = Member.builder()
@@ -69,7 +88,7 @@ public class ClientServiceImpl implements ClientService{
                 .build();
 
         Member client = memberRepository.save(entityMember);
-        Member member = memberRepository.findById(dto.getId()).get();
+        Member member = memberRepository.findById(counselorId).get();
 
         MemberClient memberClient = MemberClient.builder()
                 .member(member)
@@ -96,10 +115,10 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Long modifyClient(ClientModifiedDto dto) {
+    public Long modifyClient(ClientDto dto) {
         Member client = memberRepository.findById(dto.getId()).get();
 
-        client.changName(dto.getName());
+        client.changeName(dto.getName());
         client.changeBirth(dto.getBirth());
         client.changeContent(dto.getContent());
         client.changePhone(dto.getPhone());
@@ -114,6 +133,13 @@ public class ClientServiceImpl implements ClientService{
     public int deleteClient(Long clientId,Long memberId) {
         memberClientRepository.deleteByClientIdAndMemberId(clientId, memberId);
         return 1;
+    }
+
+    @Override
+    public Long getClientMemberId(Long client_id, Long member_id) {
+        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
+        Optional<MemberClient> memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
+        return memberClient.get().getId();
     }
 
     private String randomString(){

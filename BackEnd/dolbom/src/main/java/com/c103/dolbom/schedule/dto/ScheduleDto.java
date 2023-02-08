@@ -1,6 +1,8 @@
 package com.c103.dolbom.schedule.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
 import lombok.*;
 
 public class ScheduleDto {
@@ -14,6 +16,7 @@ public class ScheduleDto {
     @Getter
     @AllArgsConstructor
     @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Basic {
         private Long scheduleId;
         private Long counselorId;

@@ -13,6 +13,5 @@ public interface MemberClientRepository extends JpaRepository<MemberClient,Long>
     List<MemberClient> findByClientId(Long clientId);
     void deleteByClientId(Long clientId);
     void deleteByClientIdAndMemberId(Long clientId,Long memberId);
-
-    Optional<MemberClient> findByMemberIdAndClientId(Long member, Long client);
+    Optional<MemberClient> findByMemberIdAndClientId(Long memberId, Long clientId);
 }

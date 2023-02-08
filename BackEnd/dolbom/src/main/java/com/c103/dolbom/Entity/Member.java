@@ -38,7 +38,7 @@ public class Member extends BaseTimeEntity{
     public void changeContent(String content){
         this.content = content;
     }
-    public void changName(String name){
+    public void changeName(String name){
         this.name = name;
     }
     public void changeBirth(LocalDate birth){
