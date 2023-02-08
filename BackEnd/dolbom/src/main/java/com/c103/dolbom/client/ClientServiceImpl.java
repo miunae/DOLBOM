@@ -75,7 +75,7 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Long joinClient(ClientJoinDto dto) {
+    public Long joinClient(ClientJoinDto dto,Long counselorId) {
         //같은 이메일이 존재하다면 예외 발생
 
         Member entityMember = Member.builder()
@@ -88,7 +88,7 @@ public class ClientServiceImpl implements ClientService{
                 .build();
 
         Member client = memberRepository.save(entityMember);
-        Member member = memberRepository.findById(dto.getId()).get();
+        Member member = memberRepository.findById(counselorId).get();
 
         MemberClient memberClient = MemberClient.builder()
                 .member(member)
@@ -137,6 +137,7 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Long getClientMemberId(Long client_id, Long member_id) {
+        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
         Optional<MemberClient> memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
         return memberClient.get().getId();
     }
