@@ -48,6 +48,13 @@
       "end": "2023-02-07T19:00:00.000Z",
       "content": "ㄹㅇㄴㄹㄴㅇㄹ",
       "id": "o862e5A"
+    },
+    {
+      "title": "박현우",
+      "start": "2023-02-07T00:00:00.000Z",
+      "end": "2023-02-07T04:00:00.000Z",
+      "content": "나는 박현우다",
+      "id": "zet7UtJ"
     }
   ],
   "users": [
@@ -82,7 +89,7 @@
       "clientEmail": "angimozzi@naver.com"
     }
   ],
-  "defaultFolder": [
+  "null": [
     {
       "ud": 1,
       "folderName": "ddd",
@@ -118,6 +125,13 @@
     {
       "folderName": "fff",
       "path": "null/null",
+      "id": 10
+    }
+  ],
+  "DDD": [
+    {
+      "folderName": "fff",
+      "path": "null/DDD",
       "id": 10
     }
   ]

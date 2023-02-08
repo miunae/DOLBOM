@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useState } from 'react';
 type folderInfo = {
-  folderPath: string;
+  folderPath: string | null;
   update: () => void;
 };
 export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
@@ -22,8 +22,8 @@ export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
-      .post('http://localhost:3003/defaultFolder', {
-        folderName,
+      .post('http://i8c103.p.ssafy.io:8080/folder', {
+        member_client_id: folderName,
         path: folderPath,
       })
       .then((res) => console.log(res))
