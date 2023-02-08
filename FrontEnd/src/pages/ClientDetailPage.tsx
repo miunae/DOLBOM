@@ -1,3 +1,4 @@
+import { Divider } from '@mui/material';
 import { green } from '@mui/material/colors';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -47,6 +48,7 @@ export const ClientDetailPage = () => {
                 {userName}
               </Typography>
             </Box>
+            <Divider variant="middle" />
             <Dashboard />
           </Box>
         </Grid>
