@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -74,7 +75,7 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Long joinClient(ClientJoinDto dto) {
+    public Long joinClient(ClientJoinDto dto,Long counselorId) {
         //같은 이메일이 존재하다면 예외 발생
 
         Member entityMember = Member.builder()
@@ -87,7 +88,7 @@ public class ClientServiceImpl implements ClientService{
                 .build();
 
         Member client = memberRepository.save(entityMember);
-        Member member = memberRepository.findById(dto.getId()).get();
+        Member member = memberRepository.findById(counselorId).get();
 
         MemberClient memberClient = MemberClient.builder()
                 .member(member)
@@ -100,7 +101,6 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Long joinRegisteredClient(Long client_id, Long member_id) {
-        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
         Member client = memberRepository.findById(client_id).get();
         Member member = memberRepository.findById(member_id).get();
 
@@ -118,7 +118,7 @@ public class ClientServiceImpl implements ClientService{
     public Long modifyClient(ClientDto dto) {
         Member client = memberRepository.findById(dto.getId()).get();
 
-        client.changName(dto.getName());
+        client.changeName(dto.getName());
         client.changeBirth(dto.getBirth());
         client.changeContent(dto.getContent());
         client.changePhone(dto.getPhone());
@@ -133,6 +133,13 @@ public class ClientServiceImpl implements ClientService{
     public int deleteClient(Long clientId,Long memberId) {
         memberClientRepository.deleteByClientIdAndMemberId(clientId, memberId);
         return 1;
+    }
+
+    @Override
+    public Long getClientMemberId(Long client_id, Long member_id) {
+        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
+        Optional<MemberClient> memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
+        return memberClient.get().getId();
     }
 
     private String randomString(){

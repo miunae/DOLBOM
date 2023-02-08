@@ -162,11 +162,8 @@ public class ConferenceServiceImpl implements ConferenceService {
                     .build();
             driveRepository.save(entityDrive);
         }
-
         return 1;
     }
-
-
 
     private String extractPath(Long memberClientId, String path) {
         String[] pathArr = path.split("/");

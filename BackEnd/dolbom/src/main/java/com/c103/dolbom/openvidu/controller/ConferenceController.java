@@ -3,24 +3,25 @@ package com.c103.dolbom.openvidu.controller;
 import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.client.ClientService;
 import com.c103.dolbom.client.dto.ClientDto;
-import com.c103.dolbom.openvidu.dto.CreateSessionResDto;
-import com.c103.dolbom.openvidu.dto.JoinSessionDto;
-import com.c103.dolbom.openvidu.dto.MailDto;
-import com.c103.dolbom.openvidu.dto.MemoDto;
+import com.c103.dolbom.openvidu.dto.*;
 import com.c103.dolbom.openvidu.service.ConferenceService;
 import com.c103.dolbom.openvidu.service.MailService;
+import com.c103.dolbom.user.auth.PrincipalDetails;
 import io.openvidu.java.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Map;
 
 @CrossOrigin(origins = "*")
+@RequestMapping("api")
 @RestController
 public class ConferenceController {
 
@@ -41,6 +42,14 @@ public class ConferenceController {
 
     private OpenVidu openvidu;
 
+    private RecordingProperties recordingProperties = new RecordingProperties.Builder()
+            .outputMode(Recording.OutputMode.COMPOSED)
+            .resolution("640x480")
+            .frameRate(24)
+            .hasAudio(true)
+            .hasVideo(false)
+            .build();
+
     @PostConstruct
     public void init() {
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
@@ -50,17 +59,16 @@ public class ConferenceController {
      * Session 생성
      * @param params The CLIENT's id
      * @param params The Session properties
-     * @param id The COUNSELOR's id
      * @return The Session ID, The Conferece ID (JSON 형태)
      */
-    @PostMapping("/api/sessions/{id}")
-    public ResponseEntity<?> initializeSession(@RequestBody(required = false) Map<String, Object> params
-                                                    ,@PathVariable("id") String id)
+    @PostMapping("/sessions")
+    public ResponseEntity<?> initializeSession(@RequestBody(required = false) Map<String, Object> params,
+                                               @AuthenticationPrincipal PrincipalDetails principalDetails)
             throws OpenViduJavaClientException, OpenViduHttpException {
         Long clientId = Long.parseLong(String.valueOf(params.get("clientId")));
         String sessionId = (String)params.get("customSessionId");
         ClientDto client = clientService.getClient(clientId);
-        Long counselorId = Long.parseLong(String.valueOf(id));
+        Long counselorId = principalDetails.getMember().getId();
         // Conference DB 및 MemberConference DB에 저장
         Long conferenceId = conferenceService.createConference(counselorId,sessionId);
         MailDto mailDto = MailDto.builder()
@@ -75,6 +83,9 @@ public class ConferenceController {
             System.out.println("메일 발송 완료");
         }
         SessionProperties properties = SessionProperties.fromJson(params).build();
+//                .recordingMode(RecordingMode.ALWAYS)
+//                .defaultRecordingProperties(recordingProperties)
+//                .build();
         Session session = openvidu.createSession(properties);
         CreateSessionResDto dto = CreateSessionResDto.builder()
                 .conferenceId(conferenceId)
@@ -88,7 +99,7 @@ public class ConferenceController {
      * @param sessionId The Session in which to create the Connection
      * @return The Token associated to the Connection
      */
-    @PostMapping("/api/sessions/{sessionId}/connections")
+    @PostMapping("/sessions/{sessionId}/connections")
     public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
                                                    @RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
@@ -109,7 +120,7 @@ public class ConferenceController {
 
      * @return The Token associated to the Connection
      */
-    @PostMapping("/api/sessions/{sessionId}/client/connections")
+    @PostMapping("/connections/sessions/client/{sessionId}")
     public ResponseEntity<String> createClientConnection(@PathVariable("sessionId") String sessionId,
                                                          @RequestBody JoinSessionDto dto,
                                                          @RequestBody(required = false) Map<String, Object> params)
@@ -127,6 +138,7 @@ public class ConferenceController {
         ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
         Connection connection = session.createConnection(properties);
         System.out.println("Token: "+ connection.getToken());
+//        Recording recording = openvidu.startRecording(session.getSessionId(),recordingProperties);
         return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
     }
 
@@ -135,19 +147,29 @@ public class ConferenceController {
      * @param dto The Conferece ID, 메모 내용(textarea로 넘김)
      * @return OK, FAIL
      */
-    @PostMapping("/api/sessions/memo")
+    @PostMapping("/sessions/memo")
     public ResponseEntity<?> saveMemo(@RequestBody MemoDto dto) {
-        conferenceService.saveMemo(dto);
+        int res = conferenceService.saveMemo(dto);
+        if(res == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 회의 STT 파일 저장
-     * @param dto The Conferece ID, STT 음성 파일
+     * @param dto The Conferece ID, File Path
+     * @param file The STT record file --> 음성파일 1분 미만
      */
     @PostMapping("/api/sessions/stt")
-    public ResponseEntity<?> saveStt(@RequestBody MemoDto dto) {
+    public ResponseEntity<?> saveStt(@RequestPart MultipartFile file, @RequestBody SttDto dto) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    /**
+     * 녹음 시작
+     */
+
+
 
 }
