@@ -26,7 +26,6 @@ export const ClientDetailPage = () => {
   console.log(currentName);
   console.log(currentPath);
   const { userName } = useParams();
-
   return (
     <>
       <Grid container spacing={2}>
