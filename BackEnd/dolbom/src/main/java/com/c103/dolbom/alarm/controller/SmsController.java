@@ -2,7 +2,7 @@ package com.c103.dolbom.alarm.controller;
 
 import com.c103.dolbom.alarm.dto.Request;
 import com.c103.dolbom.alarm.dto.SmsResponse;
-import com.c103.dolbom.alarm.service.SmsService;
+import com.c103.dolbom.alarm.service.SmsServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,10 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class SmsController {
 
-    private final SmsService smsService;
+    private final SmsServiceImpl smsService;
 
     @PostMapping("/user/sms")
     public ResponseEntity<SmsResponse> test(@RequestBody Request request) throws UnsupportedEncodingException, NoSuchAlgorithmException, URISyntaxException, InvalidKeyException, JsonProcessingException {
-//            throws NoSuchAlgorithmException, URISyntaxException, UnsupportedEncodingException, InvalidKeyException, JsonProcessingException {
         SmsResponse data = smsService.sendSms(request.getRecipientPhoneNumber(), request.getContent());
         return ResponseEntity.ok().body(data);
     }
