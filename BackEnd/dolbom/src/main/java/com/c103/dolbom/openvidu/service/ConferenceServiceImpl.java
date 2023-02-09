@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +46,9 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Autowired
     DriveRepository driveRepository;
 
-    private final String absolutePath = "C:"+ File.separator+"test";
+    private final String absolutePath = File.separator+"home" + File.separator + "ubuntu" + File.separator + "Dolbom";
 
+    // 상담자가 방 생성
     @Override
     public Long createConference(Long memberId, String sessionId) {
         Member entityMember = memberRepository.findById(memberId).get();
@@ -120,6 +122,7 @@ public class ConferenceServiceImpl implements ConferenceService {
             // 디렉토리가 없다면 디렉토리 생성
             StringBuilder saveFolderBuilder = new StringBuilder();
             saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
+            System.out.println("1: saveFolderBuilder: "+ saveFolderBuilder.toString());
             File folder = new File(saveFolderBuilder.toString());
             if(!folder.exists()){//존재x
                 folder.mkdir();
@@ -137,7 +140,8 @@ public class ConferenceServiceImpl implements ConferenceService {
                 e.printStackTrace();
             }
             //
-            String savePath = extractPath(memberClientId,absolutePath);
+//            String savePath = extractPath(memberClientId,absolutePath);
+//            System.out.println("3: savePath: "+ savePath);
             //원래 파일 이름
             String originName = dateBuilder.toString()+"memo.txt";
             //파일의 저장이름으로 쓰일 uuid
@@ -148,7 +152,7 @@ public class ConferenceServiceImpl implements ConferenceService {
             SaveMemoDto saveMemoDto = SaveMemoDto.builder()
                     .originName(originName)
                     .savedName(savedName)
-                    .path(savePath+File.separator+savedName)
+                    .path(saveFolderBuilder.toString()+File.separator+savedName)
                     .saveTime(LocalDateTime.now())
                     .build();
             history.saveMemo(saveMemoDto);
@@ -165,16 +169,18 @@ public class ConferenceServiceImpl implements ConferenceService {
         return 1;
     }
 
-    private String extractPath(Long memberClientId, String path) {
-        String[] pathArr = path.split("/");
-        StringBuilder saveFolderBuilder = new StringBuilder();
-        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-
-        for(int i=0; i<pathArr.length;i++){
-            saveFolderBuilder.append(File.separator).append(pathArr[i]);
-        }
-        return saveFolderBuilder.toString();
-    }
+//    private String extractPath(Long memberClientId, String path) {
+//        String splitRegex = Pattern.quote(System.getProperty("file.separator"));
+//        String[] pathArr = path.split(splitRegex);
+//        StringBuilder saveFolderBuilder = new StringBuilder();
+//        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
+//
+//        for(int i=0; i<pathArr.length;i++){
+//            saveFolderBuilder.append(File.separator).append(pathArr[i]);
+//        }
+//        System.out.println("2: saveFolderBuilder: "+saveFolderBuilder.toString());
+//        return saveFolderBuilder.toString();
+//    }
 
 
 }
