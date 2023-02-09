@@ -12,6 +12,7 @@ public class DolbomApplication {
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(DolbomApplication.class, args);
 	}
