@@ -1,11 +1,8 @@
 import { Divider } from '@mui/material';
-import { green } from '@mui/material/colors';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../app/hooks';
@@ -13,12 +10,6 @@ import { Dashboard } from '../features/clientManagement/Dashboard';
 import { selectDashboard } from '../features/clientManagement/dashboardSlice';
 import { SideBar } from '../features/sideBar/SideBar';
 // 내담자 정보
-interface ClientCardProps {
-  userName: string;
-  userEmail: string;
-  userNumber: string;
-  id: number | string;
-}
 export const ClientDetailPage = () => {
   const currentState = useAppSelector(selectDashboard);
   const currentPath = currentState.path;

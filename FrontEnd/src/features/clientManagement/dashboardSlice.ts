@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import type { RootState } from '../../app/store';
 interface FolderState {
@@ -15,7 +15,10 @@ const dashBoardSlice = createSlice({
   name: 'dashboard',
   initialState,
   reducers: {
-    openAnotherFolder: (state: any, action) => {
+    openAnotherFolder: (
+      state: any,
+      action: PayloadAction<{ name: string | undefined; path: string }>,
+    ) => {
       state.path = action.payload.path;
       state.name = action.payload.name;
     },

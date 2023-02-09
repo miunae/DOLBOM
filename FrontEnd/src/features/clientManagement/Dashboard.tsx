@@ -1,42 +1,50 @@
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { Grid } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
 import { AddFileButton } from './AddFileButton';
 import { AddFolderButton } from './AddFolderButton';
-import dashboardSlice from './dashboardSlice';
+import { BackButton } from './BackButton';
+import { selectDashboard } from './dashboardSlice';
 import { Folder } from './Folder';
 export const Dashboard = () => {
   // const { folderId } = useParams() as { folderId: string };
-  const slash: number = useLocation().pathname.lastIndexOf('null');
-  const folderName = useLocation().pathname.substring(slash);
-  const location = useLocation();
-  const userParam = location.state.userParam;
-  const parentPath = location.state.parantPath;
-  const currentFolder = parentPath + '/' + folderName;
+  // const slash: number = useLocation().pathname.lastIndexOf('null');
+  // const folderName = useLocation().pathname.substring(slash);
+  // const location = useLocation();
+  // const userParam = location.state.userParam;
+  // const parentPath = location.state.parantPath;
+  // const currentFolder = parentPath + '/' + folderName;
+  const currentState = useAppSelector(selectDashboard);
+  const currentPath = currentState.path;
+  const currentName = currentState.name;
+  console.log(currentPath);
   const [isUpdate, setIsUpdate] = useState(false);
   const update = () => {
     setIsUpdate(!isUpdate);
   };
 
   useEffect(() => {
-    axios.get('http://localhost:3003/defaultFolder/').then((res) => {
+    axios.get(`http://localhost:3003/${currentPath}/`).then((res) => {
       setData(res.data);
     });
-  }, [isUpdate]);
+  }, [isUpdate, currentName]);
   const [data, setData] = useState([]);
   return (
     <>
-      <h1>{folderName}</h1>
-      <AddFolderButton folderPath={currentFolder} update={update} />
+      <h1>{currentName}</h1>
+      <AddFolderButton folderPath={currentPath} update={update} />
       <AddFileButton />
-      {data.map((prop: any, index) => (
-        <Grid item xs={6} key={index}>
-          <Folder key={index} folderName={prop.folderName} />
-        </Grid>
-      ))}
+      <BackButton />
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+        {data.map((prop: any, index) => (
+          <Grid item xs={2} key={index}>
+            <Folder key={index} folderName={prop.folderName} />
+          </Grid>
+        ))}
+      </Grid>
     </>
   );
 };
