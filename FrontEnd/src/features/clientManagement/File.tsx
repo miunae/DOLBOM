@@ -1,9 +1,12 @@
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { Link } from 'react-router-dom';
-export const File = ({ fileName }: string) => {
+interface Filedata {
+  fileName: string | undefined;
+}
+export const File = ({ fileName }: Filedata) => {
   return (
     <>
-      <Link href="/">
+      <Link to="/">
         {fileName}
         <InsertDriveFileIcon />
       </Link>
