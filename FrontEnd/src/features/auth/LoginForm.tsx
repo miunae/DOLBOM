@@ -28,26 +28,6 @@ type UserData = {
   username: string;
 };
 
-function Copyright({
-  sx,
-}: {
-  sx: {
-    mt: number;
-    mb: number;
-  };
-}) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...sx}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
 const theme = createTheme();
 
 export const LoginForm = () => {
@@ -136,7 +116,6 @@ export const LoginForm = () => {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );

@@ -46,7 +46,6 @@ const PwdInput = ({
         type="password"
         helperText={errorMessage}
         fullWidth
-        variant="standard"
         onChange={(e) => {
           setPwdLength(e.target.value.length);
           setPwdEmpty(!!e.target.value.length);
@@ -62,7 +61,6 @@ const PwdInput = ({
         type="password"
         helperText=""
         fullWidth
-        variant="standard"
         onChange={(e) => {
           setConfirmPwd(e.target.value);
           pwdvalidateCheck(e.target.value);
