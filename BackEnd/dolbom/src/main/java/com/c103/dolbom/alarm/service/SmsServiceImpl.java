@@ -56,7 +56,7 @@ public class SmsServiceImpl implements SmsService {
 
         // 1. 당일예약 찾기
         String curTime = LocalDateTime.now().toString();
-        List<Schedule> scheduleByTime = scheduleRepository.getScheduleByTime(curTime, 48);
+        List<Schedule> scheduleByTime = scheduleRepository.getScheduleByTime(curTime, 24);
 
         // 2. 관계 id로 유저 찾기
         Map<Long, Schedule> relationIdMap = new HashMap<>();
