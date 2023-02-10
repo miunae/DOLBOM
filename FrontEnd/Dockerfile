@@ -3,7 +3,6 @@ WORKDIR /var/jenkins_home/workspace/deploy/FrontEnd
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm cache clean --force
 RUN npm run build
 FROM nginx:stable-alpine as production-stage
 
