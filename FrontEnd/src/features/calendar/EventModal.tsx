@@ -74,7 +74,7 @@ export const EventModal = ({
         .catch((e) => console.log(e));
       // setClient(eventInfos?.event?.title);
     }
-  }, [eventInfos]);
+  }, [eventInfos, isEditCard]);
 
   //evet 추가 함수
   const addEvent = () => {
