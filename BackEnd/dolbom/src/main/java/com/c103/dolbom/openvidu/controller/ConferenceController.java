@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 //@CrossOrigin(origins = "*")
-@RequestMapping("api")
+@RequestMapping
 @RestController
 public class ConferenceController {
 
@@ -40,7 +40,7 @@ public class ConferenceController {
      * @param params The Session properties
      * @return The Session ID, The Conferece ID (JSON 형태)
      */
-    @PostMapping("/conference")
+    @PostMapping("/api/conference")
     public ResponseEntity<?> initializeSession(@RequestBody(required = false) Map<String, Object> params,
                                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Long clientId = Long.parseLong(String.valueOf(params.get("clientId")));
@@ -84,7 +84,7 @@ public class ConferenceController {
 
      * @return The Token associated to the Connection
      */
-    @PostMapping("/connections/conference/client/{sessionId}")
+    @PostMapping("/api/connections/conference/client/{sessionId}")
     public ResponseEntity<String> createClientConnection(@PathVariable("sessionId") String sessionId,
                                                          @RequestBody JoinSessionDto dto,
                                                          @RequestBody(required = false) Map<String, Object> params) {
@@ -103,7 +103,7 @@ public class ConferenceController {
      * @param dto The Conferece ID, 메모 내용(textarea로 넘김)
      * @return OK, FAIL
      */
-    @PostMapping("/conference/memo")
+    @PostMapping("/api/conference/memo")
     public ResponseEntity<?> saveMemo(@RequestBody MemoDto dto) {
         int res = conferenceService.saveMemo(dto);
         if(res == 0) {
@@ -111,21 +111,5 @@ public class ConferenceController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    /**
-     * 회의 STT 파일 저장
-     * @param dto The Conferece ID, File Path
-     * @param file The STT record file --> 음성파일 1분 미만
-     */
-    @PostMapping("/api/conference/stt")
-    public ResponseEntity<?> saveStt(@RequestPart MultipartFile file, @RequestBody SttDto dto) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    /**
-     * 녹음 시작
-     */
-
-
 
 }

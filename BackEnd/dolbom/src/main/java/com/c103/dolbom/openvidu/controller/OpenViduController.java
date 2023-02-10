@@ -4,18 +4,21 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.c103.dolbom.openvidu.service.OpenviduService;
+import com.c103.dolbom.user.auth.PrincipalDetails;
 import io.openvidu.java.client.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 public class OpenViduController {
+
+    private final OpenviduService openviduService;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -24,14 +27,6 @@ public class OpenViduController {
     private String OPENVIDU_SECRET;
 
     private OpenVidu openvidu;
-
-    private RecordingProperties recordingProperties = new RecordingProperties.Builder()
-            .outputMode(Recording.OutputMode.COMPOSED)
-            .resolution("640x480")
-            .frameRate(24)
-            .hasAudio(true)
-            .hasVideo(false)
-            .build();
 
 
     @PostConstruct
@@ -47,9 +42,6 @@ public class OpenViduController {
     public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
             throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(params).build();
-        //                .recordingMode(RecordingMode.ALWAYS)
-//                .defaultRecordingProperties(recordingProperties)
-//                .build();
         Session session = openvidu.createSession(properties);
         return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
     }
@@ -71,5 +63,23 @@ public class OpenViduController {
         Connection connection = session.createConnection(properties);
         return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
     }
+
+
+//녹음 시작
+    @GetMapping("/openvidu/api/recordings/start")
+    public ResponseEntity<?> startRecording(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String sessionId = String.valueOf(principalDetails.getMember().getId());
+        return openviduService.startRecording(sessionId);
+    }
+    //녹음 중지
+    @GetMapping("/openvidu/api/recordings/stop/{conferenceId}")
+    public ResponseEntity<?> stopRecording(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @PathVariable("conferenceId")Long conferenceId) {
+        String sessionId = String.valueOf(principalDetails.getMember().getId());
+        return openviduService.stopRecording(sessionId, conferenceId);
+    }
+
+
+
 
 }
