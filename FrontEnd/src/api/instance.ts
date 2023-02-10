@@ -6,7 +6,7 @@ import { clearUser } from '../features/auth/userSlice';
 
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-export const BASE_URL = 'http://localhost:8080/api';
+export const BASE_URL = 'http://i8c103.p.ssafy.io:8080/api';
 
 export const axiosService = axios.create({ baseURL: BASE_URL });
 
