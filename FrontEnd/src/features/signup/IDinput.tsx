@@ -22,7 +22,7 @@ const IDinput = ({
     if (id.length <= 0) {
       window.alert('이메일은 필수 입력항목입니다.');
     } else {
-      axios.get(`${import.meta.env.VITE_URL}api/user/email/${id}`).then((res) => {
+      axios.get(`${import.meta.env.VITE_URL}/api/user/email/${id}`).then((res) => {
         if (res.data.isExist) {
           setDupCheck(true);
           setIdHelperText('중복이메일 입니다.');
