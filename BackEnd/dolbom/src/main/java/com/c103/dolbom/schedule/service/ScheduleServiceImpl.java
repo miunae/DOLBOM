@@ -1,10 +1,14 @@
 package com.c103.dolbom.schedule.service;
 
+import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Schedule;
+import com.c103.dolbom.alarm.dto.AlarmMemberInterface;
 import com.c103.dolbom.client.MemberClientRepository;
+import com.c103.dolbom.schedule.dto.GetSchedule;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.repository.ScheduleRepository;
+import com.c103.dolbom.user.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +16,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
@@ -23,6 +28,40 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     private final MemberClientRepository memberClientRepository;
+
+    @Override
+    public List<ScheduleDto.Basic> getScheduleListByPeriod(Member member, String start, String end) {
+
+        Map<Long, List<ScheduleDto.Basic>> map = new HashMap<>();
+
+        List<GetSchedule> scheduleListByPeriod
+                = scheduleRepository.getScheduleListByPeriod(member.getId(), start, end);
+
+
+        System.out.println(scheduleListByPeriod.size());
+        for(GetSchedule gs : scheduleListByPeriod) {
+            System.out.println(gs.getScheduleId() + " : " + gs.getCounselorId() + " : " + gs.getClientId());
+            ScheduleDto.Basic sb = ScheduleDto.Basic.builder()
+                    .scheduleId(gs.getScheduleId())
+                    .clientId(gs.getClientId())
+                    .counselorId(gs.getCounselorId())
+                    .startTime(gs.getStartTime())
+                    .endTime(gs.getEndTime())
+                    .content(gs.getContent())
+                    .build();
+
+            if(!map.containsKey(gs.getClientId())) {
+                map.put(gs.getClientId(), new ArrayList<ScheduleDto.Basic>());
+            }
+
+            System.out.println(sb.getScheduleId() + " : " + sb.getCounselorId() + " : " + sb.getClientId());
+            map.get(gs.getClientId()).add(sb);
+        }
+
+        System.out.println(map.size());
+        return null;
+    }
+
 
     @Override
     public ScheduleDto.Detail getScheduleDetail(long scheduleId) {
