@@ -79,11 +79,16 @@ export const EventModal = ({
   //evet 추가 함수
   const addEvent = () => {
     const calendarApi = eventInfos.view.calendar;
-
+    const utcStartTime = new Date(
+      `${eventInfos.startStr.substr(0, 10)} ${startTime}`,
+    ).toISOString();
+    const utcEndTime = new Date(
+      `${eventInfos.startStr.substr(0, 10)} ${endTime}`,
+    ).toISOString();
     const data = {
       title: client == null ? '제목없음' : client,
-      start: new Date(`${eventInfos.startStr.substr(0, 10)} ${startTime}`).toISOString(),
-      end: new Date(`${eventInfos.startStr.substr(0, 10)} ${endTime}`).toISOString(),
+      start: utcStartTime,
+      end: utcEndTime,
       content,
     };
     calendarApi.addEvent(data);
