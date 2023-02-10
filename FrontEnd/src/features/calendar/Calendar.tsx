@@ -11,6 +11,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
+import { axiosService } from '../../api/instance';
 import { useModalControl } from '../../hooks/useModalControl';
 import { EventModal } from './EventModal';
 
@@ -33,7 +34,7 @@ export const Calendar = () => {
     });
   };
   useEffect(() => {
-    axios.get('http://localhost:3003/calendarEvents/').then((res) => {
+    axiosService.get('/schedule/month/2').then((res) => {
       setEvents(res.data);
     });
     console.log('랜더링');
@@ -48,9 +49,9 @@ export const Calendar = () => {
     modalControl.handleOpen();
   };
   //이벤트 클릭 시
-  const handleEventClick = (selectInfo: any) => {
+  const handleEventClick = (clickInfo: any) => {
     setIsEditCard(true);
-    setEventInfos(selectInfo);
+    setEventInfos(clickInfo);
     modalControl.handleOpen();
   };
   return (

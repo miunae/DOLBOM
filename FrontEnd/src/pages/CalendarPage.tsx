@@ -1,3 +1,4 @@
+import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
@@ -11,8 +12,10 @@ export const CalendarPage = () => {
           <SideBar />
         </Grid>
         <Grid item xs={10}>
-          <h1>CalendPage</h1>
-          <Calendar />
+          <Container fixed maxWidth="xl">
+            <h1>CalendPage</h1>
+            <Calendar />
+          </Container>
         </Grid>
       </Grid>
     </>

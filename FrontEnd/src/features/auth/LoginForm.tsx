@@ -15,11 +15,11 @@ import { useMutation } from '@tanstack/react-query';
 import jwtDecode from 'jwt-decode';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useAppDispatch } from '../../app/hooks';
 import { login } from './authApi';
 import { setUser } from './userSlice';
-
 type UserData = {
   exp: number;
   id: string;
@@ -44,7 +44,6 @@ export const LoginForm = () => {
 
       sessionStorage.setItem('access-token', 'Bearer ' + accessToken);
       sessionStorage.setItem('refresh-token', 'Bearer ' + refreshToken);
-
       navigate('/calendar');
     },
     onError: () => {

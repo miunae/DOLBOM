@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
 interface FolderState {
   path: null | string;
+  memberClientId: number;
   name: string;
 }
 
 const initialState: FolderState = {
   path: null,
+  memberClientId: 0,
   name: 'Root',
 };
 
@@ -17,9 +19,16 @@ const dashBoardSlice = createSlice({
   reducers: {
     openAnotherFolder: (
       state: any,
-      action: PayloadAction<{ name: string | undefined; path: string }>,
+      action: PayloadAction<{
+        name: string;
+        memberClientId?: number;
+        path: string;
+      }>,
     ) => {
       state.path = action.payload.path;
+      if (action.payload.memberClientId) {
+        state.memberClientId = action.payload.memberClientId;
+      }
       state.name = action.payload.name;
     },
   },

@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { openAnotherFolder, selectDashboard } from './dashboardSlice';
 interface Folderdata {
-  folderName: string | undefined;
+  folderName: string;
 }
 export const Folder = ({ folderName }: Folderdata) => {
   const currentState = useAppSelector(selectDashboard);

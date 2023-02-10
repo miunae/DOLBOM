@@ -7,19 +7,44 @@ import CardContent from '@mui/material/CardContent';
 import { green } from '@mui/material/colors';
 import Fab from '@mui/material/Fab';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { axiosService } from '../../api/instance';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { openAnotherFolder, selectDashboard } from './dashboardSlice';
 interface ClientCardProps {
+  clientId: number;
   userName: string;
   userEmail: string;
   userNumber: string;
 }
-export const ClientCard = ({ userName, userEmail, userNumber }: ClientCardProps) => {
+export const ClientCard = ({
+  clientId,
+  userName,
+  userEmail,
+  userNumber,
+}: ClientCardProps) => {
+  const dispatch = useAppDispatch();
+  const currentState = useAppSelector(selectDashboard);
   const navigate = useNavigate();
+  const accessToken = sessionStorage.getItem('access-token');
+  const refreshToken = sessionStorage.getItem('refresh-token');
+  const header = {
+    'access-token': accessToken ? accessToken : '',
+    'refresh-token': refreshToken ? refreshToken : '',
+  };
+  const [memberClientId, setMemberClientId] = useState(0);
   const goToDetail = () => {
+    axiosService
+      .get(`/client/${clientId}`, { headers: header })
+      .then((res) => setMemberClientId(parseInt(res.toString())));
+    dispatch(openAnotherFolder({ name: userName, memberClientId, path: 'null' }));
     navigate(`/clientdetail/${userName}/null`, {
       state: {
         userParam: userName,
         parantPath: 'null',
+        memberClientId,
       },
     });
   };

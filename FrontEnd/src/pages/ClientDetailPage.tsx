@@ -1,9 +1,10 @@
 import { Divider } from '@mui/material';
+import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useAppSelector } from '../app/hooks';
 import { Dashboard } from '../features/clientManagement/Dashboard';
@@ -24,25 +25,27 @@ export const ClientDetailPage = () => {
           <SideBar />
         </Grid>
         <Grid item xs={10}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              flexDirection: 'column',
-              p: 1,
-              m: 1,
-              bgcolor: 'background.paper',
-              borderRadius: 1,
-            }}
-          >
-            <Box sx={{ display: 'flex' }}>
-              <Typography variant="h2" component="div">
-                {userName}
-              </Typography>
+          <Container fixed maxWidth="xl">
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                flexDirection: 'column',
+                p: 1,
+                m: 1,
+                bgcolor: 'background.paper',
+                borderRadius: 1,
+              }}
+            >
+              <Box sx={{ display: 'flex' }}>
+                <Typography variant="h2" component="div">
+                  {userName}
+                </Typography>
+              </Box>
+              <Divider variant="middle" />
+              <Dashboard />
             </Box>
-            <Divider variant="middle" />
-            <Dashboard />
-          </Box>
+          </Container>
         </Grid>
       </Grid>
     </>

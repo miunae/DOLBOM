@@ -4,18 +4,32 @@ import axios from 'axios';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+import { axiosService } from '../api/instance';
 import { ClientCard } from '../features/clientManagement/ClientCard';
 import { SideBar } from '../features/sideBar/SideBar';
 interface ClientCardProps {
-  userName: string;
-  userEmail: string;
-  userNumber: string;
   id: number | string;
+  clientId: number;
+  name: string;
+  phone: string;
+  email: string;
 }
+type CustomHeaders = {
+  'access-token': string;
+  'refresh-token': string;
+};
 export const ClientManagementPage = () => {
   const [data, setData] = useState([]);
+  const accessToken = sessionStorage.getItem('access-token');
+  const refreshToken = sessionStorage.getItem('refresh-token');
+  const header: CustomHeaders = {
+    'access-token': accessToken ? accessToken : '',
+    'refresh-token': refreshToken ? refreshToken : '',
+  };
   useEffect(() => {
-    axios.get('http://localhost:3003/users/').then((res) => {
+    console.log(header);
+    axiosService.get('/client/', { headers: header }).then((res) => {
+      console.log(res);
       setData(res.data);
     });
   }, []);
@@ -33,9 +47,10 @@ export const ClientManagementPage = () => {
                 <Grid item xs={6} key={index}>
                   <ClientCard
                     key={prop.id}
-                    userName={prop.userName}
-                    userEmail={prop.userEmail}
-                    userNumber={prop.userNumber}
+                    clientId={prop.clientId}
+                    userName={prop.name}
+                    userEmail={prop.email}
+                    userNumber={prop.phone}
                   />
                 </Grid>
               ))}
