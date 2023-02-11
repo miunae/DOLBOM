@@ -5,26 +5,44 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { access } from 'fs';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const theme = createTheme();
 
 export const ClientCheckForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
-  const [roomNumber, setRoomNumber] = useState('');
+  const [clientSessionId, setClientSessionId] = useState('');
+  const [conferenceId, setConferenceId] = useState('');
 
-  // 데이터를 넘기기 편하게 묶는다.
-  const clientJoinData = {
-    name,
-    email,
-    code,
-    roomNumber,
-  };
+  // (27) 선택된 내담자들에 대한 정보를 post 한다.
+  function sendToClientinfo() {
+    const body = JSON.stringify({
+      email: email,
+      sessionid: clientSessionId,
+      conferenceId: conferenceId,
+    });
+    axios
+      .post('http://localhost:8080/api/conference/client', body, {
+        headers: {
+          'Content-Type': 'application/json',
+          'access-token': sessionStorage.getItem('access-token'),
+          'refresh-token': sessionStorage.getItem('refresh-token'),
+        },
+      })
+      .then(function (res) {
+        console.log(res + '고객정보 전달 성공!');
+      })
+      .catch(function (res) {
+        console.log(res + '고객정보 전달 실패!');
+      }); // 요청 응답값에 따라서, 입장 허가와 불허를 판단한다.
+  }
+  // sessionStorage.setItem('access-token', 'Bearer ' + accessToken);
 
-  // console.log(clientJoinData);
+  sessionStorage.setItem('sessionId', clientSessionId);
 
   return (
     <ThemeProvider theme={theme}>
@@ -66,29 +84,29 @@ export const ClientCheckForm = () => {
               margin="normal"
               required
               fullWidth
-              name="code"
+              name="clientSessionId"
               label="코드"
-              type="code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              value={clientSessionId}
+              onChange={(e) => setClientSessionId(e.target.value)}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="number"
+              name="conferenceId"
               label="방번호"
               type="number"
-              value={roomNumber}
-              onChange={(e) => setRoomNumber(e.target.value)}
+              value={conferenceId}
+              onChange={(e) => setConferenceId(e.target.value)}
             />
-            <Link
-              to={`/video`}
-              state={{
-                clientJoinData: clientJoinData,
-              }}
-            >
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Link to={`/video/${clientSessionId}`}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={sendToClientinfo}
+              >
                 세션 입장
               </Button>
             </Link>

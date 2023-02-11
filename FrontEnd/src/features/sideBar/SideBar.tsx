@@ -18,7 +18,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Modal from '@mui/material/Modal';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { access } from 'fs';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -54,20 +55,64 @@ export const SideBar = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // makeSessionData (세션에서 client 분리를 위한 데이터)
-  const [makeSessionData, setMakeSessionData] = useState([]);
+  // user에 대한 고객 데이터 정보를 받는다.
+  const [clientData, setClientData] = useState([]);
 
-  // input으로 입력한 세션 코드를 저장해주기 위한 state
-  const [sessionCode, setSessionCode] = useState('');
+  // user가 selected한 client의 id를 담는다.
+  const [selectedClientId, setSelectedClientId] = useState(0);
 
-  // 해당 상담자에 대한 내담자 리스트를 요청을 받기 위한 axios
-  async function getClientData() {
-    try {
-      const response = await axios.get('http://localhost:5000/api/client/1'); // client/{id} 를 통해 호출
-      setMakeSessionData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  // selected한 client에 대한 useState를 위해서 (e type 설정하기)
+  const handleSelect = (e) => {
+    setSelectedClientId(e.target.value);
+  };
+
+  // console.log(sessionStorage.getItem('access-token')) access-token 가져오는 코드
+
+  const accessToken = sessionStorage.getItem('access-token');
+  const refreshToken = sessionStorage.getItem('refresh-token');
+
+  // (25) user에 대한 client를 받기 위한 axios 요청, header에 토큰을 보내고 back에서 user에 대한 client를 받는다.
+  function getClientData() {
+    axios
+      .get('http://localhost:8080/api/client', {
+        headers: {
+          'access-token': accessToken,
+          'refresh-token': refreshToken,
+        },
+      })
+      .then((response) => setClientData(response.data));
+  }
+
+  console.log(clientData); // client all data 확인
+  console.log('selected: ' + selectedClientId); // selected 된 client의 id 확인
+
+  // (26) 세션 생성을 누르고 back에 post 요청. sessionid랑 conf id 2개 받아서 storage에 저장
+  function sendToSelected() {
+    const body = JSON.stringify({ clientId: selectedClientId });
+    axios
+      .post('http://localhost:8080/api/conference', body, {
+        headers: {
+          'Content-Type': 'application/json',
+          'access-token': accessToken,
+          'refresh-token': refreshToken,
+        },
+      })
+      .then(function (res) {
+        sessionStorage.setItem('sessionId', res.data.sessionId), // 함수형으로 2개 전달
+          sessionStorage.setItem('conferenceId', res.data.conferenceId);
+      });
+  }
+
+  // (29) 세션 생성 누를때, post 요청 한개 더 why? 하나는 storage에 id 저장, 하나는 userid 로 설정, 이거 무조건 sessionid.
+  function OpenVidu() {
+    const body = JSON.stringify({ customSessionId: sessionStorage.getItem('sessionId') });
+    axios.post('http://localhost:8080/api/sessions', body, {
+      headers: {
+        'Content-Type': 'application/json',
+        'access-token': accessToken,
+        'refresh-token': refreshToken,
+      },
+    });
   }
 
   return (
@@ -127,8 +172,8 @@ export const SideBar = () => {
                 <div>
                   <Button
                     onClick={() => {
-                      handleOpen(); // 모달 열리는 것
-                      getClientData(); // 모달 열릴 때 axios로 counselor에 해당하는 client들 호출
+                      handleOpen(); // 모달 여는 함수
+                      getClientData(); // 모달 열릴 때 axios로 counselor에 해당하는 client 호출
                     }}
                   >
                     Video
@@ -144,42 +189,33 @@ export const SideBar = () => {
                         내담자 정보 입력 및 세션 생성
                       </Typography>
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        내담자 선택 :
-                        <select>
-                          {makeSessionData.map((it, idx) => (
+                        내담자 선택 :{/* id, name, phone type 설정 해줘야함  */}
+                        <select onChange={handleSelect}>
+                          {clientData.map((it, idx) => (
                             <option key={idx} value={it.id}>
                               {it.name} : {it.phone}
                             </option>
                           ))}
                         </select>
                       </Typography>
-                      <div>
-                        <Typography id="modal-modal-session" sx={{ mt: 2 }}>
-                          코드
-                        </Typography>
-                        <input
-                          defaultValue={'정수를 입력하세요'}
-                          onChange={(e) => {
-                            setSessionCode(e.target.value);
-                          }}
-                        />
-                      </div>
 
                       <div>
                         <Typography id="modal-modal-button" variant="h6" component="h2">
-                          {/* 링크를 타고 들어갈 때 해당 링크로 DATA 전송 */}
-                          <Link
-                            to={`/video`}
-                            state={{
-                              makeSessionData: makeSessionData,
-                              sessionCode: sessionCode,
-                            }}
-                          >
-                            <Button color="secondary">세션 생성</Button>
+                          {/* 링크 타고 들어 갈때 Video number는 sessionID로 한다.  */}
+                          <Link to={`/video/${sessionStorage.getItem('sessionId')}`}>
+                            <Button
+                              color="secondary"
+                              onClick={() => {
+                                sendToSelected(); // selected된 데이터 넘기고
+                                OpenVidu(); // openvidu할 때 쓸 id 넘긴다.
+                              }}
+                            >
+                              세션 생성
+                            </Button>
                           </Link>
 
                           <Link to="/calendar ">
-                            <button onClick={handleClose}>뒤로가기</button>
+                            <button>뒤로가기</button>
                           </Link>
                         </Typography>
                       </div>

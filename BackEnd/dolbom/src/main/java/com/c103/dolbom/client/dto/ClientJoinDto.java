@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 @Getter
 public class ClientJoinDto{
-    private Long id;
     private String name;
     private String email;
     private String phone;

@@ -2,8 +2,7 @@ import './VideoRoomComponent.css';
 
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
-import React, { Component, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 
 import OpenViduLayout from '../layout/openvidu-layout';
 import UserModel from '../models/user-model';
@@ -12,15 +11,25 @@ import DialogExtensionComponent from './dialog-extension/DialogExtension';
 import TextareaDec from './memo/TextareaDec';
 import StreamComponent from './stream/StreamComponent';
 import ToolbarComponent from './toolbar/ToolbarComponent';
-// import VideoRoomData from './VideoRoomData';
 
-// import SideBar from '../features/sideBar';
+// console.log(this.props);
 
+// makeSessionData = makeSessionData;
+
+// console.log(makeSessionData);
 var localUser = new UserModel();
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
 
-class VideoRoomComponent extends Component {
+// function Hello(props) {
+//   const APPLICATION_SERVER_URL =
+//     process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/{props.id}';
+// }
+
+const APPLICATION_SERVER_URL =
+  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/';
+
+class VideoRoomComponent extends React.Component {
+  // let test = this.props.makeSessionData
+  // console.log(test)
   constructor(props) {
     super(props);
     this.hasBeenUpdated = false;
@@ -39,6 +48,7 @@ class VideoRoomComponent extends Component {
       subscribers: [],
       chatDisplay: 'none',
       currentVideoDevice: undefined,
+      conferenceId: undefined,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -56,6 +66,13 @@ class VideoRoomComponent extends Component {
     this.toggleChat = this.toggleChat.bind(this);
     this.checkNotification = this.checkNotification.bind(this);
     this.checkSize = this.checkSize.bind(this);
+    this.updateConferenceId = this.updateConferenceId.bind(this);
+  }
+
+  updateConferenceId() {
+    this.setState({
+      conferenceId: this.conferenceId,
+    });
   }
 
   componentDidMount() {
@@ -80,6 +97,7 @@ class VideoRoomComponent extends Component {
     window.addEventListener('resize', this.updateLayout);
     window.addEventListener('resize', this.checkSize);
     this.joinSession();
+    this.updateConferenceId();
   }
 
   componentWillUnmount() {
@@ -89,7 +107,7 @@ class VideoRoomComponent extends Component {
     this.leaveSession();
   }
 
-  onbeforeunload(event) {
+  onbeforeunload() {
     this.leaveSession();
   }
 
@@ -521,6 +539,8 @@ class VideoRoomComponent extends Component {
     }
   }
 
+  // console.log(sessionId)
+
   render() {
     const mySessionId = this.state.mySessionId;
     const localUser = this.state.localUser;
@@ -569,7 +589,9 @@ class VideoRoomComponent extends Component {
             </div>
           )}
           <div>
+            {/* if (sessionStorage.getItem('refresh-token')) return <TextareaDec /> */}
             <TextareaDec />
+            {/* console.log(sessionStorage.getItem('refresh-token')) */}
           </div>
         </div>
       </div>
@@ -591,23 +613,28 @@ class VideoRoomComponent extends Component {
    * Visit https://docs.openvidu.io/en/stable/application-server to learn
    * more about the integration of OpenVidu in your application server.
    */
+
   async getToken() {
-    const sessionId = await this.createSession(this.state.mySessionId);
+    // const sessionId = await this.createSession(this.state.mySessionId);
+    const sessionId = await this.createSession(sessionStorage.getItem('sessionId'));
+    console.log(sessionStorage.getItem('sessionId'));
+    console.log('세션 아이디: ' + sessionId);
     return await this.createToken(sessionId);
   }
 
   async createSession(sessionId) {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + 'api/sessions/1',
-      { customSessionId: sessionId, clientId: 2 },
+      APPLICATION_SERVER_URL + 'api/sessions',
+      { customSessionId: sessionId },
       {
         headers: { 'Content-Type': 'application/json' },
       },
     );
-
-    // console.log(response.data.conferenceId);
-    return response.data.sessionId; // The sessionId
+    console.log('createSession응답값: ' + response.data);
+    return response.data; // The sessionId
   }
+
+  // console.log(response.data.conferenceId);
 
   async createToken(sessionId) {
     const response = await axios.post(
@@ -619,5 +646,13 @@ class VideoRoomComponent extends Component {
     );
     return response.data; // The token
   }
+
+  // conferenceid 보내기 위한 함수
+  //   sendConferenceid() {
+  //     axios
+  //       .post('http://localhost:8080/api/conference/memo')
+  //       .then((res) => console.log(res))
+  //       .catch((err) => console.log(err));
+  //   }
 }
 export default VideoRoomComponent;

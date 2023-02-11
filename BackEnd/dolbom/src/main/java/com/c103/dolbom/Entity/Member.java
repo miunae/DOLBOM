@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class Member extends BaseTimeEntity{
     @Column(nullable = false, updatable = false, length = 45,unique = true)
     private String email;
-    @Column(nullable = false, length = 45)
+    @Column(nullable = false, length = 100)
     private String password;
     @Column(nullable = false, length = 100)
     private String name;
@@ -33,10 +33,14 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false,length = 11)
     private String phone;
 
+    public void setUserPassword(String password) {
+        this.password = password;
+    }
+
     public void changeContent(String content){
         this.content = content;
     }
-    public void changName(String name){
+    public void changeName(String name){
         this.name = name;
     }
     public void changeBirth(LocalDate birth){
@@ -45,5 +49,4 @@ public class Member extends BaseTimeEntity{
     public void changePhone(String phone){
         this.phone=phone;
     }
-
 }
