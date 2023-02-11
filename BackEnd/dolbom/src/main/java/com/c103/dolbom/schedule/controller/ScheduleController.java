@@ -1,10 +1,16 @@
 package com.c103.dolbom.schedule.controller;
 
+import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.service.ScheduleService;
+import com.c103.dolbom.user.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/schedule")
@@ -12,6 +18,19 @@ import org.springframework.web.bind.annotation.*;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+
+    @GetMapping("/start/{start}/end/{end}")
+    public ResponseEntity<?> getScheduleDetail(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable String start,
+            @PathVariable String end) {
+
+        Member member = principalDetails.getMember();
+        List<ScheduleDto.Basic> scheduleListByPeriod = scheduleService.getScheduleListByPeriod(member, start, end);
+        return new ResponseEntity<List<ScheduleDto.Basic>>(scheduleListByPeriod, HttpStatus.OK);
+
+    }
+
 
     @GetMapping("/{scheduleId}")
     public ResponseEntity<?> getScheduleDetail(@PathVariable long scheduleId) {
