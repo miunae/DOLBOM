@@ -3,23 +3,16 @@ package com.c103.dolbom.schedule.service;
 import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Schedule;
-import com.c103.dolbom.alarm.dto.AlarmMemberInterface;
 import com.c103.dolbom.client.MemberClientRepository;
+import com.c103.dolbom.repository.MemberRepository;
 import com.c103.dolbom.schedule.dto.GetSchedule;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.repository.ScheduleRepository;
-import com.c103.dolbom.user.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -29,37 +22,58 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final MemberClientRepository memberClientRepository;
 
+    private final MemberRepository memberRepository;
+
     @Override
-    public List<ScheduleDto.Basic> getScheduleListByPeriod(Member member, String start, String end) {
+    public List<ScheduleDto.Detail> getScheduleList(Member member) {
 
-        Map<Long, List<ScheduleDto.Basic>> map = new HashMap<>();
+        Map<Long, List<ScheduleDto.Detail>> scheduleMap = new HashMap<>();
+        List<ScheduleDto.Detail> memberScheduleList = new ArrayList<>();
+        List<GetSchedule> scheduleList = scheduleRepository.getScheduleList(member.getId());
 
-        List<GetSchedule> scheduleListByPeriod
-                = scheduleRepository.getScheduleListByPeriod(member.getId(), start, end);
+        StringBuilder sbStart = new StringBuilder();
+        StringBuilder sbEnd = new StringBuilder();
 
+        for(GetSchedule gs : scheduleList) {
+            if(!scheduleMap.containsKey(gs.getClientId()))
+                scheduleMap.put(gs.getClientId(), new ArrayList<ScheduleDto.Detail>());
 
-        System.out.println(scheduleListByPeriod.size());
-        for(GetSchedule gs : scheduleListByPeriod) {
-            System.out.println(gs.getScheduleId() + " : " + gs.getCounselorId() + " : " + gs.getClientId());
-            ScheduleDto.Basic sb = ScheduleDto.Basic.builder()
-                    .scheduleId(gs.getScheduleId())
-                    .clientId(gs.getClientId())
-                    .counselorId(gs.getCounselorId())
-                    .startTime(gs.getStartTime())
-                    .endTime(gs.getEndTime())
-                    .content(gs.getContent())
-                    .build();
+            String[] startTimeArr = gs.getStartTime().split(" ");
+            String[] endTimeArr = gs.getEndTime().split(" ");
 
-            if(!map.containsKey(gs.getClientId())) {
-                map.put(gs.getClientId(), new ArrayList<ScheduleDto.Basic>());
-            }
+            scheduleMap.get(gs.getClientId()).add(ScheduleDto.Detail.builder()
+                            .scheduleId(gs.getScheduleId())
+                            .counselorId(gs.getCounselorId())
+                            .clientId(gs.getClientId())
+                            .startTime(sbStart.append(startTimeArr[0]).append("T").append(startTimeArr[1]).append("Z").toString())
+                            .endTime(sbEnd.append(endTimeArr[0]).append("T").append(endTimeArr[1]).append("Z").toString())
+                            .counselorName(member.getName())
+                            .clientName("임시 이름")
+                            .content(gs.getContent())
+                    .build());
 
-            System.out.println(sb.getScheduleId() + " : " + sb.getCounselorId() + " : " + sb.getClientId());
-            map.get(gs.getClientId()).add(sb);
+            sbStart.setLength(0);
+            sbEnd.setLength(0);
         }
 
-        System.out.println(map.size());
-        return null;
+        // client id -> client name 조회
+        List<Long> clientIdList = new ArrayList<>(scheduleMap.keySet());
+        List<Member> byIdIn = memberRepository.findByIdIn(clientIdList);
+        Map<Long, String> idToNameMap = new HashMap<>();
+        for(Member m : byIdIn) {
+            idToNameMap.put(m.getId(), m.getName());
+        }
+
+        for(Long clientId : scheduleMap.keySet()) {
+            String clientName = idToNameMap.get(clientId);
+            for(ScheduleDto.Detail sd :scheduleMap.get(clientId)) {
+                System.out.println(sd.getScheduleId() + " : scheduleId");
+                sd.setClientName(clientName);
+                memberScheduleList.add(sd);
+            }
+        }
+
+        return memberScheduleList;
     }
 
 

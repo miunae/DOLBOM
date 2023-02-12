@@ -19,5 +19,5 @@ public interface ScheduleService {
 
     long deleteSchedule(long scheduleId);
 
-    List<ScheduleDto.Basic> getScheduleListByPeriod(Member member, String start, String end);
+    List<ScheduleDto.Detail> getScheduleList(Member member);
 }

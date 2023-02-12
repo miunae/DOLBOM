@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 public interface GetSchedule {
 
-    long getScheduleId();
-    long getCounselorId();
-    long getClientId();
+    Long getScheduleId();
+    Long getCounselorId();
+    Long getClientId();
 
     String getStartTime();
     String getEndTime();

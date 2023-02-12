@@ -15,7 +15,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query(value = "SELECT * FROM SCHEDULE WHERE TIMESTAMPDIFF(HOUR, :standardTime, start_time) BETWEEN 0 and :hour",nativeQuery = true)
     List<Schedule> getScheduleByTime(@Param("standardTime") String standardTime, @Param("hour") int hour);
 
-    @Query(value="select s.id as schedule_id, mc.client_id, mc.member_id as counselor_id, s.start_time, s.end_time, s.content from schedule s join member_client mc on (s.member_client_id = mc.id) \n" +
-            "where member_id = :memberId and (start_time between :start and :end) and (end_time between :start and :end)", nativeQuery = true)
-    List<GetSchedule> getScheduleListByPeriod(@Param("memberId") Long memberId, String start, String end);
+    @Query(value = "select s.id as scheduleId, mc.member_id as counselorId, mc.client_id as clientId, s.start_time as startTime, s.end_time as endTime, s.content\n" +
+            "from member_client mc join schedule s on (mc.id = s.member_client_id)\n" +
+            "where mc.member_id = :id", nativeQuery = true)
+    List<GetSchedule> getScheduleList(Long id);
 }

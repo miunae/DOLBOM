@@ -19,15 +19,13 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @GetMapping("/start/{start}/end/{end}")
+    @GetMapping
     public ResponseEntity<?> getScheduleDetail(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable String start,
-            @PathVariable String end) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
         Member member = principalDetails.getMember();
-        List<ScheduleDto.Basic> scheduleListByPeriod = scheduleService.getScheduleListByPeriod(member, start, end);
-        return new ResponseEntity<List<ScheduleDto.Basic>>(scheduleListByPeriod, HttpStatus.OK);
+        List<ScheduleDto.Detail> scheduleListByPeriod = scheduleService.getScheduleList(member);
+        return new ResponseEntity<List<ScheduleDto.Detail>>(scheduleListByPeriod, HttpStatus.OK);
 
     }
 
