@@ -28,16 +28,10 @@ export const ClientCard = ({
   const dispatch = useAppDispatch();
   const currentState = useAppSelector(selectDashboard);
   const navigate = useNavigate();
-  const accessToken = sessionStorage.getItem('access-token');
-  const refreshToken = sessionStorage.getItem('refresh-token');
-  const header = {
-    'access-token': accessToken ? accessToken : '',
-    'refresh-token': refreshToken ? refreshToken : '',
-  };
   const [memberClientId, setMemberClientId] = useState(0);
   const goToDetail = () => {
     axiosService
-      .get(`/client/${clientId}`, { headers: header })
+      .get(`/client/${clientId}`)
       .then((res) => setMemberClientId(parseInt(res.toString())));
     dispatch(openAnotherFolder({ name: 'root', memberClientId, path: '//null' }));
     navigate(`/clientdetail/${userName}/null`, {

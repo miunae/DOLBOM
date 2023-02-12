@@ -1,9 +1,4 @@
-import {
-  DateSelectArg,
-  EventApi,
-  EventClickArg,
-  EventContentArg,
-} from '@fullcalendar/core';
+import { EventApi } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
@@ -21,6 +16,15 @@ export const Calendar = () => {
   const [eventInfos, setEventInfos] = useState();
   const [clickInfos, setClickInfos] = useState();
   const [isEditCard, setIsEditCard] = useState<boolean>(false);
+  useEffect(() => {
+    axiosService
+      .get('/schedule/')
+      .then((res) => {
+        setEvents(res.data);
+      })
+      .catch((err) => console.log(`초기랜더링 에러${err}`));
+    console.log('랜더링');
+  }, []);
   //드롭
   const eventDrop = (info: any) => {
     console.log(info.event);
@@ -33,21 +37,6 @@ export const Calendar = () => {
       });
     });
   };
-  const accessToken = sessionStorage.getItem('access-token');
-  const refreshToken = sessionStorage.getItem('refresh-token');
-  const header = {
-    'access-token': accessToken ? accessToken : '',
-    'refresh-token': refreshToken ? refreshToken : '',
-  };
-  useEffect(() => {
-    axiosService
-      .get('/schedule/', { headers: header })
-      .then((res) => {
-        setEvents(res.data);
-      })
-      .catch((err) => console.log(`초기랜더링 에러${err}`));
-    console.log('랜더링');
-  }, []);
 
   const [currentEvents, setCurrentEvents] = useState<EventApi[]>([]);
   const handleEvents = useCallback((events: EventApi[]) => setCurrentEvents(events), []);

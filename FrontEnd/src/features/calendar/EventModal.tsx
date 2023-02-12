@@ -39,7 +39,7 @@ export const EventModal = ({
 }: EventModalProps) => {
   //기존 내담자 리스트
   console.log(eventInfos);
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(['김싸피']);
   //선정된 내담자
   const [client, setClient] = useState('');
   //예약 내용

@@ -13,7 +13,6 @@ const accessToken = sessionStorage.getItem('access-token');
 const refreshToken = sessionStorage.getItem('refresh-token');
 if (accessToken) axiosService.defaults.headers.common['access-token'] = accessToken;
 if (refreshToken) axiosService.defaults.headers.common['refresh-token'] = refreshToken;
-
 type CustomHeaders = {
   'access-token': string;
   'refresh-token': string;

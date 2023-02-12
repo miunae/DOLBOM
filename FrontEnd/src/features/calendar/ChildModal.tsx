@@ -2,9 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import { AxiosHeaders } from 'axios';
 
-// import { toast, ToastContainer } from 'react-toastify';
 import { axiosService } from '../../api/instance';
 const style = {
   position: 'absolute' as const,
@@ -14,7 +12,6 @@ const style = {
   width: 500,
   height: 430,
   bgcolor: 'background.paper',
-  // border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -22,10 +19,6 @@ interface ChildModalProps {
   childOpen: boolean;
   handleChildClose: () => void;
 }
-// type CustomHeaders = {
-//   'access-token': string;
-//   'refresh-token': string;
-// } & AxiosHeaders;
 export const ChildModal = ({ childOpen, handleChildClose }: ChildModalProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,30 +28,11 @@ export const ChildModal = ({ childOpen, handleChildClose }: ChildModalProps) => 
       email: data.get('email')?.toString() ?? '',
       phone: data.get('phone')?.toString() ?? '',
     };
-    const accessToken = sessionStorage.getItem('access-token');
-    const refreshToken = sessionStorage.getItem('refresh-token');
-    const header = {
-      'access-token': accessToken ? accessToken : '',
-      'refresh-token': refreshToken ? refreshToken : '',
-    };
-    axiosService.post('/client/', clientdata, {
-      headers: header,
-    });
-    // toast.success('내담자 등록 완료!', {
-    //   position: 'top-center',
-    //   autoClose: 200,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    //   theme: 'light',
-    // });
+    axiosService.post('/client/', clientdata);
     handleChildClose();
   };
   return (
     <>
-      {/* <ToastContainer /> */}
       <Modal hideBackdrop open={childOpen} onClose={handleChildClose}>
         <Box sx={style}>
           <h2 id="child-modal-title">신규 내담자 등록</h2>
