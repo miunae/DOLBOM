@@ -28,6 +28,7 @@ public class ScheduleDto {
 
 
     @Getter
+    @Setter
     @AllArgsConstructor
     @Builder
     public static class Detail {
