@@ -27,8 +27,7 @@ export const ClientManagementPage = () => {
     'refresh-token': refreshToken ? refreshToken : '',
   };
   useEffect(() => {
-    console.log(header);
-    axiosService.get('/client/', { headers: header }).then((res) => {
+    axiosService.get('/client/').then((res) => {
       console.log(res);
       setData(res.data);
     });

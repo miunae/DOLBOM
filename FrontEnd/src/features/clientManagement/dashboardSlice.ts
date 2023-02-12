@@ -8,9 +8,9 @@ interface FolderState {
 }
 
 const initialState: FolderState = {
+  name: 'root',
   path: null,
   memberClientId: 0,
-  name: 'Root',
 };
 
 const dashBoardSlice = createSlice({
@@ -20,9 +20,9 @@ const dashBoardSlice = createSlice({
     openAnotherFolder: (
       state: any,
       action: PayloadAction<{
-        name: string;
+        name?: string;
         memberClientId?: number;
-        path: string;
+        path?: string;
       }>,
     ) => {
       state.path = action.payload.path;

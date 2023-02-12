@@ -33,10 +33,19 @@ export const Calendar = () => {
       });
     });
   };
+  const accessToken = sessionStorage.getItem('access-token');
+  const refreshToken = sessionStorage.getItem('refresh-token');
+  const header = {
+    'access-token': accessToken ? accessToken : '',
+    'refresh-token': refreshToken ? refreshToken : '',
+  };
   useEffect(() => {
-    axiosService.get('/schedule/month/2').then((res) => {
-      setEvents(res.data);
-    });
+    axiosService
+      .get('/schedule/', { headers: header })
+      .then((res) => {
+        setEvents(res.data);
+      })
+      .catch((err) => console.log(`초기랜더링 에러${err}`));
     console.log('랜더링');
   }, []);
 

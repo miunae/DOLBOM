@@ -39,7 +39,7 @@ export const ClientCard = ({
     axiosService
       .get(`/client/${clientId}`, { headers: header })
       .then((res) => setMemberClientId(parseInt(res.toString())));
-    dispatch(openAnotherFolder({ name: userName, memberClientId, path: 'null' }));
+    dispatch(openAnotherFolder({ name: 'root', memberClientId, path: '//null' }));
     navigate(`/clientdetail/${userName}/null`, {
       state: {
         userParam: userName,
