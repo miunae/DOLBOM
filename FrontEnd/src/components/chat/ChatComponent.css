@@ -32,7 +32,7 @@
 }
 
 #chatComponent {
-  background-color: #b8b8b8;
+  background-color: #c8bec2;
   position: absolute;
   z-index: 99999;
   top: 0;
@@ -159,7 +159,7 @@ span.triangle {
 #messageInput {
   position: absolute;
   bottom: 0px;
-  width: 100%;
+  width: 90%;
   background-color: #ffffff;
   text-align: center;
   padding: 10px 0px;
@@ -178,13 +178,12 @@ span.triangle {
 }
 
 #sendButton {
-  background-color: #81e9b0;
+  /* background-color: #81e9b0; */
   position: absolute;
   right: 10px;
   top: 0;
   bottom: 0;
   margin: auto;
-  border: 1px solid #7ae2a9;
   box-shadow: none !important;
 }
 #sendButton {

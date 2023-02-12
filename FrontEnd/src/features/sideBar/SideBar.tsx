@@ -68,6 +68,8 @@ export const SideBar = () => {
 
   // console.log(sessionStorage.getItem('access-token')) access-token 가져오는 코드
 
+  // const sessionId = sessionStorage.setItem('userId') // userID를 Modal 창에서 클릭시 받아서 사용
+
   const accessToken = sessionStorage.getItem('access-token');
   const refreshToken = sessionStorage.getItem('refresh-token');
 

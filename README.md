@@ -2,7 +2,7 @@
 
 docker run -p 4443:4443 --rm -e OPENVIDU_SECRET=MY_SECRET openvidu/openvidu-dev:2.25.0
 
-## back mysql
+## mysql
 
 create database IF NOT EXISTS `dolbom` collate utf8mb4_general_ci;
 create user 'lcm'@'localhost' identified by '1234';
@@ -26,3 +26,16 @@ values ("2","1");
 select _ from conference;
 select _ from member_conference;
 select \* from conference_history;
+
+## redis
+
+docker run -it --link myredis:redis --rm redis redis-cli -h redis -p 6379
+
+## back server
+
+Dolbom Application
+
+## front server
+
+npm install
+pip install -r requirements.txt

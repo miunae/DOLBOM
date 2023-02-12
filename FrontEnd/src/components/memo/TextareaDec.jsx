@@ -83,8 +83,8 @@ export default function TextareaDec() {
         placeholder="메모장"
         value={text}
         onChange={(event) => setText(event.target.value)}
-        minRows={10} // 처음 보이는 메모장 크기
-        maxRows={11} // 15줄을 넘어가면 스크롤로 표시될거야.
+        minRows={6} // 처음 보이는 메모장 크기
+        maxRows={8} // 15줄을 넘어가면 스크롤로 표시될거야.
         startDecorator={
           <Box sx={{ display: 'flex', gap: 0.5 }}>
             <IconButton variant="outlined" color="neutral" onClick={addEmoji('👍')}>
@@ -100,13 +100,13 @@ export default function TextareaDec() {
         }
         endDecorator={
           <Typography level="body3" sx={{ ml: 'auto' }}>
-            글자수: {text.length}
+            글자수 : {text.length}
           </Typography>
         }
-        sx={{ minWidth: 250 }}
+        sx={{ minWidth: 200 }}
       />
       <Link>
-        <div>
+        <div className="buttons">
           <Button
             className="record-start"
             variant="contained"
