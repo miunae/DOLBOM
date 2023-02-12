@@ -26,11 +26,6 @@ import java.util.regex.Pattern;
 public class DriveServiceImpl implements DriveService{
     private final MemberClientRepository memberClientRepository;
     private final DriveRepository driveRepository;
-//    @Value("${file.dir}")
-//    String absolutePath;
-    //로컬
-//    private final String absolutePath = "C:"+ File.separator +"test";
-//    ec2
     private final String absolutePath = File.separator + "home" + File.separator + "ubuntu" + File.separator + "Dolbom";
     @Override
     public boolean memberClientFolder(Long memberClientId) {

@@ -137,7 +137,6 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Long getClientMemberId(Long client_id, Long member_id) {
-        System.out.println("client_id = " + client_id + ", member_id = " + member_id);
         Optional<MemberClient> memberClient = memberClientRepository.findByMemberIdAndClientId(member_id,client_id);
         return memberClient.get().getId();
     }
