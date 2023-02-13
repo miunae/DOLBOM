@@ -147,6 +147,7 @@ public class DriveServiceImpl implements DriveService{
     @Override
     public List<String> getFolderList(Long memberClientId, String path) {
         log.info("absolutePath " +absolutePath);
+        log.info(new File("").getPath());
         StringBuilder saveFolderBuilder = new StringBuilder();
         saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
         File rootFolder = new File(saveFolderBuilder.toString());
