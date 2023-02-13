@@ -23,8 +23,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final MemberClientRepository memberClientRepository;
     private final MemberRepository memberRepository;
 
-    private final MemberRepository memberRepository;
-
     @Override
     public List<ScheduleDto.Detail> getScheduleList(Member member) {
 
@@ -68,7 +66,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         for(Long clientId : scheduleMap.keySet()) {
             String clientName = idToNameMap.get(clientId);
             for(ScheduleDto.Detail sd :scheduleMap.get(clientId)) {
-                System.out.println(sd.getScheduleId() + " : scheduleId");
                 sd.setTitle(clientName);
                 memberScheduleList.add(sd);
             }
