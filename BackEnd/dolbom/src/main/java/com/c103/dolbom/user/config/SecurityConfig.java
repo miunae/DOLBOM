@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/admin/**")
 //				.access("hasRole('admin')")
                 .hasAuthority("admin")
-                .antMatchers("/api/file/*" , "api/folder/*", "api/client/*", "api/upload")
+                .antMatchers("/api/file/*" , "api/folder/*", "api/client/*", "api/upload","api/conference/*","openvidu/*")
                 .hasRole("COUNSELOR")
                 .anyRequest().permitAll();
 

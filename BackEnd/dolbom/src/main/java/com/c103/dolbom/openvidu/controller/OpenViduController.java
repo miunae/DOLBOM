@@ -73,15 +73,12 @@ public class OpenViduController {
         return openviduService.startRecording(sessionId);
     }
     //녹음 중지
-    @GetMapping("/openvidu/api/recordings/stop/{conferenceId}/{sessionId}")
+    @GetMapping("/openvidu/api/recordings/stop/{conferenceId}")
     public ResponseEntity<?> stopRecording(@PathVariable("conferenceId")String conferenceId,
-                                           @PathVariable("sessionId")String sessionId) {
+                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Long id = Long.parseLong(String.valueOf(conferenceId));
-//        String sessionId = String.valueOf(principalDetails.getMember().getId());
+        String sessionId = principalDetails.getMember().getId().toString();
         return openviduService.stopRecording(sessionId, id);
     }
-
-
-
 
 }

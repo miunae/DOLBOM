@@ -38,7 +38,7 @@ public class SttService {
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
         VitoResponseDto responseDto = restTemplate.postForObject(url, requestEntity, VitoResponseDto.class);
         STT_TOKEN = "bearer " + responseDto.getAccess_token();
-        System.out.println(STT_TOKEN);
+//        System.out.println(STT_TOKEN);
     }
 
     //음성 파일로 vito sttId 받아오기
@@ -80,10 +80,10 @@ public class SttService {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", STT_TOKEN);
-        System.out.println("getSttUtterance");
+//        System.out.println("getSttUtterance");
 
         String url = "https://openapi.vito.ai/v1/transcribe/"+sttId;
-        System.out.println("sttId: " + sttId);
+//        System.out.println("sttId: " + sttId);
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 
         try {

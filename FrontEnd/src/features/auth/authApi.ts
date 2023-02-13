@@ -2,8 +2,8 @@ import { axiosService } from '../../api/instance';
 
 export const login = async ({ id, pw }: { id: string; pw: string }) => {
   const { data } = await axiosService.post('/users/login', {
-    userId: id,
-    userPassword: pw,
+    email: id,
+    password: pw,
   });
   return data;
 };

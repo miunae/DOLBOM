@@ -214,7 +214,6 @@ public class OpenviduService {
     //stt api를 통해 받은 stt id 로 텍스트 불러오기
     @Transactional
     public boolean getSttUtterance(String sttId, StringBuilder sb) {
-        System.out.println("getSttUtterance 들어옴");
         VitoResponseDto vitoResponseDto = sttService.getSttUtterance(sttId, true);
         if ("completed".equals(vitoResponseDto.getStatus())) {
             //stt 완료

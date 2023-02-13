@@ -58,17 +58,6 @@ public class ConferenceController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    /**
-     * 상담사 방 참가
-     * @param sessionId The Session in which to create the Connection
-     * @return The Token associated to the Connection
-     */
-//    @PostMapping("/conference/{sessionId}/connections")
-//    public ResponseEntity<String> createConnection(@PathVariable("sessionId") String sessionId,
-//                                                   @RequestBody(required = false) Map<String, Object> params) {
-//        System.out.println("상담사 연결되었음");
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
 
     /**
      * 내담자 방 참가
@@ -85,7 +74,6 @@ public class ConferenceController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         System.out.println("내담자 연결되었음");
-//        Recording recording = openvidu.startRecording(session.getSessionId(),recordingProperties);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

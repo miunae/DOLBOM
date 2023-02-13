@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { Calendar } from '../features/calendar/Calendar';
 import { SideBar } from '../features/sideBar/SideBar';
-export const CalendarPage = () => {
+export const CalendPage = () => {
   return (
     <>
       <Grid container spacing={2}>
@@ -12,7 +12,7 @@ export const CalendarPage = () => {
         </Grid>
         <Grid item xs={10}>
           <h1>CalendPage</h1>
-          <Calendar />
+          {/* <Calendar /> */}
         </Grid>
       </Grid>
     </>
