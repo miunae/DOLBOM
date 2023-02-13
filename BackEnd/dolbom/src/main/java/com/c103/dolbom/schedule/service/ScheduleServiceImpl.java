@@ -95,13 +95,13 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
                 .clientName(mc.getClient().getName())
-                .counselorName(mc.getMember().getName())
+                .title(mc.getMember().getName())
                 .build();
         return detailScheduleDto;
     }
 
     @Override
-    public long createSchedule(ScheduleDto.Basic scheduleDto) {
+    public long createSchedule(ScheduleDto.Detail scheduleDto) {
 
         MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));

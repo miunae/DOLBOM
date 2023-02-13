@@ -2,7 +2,6 @@ package com.c103.dolbom.schedule.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.nimbusds.jose.shaded.json.annotate.JsonIgnore;
 import lombok.*;
 
 public class ScheduleDto {
@@ -20,7 +19,6 @@ public class ScheduleDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Basic {
         private Long scheduleId;
-        private Long counselorId;
         private Long clientId;
         private String startTime;
         private String endTime;
@@ -40,7 +38,7 @@ public class ScheduleDto {
         private String startTime;
         private String endTime;
         private String content;
-        private String counselorName;
+        private String title; // client Name
         private String clientName;
 
     }
