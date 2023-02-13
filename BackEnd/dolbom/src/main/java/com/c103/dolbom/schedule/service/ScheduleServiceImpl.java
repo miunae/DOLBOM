@@ -5,13 +5,14 @@ import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Schedule;
 import com.c103.dolbom.client.MemberClientRepository;
 import com.c103.dolbom.repository.MemberRepository;
+import com.c103.dolbom.schedule.dto.GetSchedule;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,60 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final MemberClientRepository memberClientRepository;
     private final MemberRepository memberRepository;
+
+    private final MemberRepository memberRepository;
+
+    @Override
+    public List<ScheduleDto.Detail> getScheduleList(Member member) {
+
+        Map<Long, List<ScheduleDto.Detail>> scheduleMap = new HashMap<>();
+        List<ScheduleDto.Detail> memberScheduleList = new ArrayList<>();
+        List<GetSchedule> scheduleList = scheduleRepository.getScheduleList(member.getId());
+
+        StringBuilder sbStart = new StringBuilder();
+        StringBuilder sbEnd = new StringBuilder();
+
+        for(GetSchedule gs : scheduleList) {
+            if(!scheduleMap.containsKey(gs.getClientId()))
+                scheduleMap.put(gs.getClientId(), new ArrayList<ScheduleDto.Detail>());
+
+            String[] startTimeArr = gs.getStartTime().split(" ");
+            String[] endTimeArr = gs.getEndTime().split(" ");
+
+            scheduleMap.get(gs.getClientId()).add(ScheduleDto.Detail.builder()
+                            .scheduleId(gs.getScheduleId())
+                            .counselorId(gs.getCounselorId())
+                            .clientId(gs.getClientId())
+                            .start(sbStart.append(startTimeArr[0]).append("T").append(startTimeArr[1]).append("Z").toString())
+                            .end(sbEnd.append(endTimeArr[0]).append("T").append(endTimeArr[1]).append("Z").toString())
+                            .counselorName(member.getName())
+                            .title("임시 이름")
+                            .content(gs.getContent())
+                    .build());
+
+            sbStart.setLength(0);
+            sbEnd.setLength(0);
+        }
+
+        // client id -> client name 조회
+        List<Long> clientIdList = new ArrayList<>(scheduleMap.keySet());
+        List<Member> byIdIn = memberRepository.findByIdIn(clientIdList);
+        Map<Long, String> idToNameMap = new HashMap<>();
+        for(Member m : byIdIn) {
+            idToNameMap.put(m.getId(), m.getName());
+        }
+
+        for(Long clientId : scheduleMap.keySet()) {
+            String clientName = idToNameMap.get(clientId);
+            for(ScheduleDto.Detail sd :scheduleMap.get(clientId)) {
+                System.out.println(sd.getScheduleId() + " : scheduleId");
+                sd.setTitle(clientName);
+                memberScheduleList.add(sd);
+            }
+        }
+
+        return memberScheduleList;
+    }
 
     @Override
     public ScheduleDto.Detail getScheduleDetail(long scheduleId) {
@@ -39,8 +94,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .start(setLocalDateTimeToISO(schedule.getStartTime()))
                 .end(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
-                .title(mc.getClient().getName())
                 .counselorName(mc.getMember().getName())
+                .title(mc.getClient().getName())
                 .build();
         return detailScheduleDto;
     }
