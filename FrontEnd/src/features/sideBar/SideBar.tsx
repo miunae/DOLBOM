@@ -1,6 +1,6 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LogoutIcon from '@mui/icons-material/Logout';
-import MailIcon from '@mui/icons-material/Mail';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
@@ -19,7 +19,6 @@ import Modal from '@mui/material/Modal';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import axios, { AxiosError } from 'axios';
-import { access } from 'fs';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -44,11 +43,14 @@ const style = {
 export const SideBar = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const navigate = useNavigate();
 
   const logOut = () => {
     dispatch(clearUser());
     sessionStorage.removeItem('access-token');
     sessionStorage.removeItem('refresh-token');
+    sessionStorage.removeItem('sessionId');
+    sessionStorage.removeItem('conferenceId');
   };
 
   const [open, setOpen] = React.useState(false);
@@ -68,10 +70,16 @@ export const SideBar = () => {
 
   // console.log(sessionStorage.getItem('access-token')) access-token 가져오는 코드
 
-  // const sessionId = sessionStorage.setItem('userId') // userID를 Modal 창에서 클릭시 받아서 사용
+  // const sessionId = sessionStorage.setItem('sessionId'); // userID를 Modal 창에서 클릭시 받아서 사용
 
   const accessToken = sessionStorage.getItem('access-token');
   const refreshToken = sessionStorage.getItem('refresh-token');
+
+  function moveToVideo() {
+    // const sessionId = sessionStorage.getItem('sessionId');
+    console.log(`세션 아이디 : ${sessionStorage.getItem('sessionId')}`);
+    navigate(`/video/${sessionStorage.getItem('sessionId')}`);
+  }
 
   // (25) user에 대한 client를 받기 위한 axios 요청, header에 토큰을 보내고 back에서 user에 대한 client를 받는다.
   function getClientData() {
@@ -101,20 +109,52 @@ export const SideBar = () => {
       })
       .then(function (res) {
         sessionStorage.setItem('sessionId', res.data.sessionId), // 함수형으로 2개 전달
-          sessionStorage.setItem('conferenceId', res.data.conferenceId);
+          sessionStorage.setItem('conferenceId', res.data.conferenceId),
+          OpenVidu();
       });
   }
+
+  const useConfirm = (message = null, onConfirm, onCancel) => {
+    if (!onConfirm || typeof onConfirm !== 'function') {
+      return;
+    }
+    if (onCancel && typeof onCancel !== 'function') {
+      return;
+    }
+
+    const confirmAction = () => {
+      if (window.confirm(message)) {
+        onConfirm();
+      } else {
+        onCancel();
+      }
+    };
+
+    return confirmAction;
+  };
+
+  const deleteConfirm = () => console.log('삭제했습니다.');
+  const cancelConfirm = () => console.log('취소했습니다.');
+  const confirmDelete = useConfirm(
+    '상담실로 이동하시겠습니까?',
+    moveToVideo,
+    cancelConfirm,
+  );
 
   // (29) 세션 생성 누를때, post 요청 한개 더 why? 하나는 storage에 id 저장, 하나는 userid 로 설정, 이거 무조건 sessionid.
   function OpenVidu() {
     const body = JSON.stringify({ customSessionId: sessionStorage.getItem('sessionId') });
-    axios.post('http://localhost:8080/api/sessions', body, {
-      headers: {
-        'Content-Type': 'application/json',
-        'access-token': accessToken,
-        'refresh-token': refreshToken,
-      },
-    });
+    axios
+      .post('http://localhost:8080/api/sessions', body, {
+        headers: {
+          'Content-Type': 'application/json',
+          'access-token': accessToken,
+          'refresh-token': refreshToken,
+        },
+      })
+      .then(function (response) {
+        confirmDelete();
+      });
   }
 
   return (
@@ -191,8 +231,8 @@ export const SideBar = () => {
                         내담자 정보 입력 및 세션 생성
                       </Typography>
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        내담자 선택 :{/* id, name, phone type 설정 해줘야함  */}
                         <select onChange={handleSelect}>
+                          <option value={'default'}>내담자를 선택해주세요.</option>
                           {clientData.map((it, idx) => (
                             <option key={idx} value={it.id}>
                               {it.name} : {it.phone}
@@ -204,21 +244,18 @@ export const SideBar = () => {
                       <div>
                         <Typography id="modal-modal-button" variant="h6" component="h2">
                           {/* 링크 타고 들어 갈때 Video number는 sessionID로 한다.  */}
-                          <Link to={`/video/${sessionStorage.getItem('sessionId')}`}>
-                            <Button
-                              color="secondary"
-                              onClick={() => {
-                                sendToSelected(); // selected된 데이터 넘기고
-                                OpenVidu(); // openvidu할 때 쓸 id 넘긴다.
-                              }}
-                            >
-                              세션 생성
-                            </Button>
-                          </Link>
+                          <Button
+                            color="secondary"
+                            onClick={async () => {
+                              sendToSelected(); // selected된 데이터 넘기고
+                              // OpenVidu(); // openvidu할 때 쓸 id 넘긴다.
+                              // confirmDelete();
+                            }}
+                          >
+                            세션 생성
+                          </Button>
 
-                          <Link to="/calendar ">
-                            <button>뒤로가기</button>
-                          </Link>
+                          <button onClick={() => navigate(-1)}>뒤로가기</button>
                         </Typography>
                       </div>
                     </Box>

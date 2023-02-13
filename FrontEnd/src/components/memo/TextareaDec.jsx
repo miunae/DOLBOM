@@ -9,9 +9,17 @@ import axios from 'axios';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import Buttons from './Buttons';
+
+// import buttons from
+
 export default function TextareaDec() {
   const [text, setText] = React.useState(''); // textarea의 값은 text로 담는다.
   const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
+
+  // const LoginOrMemo = ({ userId }: { userId?: string }) => {
+  //   if (userId) return <></>;
+  // };
 
   // 전역적으로 담자 많이 쓰니깐.
   const accessToken = sessionStorage.getItem('access-token');
@@ -59,7 +67,7 @@ export default function TextareaDec() {
       });
   }
 
-  // (32) openvidu 녹음 시작 버튼
+  // (32) openvidu 녹음 중지 버튼
   function recordstop() {
     axios
       .get('http://localhost:8080/openvidu/api/recordings/stop/{conferenceId}', {
@@ -127,6 +135,7 @@ export default function TextareaDec() {
             메모 저장
           </Button>
         </div>
+        {/* <Buttons /> */}
       </Link>
     </div>
   );
