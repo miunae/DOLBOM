@@ -1,14 +1,17 @@
 package com.c103.dolbom.schedule.service;
 
+import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Schedule;
 import com.c103.dolbom.client.MemberClientRepository;
+import com.c103.dolbom.repository.MemberRepository;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +20,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     private final MemberClientRepository memberClientRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public ScheduleDto.Detail getScheduleDetail(long scheduleId) {
@@ -32,11 +36,11 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .scheduleId(schedule.getId())
                 .counselorId(mc.getMember().getId())
                 .clientId(mc.getClient().getId())
-                .startTime(setLocalDateTimeToISO(schedule.getStartTime()))
-                .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
+                .start(setLocalDateTimeToISO(schedule.getStartTime()))
+                .end(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
-                .clientName(mc.getClient().getName())
-                .title(mc.getMember().getName())
+                .title(mc.getClient().getName())
+                .counselorName(mc.getMember().getName())
                 .build();
         return detailScheduleDto;
     }
@@ -44,11 +48,28 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public long createSchedule(ScheduleDto.Detail scheduleDto) {
 
-        MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId())
-                .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
+        Optional<MemberClient> mcOpt = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId());
 
-        LocalDateTime startTime = setISOToLocalDateTime(scheduleDto.getStartTime());
-        LocalDateTime endTime = setISOToLocalDateTime(scheduleDto.getEndTime());
+        MemberClient memberClient = null;
+        if(mcOpt.isEmpty()) {
+            Member counselor = memberRepository.findById(scheduleDto.getCounselorId())
+                    .orElseThrow(()-> new IllegalArgumentException("counselor doesn't exist"));
+
+            Member client = memberRepository.findById(scheduleDto.getClientId())
+                    .orElseThrow(()-> new IllegalArgumentException("client doesn't exist"));
+
+            MemberClient mc = MemberClient.builder()
+                    .client(client)
+                    .member(counselor)
+                    .build();
+
+            memberClient = memberClientRepository.save(mc);
+        } else {
+            memberClient = mcOpt.get();
+        }
+
+        LocalDateTime startTime = setISOToLocalDateTime(scheduleDto.getStart());
+        LocalDateTime endTime = setISOToLocalDateTime(scheduleDto.getEnd());
 
         Schedule schedule = Schedule.builder()
                 .memberClientId(memberClient)
@@ -68,7 +89,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .orElseThrow(() -> new IllegalArgumentException("schedule doesn't exist"));
 
         schedule.updateSchedule(
-                setISOToLocalDateTime(scheduleDto.getStartTime()), setISOToLocalDateTime(scheduleDto.getEndTime()), scheduleDto.getContent());
+                setISOToLocalDateTime(scheduleDto.getStart()), setISOToLocalDateTime(scheduleDto.getEnd()), scheduleDto.getContent());
 
         scheduleRepository.save(schedule);
         return schedule.getId();
