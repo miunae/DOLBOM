@@ -5,10 +5,13 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+
 import axios from 'axios';
 import { access } from 'fs';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -20,24 +23,34 @@ export const ClientCheckForm = () => {
 
   // (27) 선택된 내담자들에 대한 정보를 post 한다.
   function sendToClientinfo() {
+    const navigate = useNavigate();
+
     const body = JSON.stringify({
       email: email,
       sessionid: clientSessionId,
       conferenceId: conferenceId,
     });
     axios
-      .post('http://localhost:8080/api/conference/client', body, {
+      .post('http://localhost:8080/api/connections/conference/client', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': sessionStorage.getItem('access-token'),
           'refresh-token': sessionStorage.getItem('refresh-token'),
         },
       })
-      .then(function (res) {
-        console.log(res + '고객정보 전달 성공!');
+      .then((res) => {
+        if (res.status === 200) {
+          console.log('200받아짐');
+          <Stack sx={{ width: '100%' }} spacing={2}>
+            <Alert severity="error"> 존재하지 않는 내담자입니다! </Alert>
+          </Stack>;
+        } else if (res.status === 401) {
+          console.log('200엘스이프');
+          navigate(-1);
+        }
       })
       .catch(function (res) {
-        console.log(res + '고객정보 전달 실패!');
+        console.log('고객정보 전달 실패!');
       }); // 요청 응답값에 따라서, 입장 허가와 불허를 판단한다.
   }
   // sessionStorage.setItem('access-token', 'Bearer ' + accessToken);

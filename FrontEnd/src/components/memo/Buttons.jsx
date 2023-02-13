@@ -1,7 +1,6 @@
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import React from 'react';
-import { renderMatches } from 'react-router-dom';
 
 // 전역적으로 담자 많이 쓰니깐.
 const accessToken = sessionStorage.getItem('access-token');
@@ -9,7 +8,7 @@ const refreshToken = sessionStorage.getItem('refresh-token');
 
 // (28) memo에 대한 post conferid, memo 2개 post한다.
 
-function Buttons() {
+export default function Buttons() {
   // (31) openvidu 녹음 시작 버튼
   function sendText() {
     const body = JSON.stringify({
@@ -93,4 +92,4 @@ function Buttons() {
   );
 }
 
-export default Buttons();
+// export default Buttons();

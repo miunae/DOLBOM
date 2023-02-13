@@ -1,6 +1,6 @@
 import './TextareaDec.css';
 
-import { Button } from '@material-ui/core';
+import { Button, ButtonBase } from '@material-ui/core';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
 import Textarea from '@mui/joy/Textarea';
@@ -11,15 +11,9 @@ import { Link } from 'react-router-dom';
 
 import Buttons from './Buttons';
 
-// import buttons from
-
 export default function TextareaDec() {
   const [text, setText] = React.useState(''); // textarea의 값은 text로 담는다.
   const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
-
-  // const LoginOrMemo = ({ userId }: { userId?: string }) => {
-  //   if (userId) return <></>;
-  // };
 
   // 전역적으로 담자 많이 쓰니깐.
   const accessToken = sessionStorage.getItem('access-token');
@@ -67,7 +61,7 @@ export default function TextareaDec() {
       });
   }
 
-  // (32) openvidu 녹음 중지 버튼
+  // (32) openvidu 녹음 시작 버튼
   function recordstop() {
     axios
       .get('http://localhost:8080/openvidu/api/recordings/stop/{conferenceId}', {
@@ -84,6 +78,11 @@ export default function TextareaDec() {
         console.log(res + '녹음 중지 실패!');
       });
   }
+
+  const MemoOrUser = () => {
+    if (refreshToken && accessToken) return <Buttons />;
+    return null;
+  };
 
   return (
     <div id="memoContainer">
@@ -113,30 +112,7 @@ export default function TextareaDec() {
         }
         sx={{ minWidth: 200 }}
       />
-      <Link>
-        <div className="buttons">
-          <Button
-            className="record-start"
-            variant="contained"
-            color="primary"
-            onClick={recordstart}
-          >
-            녹음 시작
-          </Button>
-          <Button
-            className="record-stop"
-            variant="outlined"
-            color="secondary"
-            onClick={recordstop}
-          >
-            녹음 중지
-          </Button>
-          <Button className="text-save" variant="contained" onClick={sendText}>
-            메모 저장
-          </Button>
-        </div>
-        {/* <Buttons /> */}
-      </Link>
+      <MemoOrUser />
     </div>
   );
 }

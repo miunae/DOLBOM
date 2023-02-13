@@ -646,13 +646,5 @@ class VideoRoomComponent extends React.Component {
     );
     return response.data; // The token
   }
-
-  // conferenceid 보내기 위한 함수
-  //   sendConferenceid() {
-  //     axios
-  //       .post('http://localhost:8080/api/conference/memo')
-  //       .then((res) => console.log(res))
-  //       .catch((err) => console.log(err));
-  //   }
 }
 export default VideoRoomComponent;
