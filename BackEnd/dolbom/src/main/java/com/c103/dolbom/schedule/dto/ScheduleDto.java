@@ -14,6 +14,7 @@ public class ScheduleDto {
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
