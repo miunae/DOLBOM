@@ -38,8 +38,7 @@ public class ScheduleDto {
         private String startTime;
         private String endTime;
         private String content;
+        private String counselorName;
         private String title; // client Name
-        private String clientName;
-
     }
 }
