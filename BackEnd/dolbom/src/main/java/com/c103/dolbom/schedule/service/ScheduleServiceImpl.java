@@ -24,6 +24,64 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final MemberClientRepository memberClientRepository;
 
+<<<<<<< Updated upstream
+=======
+    private final MemberRepository memberRepository;
+
+    @Override
+    public List<ScheduleDto.Detail> getScheduleList(Member member) {
+
+        Map<Long, List<ScheduleDto.Detail>> scheduleMap = new HashMap<>();
+        List<ScheduleDto.Detail> memberScheduleList = new ArrayList<>();
+        List<GetSchedule> scheduleList = scheduleRepository.getScheduleList(member.getId());
+
+        StringBuilder sbStart = new StringBuilder();
+        StringBuilder sbEnd = new StringBuilder();
+
+        for(GetSchedule gs : scheduleList) {
+            if(!scheduleMap.containsKey(gs.getClientId()))
+                scheduleMap.put(gs.getClientId(), new ArrayList<ScheduleDto.Detail>());
+
+            String[] startTimeArr = gs.getStartTime().split(" ");
+            String[] endTimeArr = gs.getEndTime().split(" ");
+
+            scheduleMap.get(gs.getClientId()).add(ScheduleDto.Detail.builder()
+                            .scheduleId(gs.getScheduleId())
+                            .counselorId(gs.getCounselorId())
+                            .clientId(gs.getClientId())
+                            .startTime(sbStart.append(startTimeArr[0]).append("T").append(startTimeArr[1]).append("Z").toString())
+                            .endTime(sbEnd.append(endTimeArr[0]).append("T").append(endTimeArr[1]).append("Z").toString())
+                            .counselorName(member.getName())
+                            .title("임시 이름")
+                            .content(gs.getContent())
+                    .build());
+
+            sbStart.setLength(0);
+            sbEnd.setLength(0);
+        }
+
+        // client id -> client name 조회
+        List<Long> clientIdList = new ArrayList<>(scheduleMap.keySet());
+        List<Member> byIdIn = memberRepository.findByIdIn(clientIdList);
+        Map<Long, String> idToNameMap = new HashMap<>();
+        for(Member m : byIdIn) {
+            idToNameMap.put(m.getId(), m.getName());
+        }
+
+        for(Long clientId : scheduleMap.keySet()) {
+            String clientName = idToNameMap.get(clientId);
+            for(ScheduleDto.Detail sd :scheduleMap.get(clientId)) {
+                System.out.println(sd.getScheduleId() + " : scheduleId");
+                sd.setTitle(clientName);
+                memberScheduleList.add(sd);
+            }
+        }
+
+        return memberScheduleList;
+    }
+
+
+>>>>>>> Stashed changes
     @Override
     public ScheduleDto.Detail getScheduleDetail(long scheduleId) {
 
@@ -41,8 +99,13 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .startTime(setLocalDateTimeToISO(schedule.getStartTime()))
                 .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
+<<<<<<< Updated upstream
                 .clientName(mc.getClient().getName())
                 .counselorName(mc.getMember().getName())
+=======
+                .title(mc.getClient().getName())
+                .title(mc.getMember().getName())
+>>>>>>> Stashed changes
                 .build();
         return detailScheduleDto;
     }

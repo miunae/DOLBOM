@@ -38,8 +38,13 @@ public class ScheduleDto {
         private String startTime;
         private String endTime;
         private String content;
+<<<<<<< Updated upstream
         private String counselorName;
         private String clientName;
+=======
+        private String counselorName; // client Name
+        private String title;
+>>>>>>> Stashed changes
 
     }
 }
