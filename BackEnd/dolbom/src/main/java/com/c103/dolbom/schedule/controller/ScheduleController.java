@@ -2,8 +2,10 @@ package com.c103.dolbom.schedule.controller;
 
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.service.ScheduleService;
+import com.c103.dolbom.user.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,8 +24,9 @@ public class ScheduleController {
 
     // 스케줄 등록
     @PostMapping
-    public ResponseEntity<?> createSchedule(@RequestBody ScheduleDto.Basic scheduleDto) {
+    public ResponseEntity<?> createSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ScheduleDto.Detail scheduleDto) {
 
+        scheduleDto.setCounselorId(principalDetails.getMember().getId());
         long scheduleId = scheduleService.createSchedule(scheduleDto);
 
         return ResponseEntity.ok(new ScheduleDto.Id(scheduleId));

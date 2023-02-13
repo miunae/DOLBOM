@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public interface ScheduleService {
 
     ScheduleDto.Detail getScheduleDetail(long scheduleId);
-    long createSchedule(ScheduleDto.Basic scheduleDto);
+    long createSchedule(ScheduleDto.Detail scheduleDto);
 
     LocalDateTime setISOToLocalDateTime(String ISODateTime);
 

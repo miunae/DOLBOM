@@ -8,13 +8,7 @@ import com.c103.dolbom.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -42,13 +36,13 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
                 .clientName(mc.getClient().getName())
-                .counselorName(mc.getMember().getName())
+                .title(mc.getMember().getName())
                 .build();
         return detailScheduleDto;
     }
 
     @Override
-    public long createSchedule(ScheduleDto.Basic scheduleDto) {
+    public long createSchedule(ScheduleDto.Detail scheduleDto) {
 
         MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
