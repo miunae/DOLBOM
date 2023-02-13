@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -65,18 +66,19 @@ public class OpenViduController {
     }
 
 
-//녹음 시작
+    //녹음 시작
     @GetMapping("/openvidu/api/recordings/start")
     public ResponseEntity<?> startRecording(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         String sessionId = String.valueOf(principalDetails.getMember().getId());
         return openviduService.startRecording(sessionId);
     }
     //녹음 중지
-    @GetMapping("/openvidu/api/recordings/stop/{conferenceId}")
-    public ResponseEntity<?> stopRecording(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                           @PathVariable("conferenceId")Long conferenceId) {
-        String sessionId = String.valueOf(principalDetails.getMember().getId());
-        return openviduService.stopRecording(sessionId, conferenceId);
+    @GetMapping("/openvidu/api/recordings/stop/{conferenceId}/{sessionId}")
+    public ResponseEntity<?> stopRecording(@PathVariable("conferenceId")String conferenceId,
+                                           @PathVariable("sessionId")String sessionId) {
+        Long id = Long.parseLong(String.valueOf(conferenceId));
+//        String sessionId = String.valueOf(principalDetails.getMember().getId());
+        return openviduService.stopRecording(sessionId, id);
     }
 
 

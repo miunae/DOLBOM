@@ -31,7 +31,7 @@ public class SttService {
         HttpStatus httpStatus = HttpStatus.CREATED;
         RestTemplate restTemplate = new RestTemplate();
         map.add("client_id", "_dQ4HfAjCDjj3oKfjhPQ");
-        map.add("client_secret", "V5Hjnm8IuRspfJiMHeWTAIrN8E7yxkjDXKcu9W6f");
+        map.add("client_secret", "53VJEWqhBSkkrBjScQzFiVBZ0M0ta4fNaYjlOlD4");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         String url = "https://openapi.vito.ai/v1/authenticate";
@@ -44,6 +44,7 @@ public class SttService {
     //음성 파일로 vito sttId 받아오기
     public String getSttId(String fileUrl, boolean resend) throws IOException {
         // resend 반복 토큰 요청 막기
+//        getSttToken();
         System.out.println("getSttId, token = " + STT_TOKEN);
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         HttpStatus httpStatus = HttpStatus.CREATED;
@@ -82,6 +83,7 @@ public class SttService {
         System.out.println("getSttUtterance");
 
         String url = "https://openapi.vito.ai/v1/transcribe/"+sttId;
+        System.out.println("sttId: " + sttId);
         HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 
         try {

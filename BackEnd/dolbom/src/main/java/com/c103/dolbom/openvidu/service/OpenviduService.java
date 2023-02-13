@@ -1,5 +1,6 @@
 package com.c103.dolbom.openvidu.service;
 
+import com.c103.dolbom.Entity.Conference;
 import com.c103.dolbom.Entity.ConferenceHistory;
 import com.c103.dolbom.Entity.Drive;
 import com.c103.dolbom.Entity.MemberClient;
@@ -8,6 +9,7 @@ import com.c103.dolbom.drive.DriveRepository;
 import com.c103.dolbom.openvidu.dto.SaveMemoDto;
 import com.c103.dolbom.openvidu.dto.VitoResponseDto;
 import com.c103.dolbom.openvidu.repository.ConferenceHistoryRepository;
+import com.c103.dolbom.openvidu.repository.ConferenceRepository;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +41,15 @@ import java.util.stream.Collectors;
 public class OpenviduService {
 
     private final SttService sttService;
+
+    @Autowired
     private ConferenceHistoryRepository conferenceHistoryRepository;
+
+    @Autowired
     private MemberClientRepository memberClientRepository;
+
+    @Autowired
+    private ConferenceRepository conferenceRepository;
 
     @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
@@ -53,8 +62,8 @@ public class OpenviduService {
     @Autowired
     DriveRepository driveRepository;
 
-    private final String absolutePath = File.separator+"home" + File.separator + "ubuntu" + File.separator + "Dolbom";
-
+//    private final String absolutePath = File.separator+"home" + File.separator + "ubuntu" + File.separator + "Dolbom";
+    private final String absolutePath = "C:"+ File.separator+"test";
     @PostConstruct
     private void init() {
         //openvidu 서버와 연결
@@ -116,15 +125,21 @@ public class OpenviduService {
             //STT 를 위한 API 전송
             String sttId = null;
             try {
+                System.out.println("녹음 URL = " + recording.getUrl());
                 sttId = sttService.getSttId(recording.getUrl(), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             //ConferenceId에 해당하는 conferenceHistory 목록들
+            System.out.println(conferenceId);
+            Conference entityConference = conferenceRepository.findById(conferenceId).get();
             List<ConferenceHistory> conferenceHistoryList
-                    = conferenceHistoryRepository.findAllByConferenceId(conferenceId);
+                    = conferenceHistoryRepository.findAllByConference(entityConference);
             if(conferenceHistoryList.isEmpty()){
                 return new ResponseEntity<>("conferenceId fail", HttpStatus.NOT_FOUND);
+            }
+            for(ConferenceHistory ch : conferenceHistoryList){
+                System.out.println("히스토리 id: " + ch.getId());
             }
             //stt api를 통해 받은 stt id 로 텍스트 불러오기
             sttContent = new StringBuilder();
@@ -164,7 +179,7 @@ public class OpenviduService {
                     e.printStackTrace();
                 }
                 //원래 파일 이름
-                String originName = dateBuilder.toString()+"memo.txt";
+                String originName = dateBuilder.toString()+"대화기록.txt";
                 //파일의 저장이름으로 쓰일 uuid
                 String uuid = UUID.randomUUID().toString();
                 //확장자
@@ -176,7 +191,7 @@ public class OpenviduService {
                         .path(saveFolderBuilder.toString()+File.separator+savedName)
                         .saveTime(LocalDateTime.now())
                         .build();
-                history.saveMemo(saveSttDto);
+                history.saveStt(saveSttDto);
                 conferenceHistoryRepository.save(history);
                 // 드라이브에 저장
                 Drive entityDrive = Drive.builder()
@@ -199,6 +214,7 @@ public class OpenviduService {
     //stt api를 통해 받은 stt id 로 텍스트 불러오기
     @Transactional
     public boolean getSttUtterance(String sttId, StringBuilder sb) {
+        System.out.println("getSttUtterance 들어옴");
         VitoResponseDto vitoResponseDto = sttService.getSttUtterance(sttId, true);
         if ("completed".equals(vitoResponseDto.getStatus())) {
             //stt 완료
@@ -206,9 +222,13 @@ public class OpenviduService {
                     .msg(utterance.getMsg())
                     .build()).collect(Collectors.toList());
             for(VitoResponseDto.Utterance utt : utterances) {
+                System.out.println(utt.getMsg());
                 sb.append(utt.getMsg());
             }
             return true;
+        }
+        else if("transcribing".equals(vitoResponseDto.getStatus())) {
+            getSttUtterance(sttId,sb);
         }
         return false;
     }

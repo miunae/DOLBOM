@@ -1,23 +1,16 @@
 package com.c103.dolbom.openvidu.controller;
 
-import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.client.ClientService;
 import com.c103.dolbom.client.dto.ClientDto;
 import com.c103.dolbom.openvidu.dto.*;
 import com.c103.dolbom.openvidu.service.ConferenceService;
 import com.c103.dolbom.openvidu.service.MailService;
 import com.c103.dolbom.user.auth.PrincipalDetails;
-import io.openvidu.java.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.Map;
 
 //@CrossOrigin(origins = "*")
@@ -79,13 +72,11 @@ public class ConferenceController {
 
     /**
      * 내담자 방 참가
-     * @param sessionId The Session in which to create the Connection
      * @param dto    내담자 이름, 이메일, 참여할 참여코드, 회의 ID
-
      * @return The Token associated to the Connection
      */
-    @PostMapping("/api/connections/conference/client/{sessionId}")
-    public ResponseEntity<String> createClientConnection(@PathVariable("sessionId") String sessionId,
+    @PostMapping("/api/connections/conference/client")
+    public ResponseEntity<String> createClientConnection(
                                                          @RequestBody JoinSessionDto dto,
                                                          @RequestBody(required = false) Map<String, Object> params) {
         // MemberConferece DB 저장 및 ConferenceHistory DB 저장

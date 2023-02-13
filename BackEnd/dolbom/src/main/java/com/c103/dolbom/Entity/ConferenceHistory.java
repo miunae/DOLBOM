@@ -63,4 +63,11 @@ public class ConferenceHistory extends BaseEntity{
         this.endedTime = dto.getSaveTime();
     }
 
+    public void saveStt(SaveMemoDto dto) {
+        this.sttOriginName = dto.getOriginName();
+        this.sttSavedName = dto.getSavedName();
+        this.sttPath = dto.getPath();
+        this.endedTime = dto.getSaveTime();
+    }
+
 }
