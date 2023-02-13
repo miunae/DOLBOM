@@ -21,6 +21,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     private final MemberClientRepository memberClientRepository;
+    private final MemberRepository memberRepository;
 
     private final MemberRepository memberRepository;
 
@@ -102,8 +103,25 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public long createSchedule(ScheduleDto.Detail scheduleDto) {
 
-        MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId())
-                .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
+        Optional<MemberClient> mcOpt = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId());
+
+        MemberClient memberClient = null;
+        if(mcOpt.isEmpty()) {
+            Member counselor = memberRepository.findById(scheduleDto.getCounselorId())
+                    .orElseThrow(()-> new IllegalArgumentException("counselor doesn't exist"));
+
+            Member client = memberRepository.findById(scheduleDto.getClientId())
+                    .orElseThrow(()-> new IllegalArgumentException("client doesn't exist"));
+
+            MemberClient mc = MemberClient.builder()
+                    .client(client)
+                    .member(counselor)
+                    .build();
+
+            memberClient = memberClientRepository.save(mc);
+        } else {
+            memberClient = mcOpt.get();
+        }
 
         LocalDateTime startTime = setISOToLocalDateTime(scheduleDto.getStart());
         LocalDateTime endTime = setISOToLocalDateTime(scheduleDto.getEnd());
