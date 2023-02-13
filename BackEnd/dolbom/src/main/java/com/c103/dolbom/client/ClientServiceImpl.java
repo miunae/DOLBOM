@@ -8,6 +8,7 @@ import com.c103.dolbom.client.dto.ClientDto;
 import com.c103.dolbom.client.dto.ClientSimpleDto;
 import com.c103.dolbom.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,11 +19,13 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ClientServiceImpl implements ClientService{
     private final MemberClientRepository memberClientRepository;
     private final MemberRepository memberRepository;
     @Override
     public List<ClientSimpleDto> getClientListByMemberId(Long memberId) {
+        log.info("getClientListByMemberId " + memberId);
         List<MemberClient> list = memberClientRepository.findByMemberId(memberId);
 
         List<ClientSimpleDto> clientList = new ArrayList<>();
