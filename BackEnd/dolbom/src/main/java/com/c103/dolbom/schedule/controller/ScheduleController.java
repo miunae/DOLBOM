@@ -39,8 +39,9 @@ public class ScheduleController {
 
     // 스케줄 등록
     @PostMapping
-    public ResponseEntity<?> createSchedule(@RequestBody ScheduleDto.Basic scheduleDto) {
+    public ResponseEntity<?> createSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ScheduleDto.Basic scheduleDto) {
 
+        scheduleDto.setCounselorId(principalDetails.getMember().getId());
         long scheduleId = scheduleService.createSchedule(scheduleDto);
 
         return ResponseEntity.ok(new ScheduleDto.Id(scheduleId));
