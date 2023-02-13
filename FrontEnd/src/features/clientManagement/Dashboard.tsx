@@ -1,4 +1,5 @@
 import { Grid, Typography } from '@mui/material';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import { axiosService } from '../../api/instance';
@@ -20,7 +21,7 @@ export const Dashboard = () => {
   const currentState = useAppSelector(selectDashboard);
   const currentPath = currentState.path;
   const currentName = currentState.name;
-  const curretMemberClientId = currentState.memberClientId;
+  const currentMemberClientId = currentState.memberClientId;
   console.log(currentPath);
   const [isUpdate, setIsUpdate] = useState(false);
   const update = () => {
@@ -29,12 +30,15 @@ export const Dashboard = () => {
 
   useEffect(() => {
     setCurrentFolderName(currentState.name);
-    axiosService
-      .get('/folder/', { params: { id: curretMemberClientId, path: '/root' } })
-      .then((res) => {
-        setData(res.data);
-        console.log(data);
-      });
+    // axiosService
+    //   .get('/folder/', { params: { id: currentMemberClientId, path: '' } })
+    //   .then((res) => {
+    //     setData(res.data);
+    //     console.log(data);
+    //   });
+    axios
+      .get('http://localhost:3003/RootFolder')
+      .then((res) => setData(res.data[0].folderList));
   }, [isUpdate, currentPath]);
   const [data, setData] = useState([]);
   return (
@@ -47,7 +51,7 @@ export const Dashboard = () => {
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
           {data.map((prop: any, index) => (
             <Grid item xs={2} key={index}>
-              <Folder key={index} folderName={prop.folderName} />
+              <Folder key={index} folderName={prop} />
             </Grid>
           ))}
         </Grid>

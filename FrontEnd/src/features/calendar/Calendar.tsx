@@ -3,7 +3,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { axiosService } from '../../api/instance';
@@ -21,20 +20,25 @@ export const Calendar = () => {
       .get('/schedule/')
       .then((res) => {
         setEvents(res.data);
+        console.log(res.data);
       })
       .catch((err) => console.log(`초기랜더링 에러${err}`));
-    console.log('랜더링');
   }, []);
   //드롭
   const eventDrop = (info: any) => {
     console.log(info.event);
-    const updateId = info.event._def.publicId;
-    axios.get(`http://localhost:3003/calendarEvents/${updateId}`).then((res) => {
-      axios.put(`http://localhost:3003/calendarEvents/${updateId}`, {
-        ...res.data,
-        start: info.event.startStr,
-        end: info.event.endStr,
-      });
+    const updateId = info.event.extendedProps.scheduleId;
+    axiosService.get(`schedule/${updateId}`).then((res) => {
+      const DropData = {
+        scheduleId: updateId,
+        clientId: res.data.clientId,
+        title: res.data.title,
+        start: new Date(info.event.startStr).toISOString(),
+        end: new Date(info.event.endStr).toISOString(),
+        content: res.data.content,
+      };
+      console.log(res.data);
+      axiosService.put(`/schedule/`, DropData).then((res) => console.log(res));
     });
   };
 

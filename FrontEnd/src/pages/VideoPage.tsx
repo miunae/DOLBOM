@@ -2,6 +2,7 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { SideBar } from '../features/sideBar/SideBar';
+
 export const VideoPage = () => {
   return (
     <>

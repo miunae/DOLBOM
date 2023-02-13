@@ -37,7 +37,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/profile',
-    element: store.getState().user?.id ? <ProfilePage /> : <LoginPage />,
+    element: <ProfilePage />,
   },
   {
     path: '/signup',

@@ -220,5 +220,15 @@
       "path": "null/DDD",
       "id": 10
     }
+  ],
+  "RootFolder": [
+    {
+      "folderList":["aaa","bbb","ccc"]
+    }
+  ],
+  "aaa":[
+    {
+      "folderList":["secondfloor"]
+    }
   ]
 }

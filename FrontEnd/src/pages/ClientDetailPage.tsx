@@ -1,4 +1,5 @@
-import { Divider } from '@mui/material';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Breadcrumbs, Divider } from '@mui/material';
 import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -18,6 +19,8 @@ export const ClientDetailPage = () => {
   console.log(currentName);
   console.log(currentPath);
   const { userName } = useParams();
+  const breadcrumbs = <h1>breadscrum</h1>;
+  console.log(currentState.memberClientId);
   return (
     <>
       <Grid container spacing={2}>
@@ -43,6 +46,12 @@ export const ClientDetailPage = () => {
                 </Typography>
               </Box>
               <Divider variant="middle" />
+              <Breadcrumbs
+                separator={<NavigateNextIcon fontSize="small" />}
+                aria-label="breadcrumb"
+              >
+                {breadcrumbs}
+              </Breadcrumbs>
               <Dashboard />
             </Box>
           </Container>

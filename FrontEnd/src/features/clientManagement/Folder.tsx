@@ -1,6 +1,7 @@
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { Button } from '@mui/material';
 import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { openAnotherFolder, selectDashboard } from './dashboardSlice';
@@ -25,12 +26,26 @@ export const Folder = ({ folderName }: Folderdata) => {
       <Button
         variant="outlined"
         onClick={toAnotherFolder}
-        sx={{ width: 1, height: '10vh' }}
+        // sx={{ width: 'auto', height: 'auto' }}
       >
-        <FolderOpenIcon sx={{ width: 1 / 2, height: '10vh' }} />
-        <Typography variant="h6" component="div" noWrap>
-          {folderName}
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            p: 1,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            margin: 0,
+          }}
+        >
+          <FolderOpenIcon sx={{ width: 1 / 2, height: '10vh' }} />
+          <Typography variant="h6" component="div" noWrap>
+            {folderName}
+          </Typography>
+        </Box>
       </Button>
     </>
   );

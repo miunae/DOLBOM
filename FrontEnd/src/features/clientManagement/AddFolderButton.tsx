@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import axios from 'axios';
 import { useState } from 'react';
 
 import { axiosService } from '../../api/instance';
@@ -27,10 +26,11 @@ export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(`${currentMemberClientId} ㅇ;ㅣㅂ`);
     axiosService
-      .post('/folder', {
+      .post('/folder/', {
         member_client_id: currentMemberClientId,
-        path: '/root/first',
+        path: 'first',
       })
       .then((res) => console.log(res))
       .catch((error) => console.log(error));

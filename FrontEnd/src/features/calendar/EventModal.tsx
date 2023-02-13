@@ -9,6 +9,7 @@ import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
+import { axiosService } from '../../api/instance';
 import { useFetchData } from '../../hooks/useFetchData';
 import { ChildModal } from './ChildModal';
 
@@ -38,7 +39,7 @@ export const EventModal = ({
   isEditCard,
 }: EventModalProps) => {
   //기존 내담자 리스트
-  console.log(eventInfos);
+  const [clientId, setClientId] = useState('');
   const [list, setList] = useState(['김싸피']);
   //선정된 내담자
   const [client, setClient] = useState('');
@@ -50,24 +51,22 @@ export const EventModal = ({
   const [endTime, setEndTime] = useState('13:00');
   // autocomplete 목록 불러오기
   useEffect(() => {
-    console.log('edit');
     useFetchData().then((res) => setList(res));
   }, []);
   //isEdit => true 일때 정보 불러오기
   useEffect(() => {
     if (isEditCard) {
-      console.log(eventInfos?.event);
-      axios
-        .get(`http://localhost:3003/calendarEvents/${eventInfos?.event?._def?.publicId}`)
+      const scheduleId = eventInfos?.event.extendedProps.scheduleId;
+      axiosService
+        .get(`/schedule/${scheduleId}`)
         .then((res) => {
+          setClientId(res.data.clientId);
           setClient(res.data?.title);
           setContent(res.data?.content);
           const startString: any = new Date(res.data?.start).toString();
           const startmid = startString.indexOf(':');
           const endString: any = new Date(res.data?.end).toString();
           const endtmid: number = startString.indexOf(':');
-          console.log(typeof startString);
-          console.log(startmid);
           setStartTime(startString.substring(startmid - 2, startmid + 3));
           setEndTime(endString.substring(endtmid - 2, endtmid + 3));
         })
@@ -75,24 +74,25 @@ export const EventModal = ({
       // setClient(eventInfos?.event?.title);
     }
   }, [eventInfos]);
-
+  useEffect(() => {
+    axiosService.get('/client/').then((res) => {
+      setClientId(res.data);
+    });
+  }, []);
   //evet 추가 함수
   const addEvent = () => {
     const calendarApi = eventInfos.view.calendar;
-    const utcStartTime = new Date(
-      `${eventInfos.startStr.substr(0, 10)} ${startTime}`,
-    ).toISOString();
-    const utcEndTime = new Date(
-      `${eventInfos.startStr.substr(0, 10)} ${endTime}`,
-    ).toISOString();
+    const utcStartTime = new Date(`${eventInfos.startStr} ${startTime}`).toISOString();
+    const utcEndTime = new Date(`${eventInfos.startStr} ${endTime}`).toISOString();
     const data = {
+      clientId,
       title: client == null ? '제목없음' : client,
       start: utcStartTime,
       end: utcEndTime,
       content,
     };
     calendarApi.addEvent(data);
-    axios.post('http://localhost:3003/calendarEvents', data);
+    axiosService.post('/schedule/', data).then((res) => console.log(res));
 
     setClient('');
     setContent('');
@@ -101,18 +101,26 @@ export const EventModal = ({
   const editEvent = () => {
     const calendarApi = eventInfos.view.calendar;
     const currentEvent = calendarApi.getEventById(eventInfos.event.id);
-
-    console.log(eventInfos);
-    console.log(currentEvent);
     const data = {
+      scheduleId: currentEvent.extendedProps.scheduleId,
+      clientId,
       title: client == null ? '제목없음' : client,
-      start: new Date(`${eventInfos.event.startStr.substr(0, 10)} ${startTime}`),
-      end: new Date(`${eventInfos.event.startStr.substr(0, 10)} ${endTime}`),
+      start: new Date(
+        `${eventInfos.event.startStr.substr(0, 10)} ${startTime}`,
+      ).toISOString(),
+      end: new Date(
+        `${eventInfos.event.startStr.substr(0, 10)} ${endTime}`,
+      ).toISOString(),
       content,
     };
-    axios.put(`http://localhost:3003/calendarEvents/${currentEvent._def.publicId}`, data);
+    axiosService.put('/schedule/', data).then((res) => console.log(res));
+    console.log('전송된 데이터');
+    console.log(data);
     if (currentEvent) {
-      currentEvent.setProp('title', client !== null ? client : '무제');
+      console.log('있긴함');
+      currentEvent.setProp('title', client);
+      currentEvent.setExtendedProp('title', data.title);
+      currentEvent.setExtendedProp('content', data.content);
       currentEvent.setDates(data.start, data.end);
     }
     setClient('');
@@ -121,9 +129,8 @@ export const EventModal = ({
   };
   const removeEvent = () => {
     eventInfos.event.remove();
-    axios.delete(
-      `http://localhost:3003/calendarEvents/${eventInfos.event._def.publicId}`,
-    );
+    const scheduleId = eventInfos?.event.extendedProps.scheduleId;
+    axiosService.delete(`/schedule/${scheduleId}`);
     setClient('');
     setContent('');
     handleClose();
@@ -165,7 +172,12 @@ export const EventModal = ({
             options={list}
             // freeSolo={true}
             value={client ? client : ''}
-            onInputChange={(e, value: string) => setClient(value)}
+            onInputChange={(e, value: string) => {
+              setClient(value);
+              axiosService
+                .get(`/client/name/${value}`)
+                .then((res) => setClientId(res.data[0].id));
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -191,6 +203,7 @@ export const EventModal = ({
               sx={{ width: 200 }}
               onChange={(e) => {
                 setStartTime(e.target.value);
+                console.log(startTime);
                 console.log(e.target.value);
               }}
               // eventInfos.startStr

@@ -12,8 +12,11 @@ import {
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { axiosService } from '../../api/instance';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { openAnotherFolder, selectDashboard, setMemberClientId } from './dashboardSlice';
 
 // function createData(clientName: string, email: string, phone: string, detail: string) {
 //   return { clientName, email, phone, detail };
@@ -69,11 +72,21 @@ function OrderTableHead() {
   );
 }
 export const ClientTable = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const goDetail = (clientName: string, clientId: number | string) => {
+    axiosService
+      .get(`/client/${clientId}`)
+      .then((res) => dispatch(setMemberClientId({ memberClientId: res.data })));
+    dispatch(openAnotherFolder({ name: 'root', path: '//null' }));
+    navigate(`/clientdetail/${clientName}/null`);
+  };
   const [data, setData] = useState([]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
       console.log(res);
       setData(res.data);
+      console.log(data);
       // data.map((item: any) => createData(item.name, item.email, item.phone, '더보기'));
     });
   }, []);
@@ -92,12 +105,8 @@ export const ClientTable = () => {
         <Table
           aria-labelledby="tableTitle"
           sx={{
-            '& .MuiTableCell-root:first-child': {
-              pl: 2,
-            },
-            '& .MuiTableCell-root:last-child': {
-              pr: 3,
-            },
+            pl: 2,
+            pe: 2,
           }}
         >
           <OrderTableHead />
@@ -118,7 +127,14 @@ export const ClientTable = () => {
                   <TableCell align="left">{row.email}</TableCell>
                   <TableCell align="right">{row.phone}</TableCell>
                   <TableCell align="right">
-                    <Button variant="contained">Contained</Button>
+                    <Button
+                      onClick={() => {
+                        goDetail(row.name, row.id);
+                      }}
+                      variant="contained"
+                    >
+                      더보기
+                    </Button>
                   </TableCell>
                 </TableRow>
               );
