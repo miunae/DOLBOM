@@ -1,20 +1,18 @@
 package com.c103.dolbom.schedule.service;
 
+import com.c103.dolbom.Entity.Member;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.Entity.Schedule;
 import com.c103.dolbom.client.MemberClientRepository;
+import com.c103.dolbom.repository.MemberRepository;
+import com.c103.dolbom.schedule.dto.GetSchedule;
 import com.c103.dolbom.schedule.dto.ScheduleDto;
 import com.c103.dolbom.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,8 +22,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private final MemberClientRepository memberClientRepository;
 
-<<<<<<< Updated upstream
-=======
     private final MemberRepository memberRepository;
 
     @Override
@@ -80,8 +76,6 @@ public class ScheduleServiceImpl implements ScheduleService {
         return memberScheduleList;
     }
 
-
->>>>>>> Stashed changes
     @Override
     public ScheduleDto.Detail getScheduleDetail(long scheduleId) {
 
@@ -99,19 +93,14 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .startTime(setLocalDateTimeToISO(schedule.getStartTime()))
                 .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
-<<<<<<< Updated upstream
-                .clientName(mc.getClient().getName())
                 .counselorName(mc.getMember().getName())
-=======
                 .title(mc.getClient().getName())
-                .title(mc.getMember().getName())
->>>>>>> Stashed changes
                 .build();
         return detailScheduleDto;
     }
 
     @Override
-    public long createSchedule(ScheduleDto.Basic scheduleDto) {
+    public long createSchedule(ScheduleDto.Detail scheduleDto) {
 
         MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
