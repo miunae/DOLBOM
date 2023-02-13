@@ -152,6 +152,8 @@ public class DriveServiceImpl implements DriveService{
         saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
         File rootFolder = new File(saveFolderBuilder.toString());
         log.info("getFolderList " + rootFolder.getName());
+        log.info("루트 폴더 존재하나? " + rootFolder.exists() +" 루트 폴더의 절대경로" + new File(absolutePath).getAbsolutePath());
+        log.info("절대 경로의 부모 폴더 " + new File(absolutePath).getParent());
         if(!rootFolder.exists()){//존재x
             rootFolder.mkdir();
             return null;
