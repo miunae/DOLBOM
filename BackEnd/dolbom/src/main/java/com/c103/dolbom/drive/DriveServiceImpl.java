@@ -5,6 +5,7 @@ import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.client.MemberClientRepository;
 import com.c103.dolbom.drive.dto.FileResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DriveServiceImpl implements DriveService{
     private final MemberClientRepository memberClientRepository;
     private final DriveRepository driveRepository;
@@ -147,6 +149,7 @@ public class DriveServiceImpl implements DriveService{
         StringBuilder saveFolderBuilder = new StringBuilder();
         saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
         File rootFolder = new File(saveFolderBuilder.toString());
+        log.info("getFolderList " + rootFolder.getName());
         if(!rootFolder.exists()){//존재x
             rootFolder.mkdir();
             return null;
