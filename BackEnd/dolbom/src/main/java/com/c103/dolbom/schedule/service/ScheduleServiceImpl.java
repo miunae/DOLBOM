@@ -45,8 +45,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                             .scheduleId(gs.getScheduleId())
                             .counselorId(gs.getCounselorId())
                             .clientId(gs.getClientId())
-                            .startTime(sbStart.append(startTimeArr[0]).append("T").append(startTimeArr[1]).append("Z").toString())
-                            .endTime(sbEnd.append(endTimeArr[0]).append("T").append(endTimeArr[1]).append("Z").toString())
+                            .start(sbStart.append(startTimeArr[0]).append("T").append(startTimeArr[1]).append("Z").toString())
+                            .end(sbEnd.append(endTimeArr[0]).append("T").append(endTimeArr[1]).append("Z").toString())
                             .counselorName(member.getName())
                             .title("임시 이름")
                             .content(gs.getContent())
@@ -90,8 +90,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .scheduleId(schedule.getId())
                 .counselorId(mc.getMember().getId())
                 .clientId(mc.getClient().getId())
-                .startTime(setLocalDateTimeToISO(schedule.getStartTime()))
-                .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
+                .start(setLocalDateTimeToISO(schedule.getStartTime()))
+                .end(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
                 .counselorName(mc.getMember().getName())
                 .title(mc.getClient().getName())
@@ -105,8 +105,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         MemberClient memberClient = memberClientRepository.findByMemberIdAndClientId(scheduleDto.getCounselorId(), scheduleDto.getClientId())
                 .orElseThrow(() -> new IllegalArgumentException("relation doesn't exist"));
 
-        LocalDateTime startTime = setISOToLocalDateTime(scheduleDto.getStartTime());
-        LocalDateTime endTime = setISOToLocalDateTime(scheduleDto.getEndTime());
+        LocalDateTime startTime = setISOToLocalDateTime(scheduleDto.getStart());
+        LocalDateTime endTime = setISOToLocalDateTime(scheduleDto.getEnd());
 
         Schedule schedule = Schedule.builder()
                 .memberClientId(memberClient)
@@ -126,7 +126,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .orElseThrow(() -> new IllegalArgumentException("schedule doesn't exist"));
 
         schedule.updateSchedule(
-                setISOToLocalDateTime(scheduleDto.getStartTime()), setISOToLocalDateTime(scheduleDto.getEndTime()), scheduleDto.getContent());
+                setISOToLocalDateTime(scheduleDto.getStart()), setISOToLocalDateTime(scheduleDto.getEnd()), scheduleDto.getContent());
 
         scheduleRepository.save(schedule);
         return schedule.getId();

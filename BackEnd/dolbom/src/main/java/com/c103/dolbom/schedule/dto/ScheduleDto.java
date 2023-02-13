@@ -20,8 +20,8 @@ public class ScheduleDto {
     public static class Basic {
         private Long scheduleId;
         private Long clientId;
-        private String startTime;
-        private String endTime;
+        private String start;
+        private String end;
         private String content;
     }
 
@@ -35,8 +35,8 @@ public class ScheduleDto {
         private Long scheduleId;
         private Long counselorId;
         private Long clientId;
-        private String startTime;
-        private String endTime;
+        private String start;
+        private String end;
         private String content;
         private String counselorName;
         private String title; // client Name
