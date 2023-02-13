@@ -48,7 +48,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                             .startTime(sbStart.append(startTimeArr[0]).append("T").append(startTimeArr[1]).append("Z").toString())
                             .endTime(sbEnd.append(endTimeArr[0]).append("T").append(endTimeArr[1]).append("Z").toString())
                             .counselorName(member.getName())
-                            .clientName("임시 이름")
+                            .title("임시 이름")
                             .content(gs.getContent())
                     .build());
 
@@ -68,14 +68,13 @@ public class ScheduleServiceImpl implements ScheduleService {
             String clientName = idToNameMap.get(clientId);
             for(ScheduleDto.Detail sd :scheduleMap.get(clientId)) {
                 System.out.println(sd.getScheduleId() + " : scheduleId");
-                sd.setClientName(clientName);
+                sd.setTitle(clientName);
                 memberScheduleList.add(sd);
             }
         }
 
         return memberScheduleList;
     }
-
 
     @Override
     public ScheduleDto.Detail getScheduleDetail(long scheduleId) {
@@ -94,8 +93,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 .startTime(setLocalDateTimeToISO(schedule.getStartTime()))
                 .endTime(setLocalDateTimeToISO(schedule.getEndTime()))
                 .content(schedule.getContent())
-                .clientName(mc.getClient().getName())
-                .title(mc.getMember().getName())
+                .counselorName(mc.getMember().getName())
+                .title(mc.getClient().getName())
                 .build();
         return detailScheduleDto;
     }
