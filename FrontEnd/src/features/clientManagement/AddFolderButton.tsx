@@ -16,6 +16,7 @@ type folderInfo = {
 export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   const [open, setOpen] = useState(false);
   const currentState = useAppSelector(selectDashboard);
+  const currentPath = currentState.path;
   const currentMemberClientId = currentState.memberClientId;
   const [folderName, setFolderName] = useState('새폴더');
   const openModal = () => {
@@ -26,11 +27,15 @@ export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(`${currentMemberClientId} ㅇ;ㅣㅂ`);
+    const path = currentPath?.length
+      ? currentPath.slice(1) + '/' + folderName
+      : folderName;
+    console.log('루트 생성');
+    console.log(path);
     axiosService
       .post('/folder/', {
         member_client_id: currentMemberClientId,
-        path: 'first',
+        path,
       })
       .then((res) => console.log(res))
       .catch((error) => console.log(error));

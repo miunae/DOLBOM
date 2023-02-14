@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <AxiosSetup />
-        <HomePage />
+        <LoginPage />
       </>
     ),
   },
