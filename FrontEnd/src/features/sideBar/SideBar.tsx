@@ -18,9 +18,14 @@ import ListItemText from '@mui/material/ListItemText';
 import Modal from '@mui/material/Modal';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+<<<<<<< HEAD
 import axios, { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+=======
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+>>>>>>> 4ac22943d1c3eb0b67902f3da6c803c1a2789848
 
 import { useAppSelector } from '../../app/hooks';
 import { useAppDispatch } from '../../app/hooks';
@@ -49,8 +54,12 @@ export const SideBar = () => {
     dispatch(clearUser());
     sessionStorage.removeItem('access-token');
     sessionStorage.removeItem('refresh-token');
+<<<<<<< HEAD
     sessionStorage.removeItem('sessionId');
     sessionStorage.removeItem('conferenceId');
+=======
+    navigate('/login');
+>>>>>>> 4ac22943d1c3eb0b67902f3da6c803c1a2789848
   };
 
   const [open, setOpen] = React.useState(false);
