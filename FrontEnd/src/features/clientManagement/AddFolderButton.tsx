@@ -4,14 +4,19 @@ import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import axios from 'axios';
 import { useState } from 'react';
+
+import { axiosService } from '../../api/instance';
+import { useAppSelector } from '../../app/hooks';
+import { selectDashboard } from './dashboardSlice';
 type folderInfo = {
   folderPath: string | null;
   update: () => void;
 };
 export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   const [open, setOpen] = useState(false);
+  const currentState = useAppSelector(selectDashboard);
+  const currentMemberClientId = currentState.memberClientId;
   const [folderName, setFolderName] = useState('새폴더');
   const openModal = () => {
     setOpen(true);
@@ -21,10 +26,11 @@ export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .post('http://i8c103.p.ssafy.io:8080/folder', {
-        member_client_id: folderName,
-        path: folderPath,
+    console.log(`${currentMemberClientId} ㅇ;ㅣㅂ`);
+    axiosService
+      .post('/folder/', {
+        member_client_id: currentMemberClientId,
+        path: 'first',
       })
       .then((res) => console.log(res))
       .catch((error) => console.log(error));

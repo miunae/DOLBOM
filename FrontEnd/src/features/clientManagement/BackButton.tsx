@@ -14,7 +14,9 @@ export const BackButton = () => {
       const exPath = currentPath.substring(0, slashidx);
       const nameStart = exPath.lastIndexOf('/');
       const exFolderName = exPath.substring(nameStart + 1);
-      dispatch(openAnotherFolder({ name: exFolderName, path: exPath }));
+      dispatch(
+        openAnotherFolder({ name: exFolderName, memberClientId: 0, path: exPath }),
+      );
     }
   };
   return (
