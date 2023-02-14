@@ -77,7 +77,18 @@ public class ConferenceServiceImpl implements ConferenceService {
         } else {
             return null;
         }
-        Conference entityConference = conferenceRepository.findById(dto.getConferenceId()).get();
+        Conference entityConference;
+        Optional<Conference> optionalConference = conferenceRepository.findById(dto.getConferenceId());
+        if(optionalConference.isPresent()) {
+            entityConference = optionalConference.get();
+        } else {
+            return null;
+        }
+        // 세션아이디와 상담사 아이디가 일치하지 않는다면 null 반환
+
+        if(!entityConference.getMember().getId().equals(Long.parseLong(String.valueOf(dto.getSessionId())))) {
+            return null;
+        }
 
         MemberConference memberConference = MemberConference.builder()
                 .member(entityClient)
@@ -122,7 +133,7 @@ public class ConferenceServiceImpl implements ConferenceService {
             // 디렉토리가 없다면 디렉토리 생성
             StringBuilder saveFolderBuilder = new StringBuilder();
             saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-            System.out.println("1: saveFolderBuilder: "+ saveFolderBuilder.toString());
+//            System.out.println("1: saveFolderBuilder: "+ saveFolderBuilder.toString());
             File folder = new File(saveFolderBuilder.toString());
             if(!folder.exists()){//존재x
                 folder.mkdir();

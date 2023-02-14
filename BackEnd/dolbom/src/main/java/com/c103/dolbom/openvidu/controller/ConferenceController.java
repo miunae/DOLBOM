@@ -65,13 +65,11 @@ public class ConferenceController {
      * @return The Token associated to the Connection
      */
     @PostMapping("/api/connections/conference/client")
-    public ResponseEntity<String> createClientConnection(
-                                                         @RequestBody JoinSessionDto dto,
-                                                         @RequestBody(required = false) Map<String, Object> params) {
+    public ResponseEntity<String> createClientConnection(@RequestBody JoinSessionDto dto) {
         // MemberConferece DB 저장 및 ConferenceHistory DB 저장
         Long memberConferenceId = conferenceService.createMemberConference(dto);
         if(memberConferenceId == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("일치하지 않습니다",HttpStatus.NOT_FOUND);
         }
         System.out.println("내담자 연결되었음");
         return new ResponseEntity<>(HttpStatus.OK);
