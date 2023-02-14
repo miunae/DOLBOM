@@ -1,11 +1,14 @@
 package com.c103.dolbom.drive;
 
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.c103.dolbom.Entity.Drive;
 import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.client.MemberClientRepository;
 import com.c103.dolbom.drive.dto.FileResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,18 +24,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
-//로컬 저장
-//@Service
+
+@Service
 @RequiredArgsConstructor
 @Slf4j
-public class DriveServiceImpl implements DriveService{
+public class S3DriveServiceImpl implements DriveService{
     private final MemberClientRepository memberClientRepository;
     private final DriveRepository driveRepository;
-    private final String absolutePath = File.separator + "home" + File.separator + "ubuntu" + File.separator + "Dolbom";
+    private final S3Uploader s3Uploader;
+    @Value("${cloud.aws.s3.dir}")
+    public String absolutePath;
     @Override
     public boolean memberClientFolder(Long memberClientId) {
         StringBuilder saveFolderBuilder = new StringBuilder();
-        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
+        saveFolderBuilder.append(absolutePath).append("/").append(memberClientId.toString());
         File folder = new File(saveFolderBuilder.toString());
         if(!folder.exists()){//존재x
             folder.mkdir();
@@ -44,39 +49,29 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public boolean pathFolder(Long memberClientId, String path) {
+    public boolean pathFolder(Long memberClientId, String path) throws IOException {
         String savePath = extractPath(memberClientId, path);
-
-        File folder = new File(savePath);
-
-        if(!folder.exists()){//존재x
-            folder.mkdir();
-            return true;
-        }
-        else{//이미 존재
-            return false;
-        }
+        s3Uploader.folderUpload(savePath);
+        return true;
     }
 
     private String extractPath(Long memberClientId, String path) {
-        String splitRegex = Pattern.quote(System.getProperty("file.separator"));
+        String splitRegex = Pattern.quote(System.getProperty("user.home"));
         String[] pathArr = path.split(splitRegex);
         StringBuilder saveFolderBuilder = new StringBuilder();
-        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
+        saveFolderBuilder.append(absolutePath).append(memberClientId.toString());
 
         for(int i=0; i<pathArr.length;i++){
-            saveFolderBuilder.append(File.separator).append(pathArr[i]);
+            saveFolderBuilder.append("/").append(pathArr[i]);
         }
+        System.out.println(saveFolderBuilder.toString());
         return saveFolderBuilder.toString();
     }
 
     @Override
     public Long pathFileSave(Long memberClientId, String path, MultipartFile file) throws IOException {
         String savePath = extractPath(memberClientId, path);
-        File folder = new File(savePath);
-        if (!folder.exists()){
-            return -1L;
-        }
+
         //원래 파일 이름
         String originName = file.getOriginalFilename();
         //파일의 저장이름으로 쓰일 uuid
@@ -84,6 +79,9 @@ public class DriveServiceImpl implements DriveService{
         //확장자
         String extension = originName.substring(originName.lastIndexOf("."));
         String savedName = uuid+extension;
+        String resultPath = savePath+"/"+savedName;
+
+        String s3url = s3Uploader.fileUpload(file,resultPath);
 
         MemberClient memberClient = memberClientRepository.findById(memberClientId).get();
 
@@ -91,10 +89,8 @@ public class DriveServiceImpl implements DriveService{
                 .memberClient(memberClient)
                 .originName(originName)
                 .savedName(savedName)
-                .path(savePath+File.separator+savedName)
+                .path(savePath+"/"+savedName)
                 .build();
-
-        file.transferTo(new File(savePath+File.separator+savedName));
 
         Drive result = driveRepository.save(drive);
 
@@ -111,32 +107,20 @@ public class DriveServiceImpl implements DriveService{
 
     @Override
     public List<FileResponseDto> getFileList(Long memberClientId, String path) {
-        StringBuilder saveFolderBuilder = new StringBuilder();
-        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-        File rootFolder = new File(saveFolderBuilder.toString());
-        if(!rootFolder.exists()){//존재x
-            rootFolder.mkdir();
-        }
+        String prefix = extractPath(memberClientId, path);
+        List<String> fileList = s3Uploader.getLevelFileList(prefix);
 
-        String savePath = extractPath(memberClientId, path);
-        File folder = new File(savePath);
-        String[] fileList = folder.list();
 
         List<FileResponseDto> fileResponseDto = new ArrayList<>();
 
         for(String str : fileList){
-            File file = new File(savePath,str);
-            //파일인 경우
-            if(file.isFile()){
-                //repository에서 가져오는 방식
-                Drive drive = driveRepository.findBySavedName(str);
+            Drive drive = driveRepository.findBySavedName(str);
 
-                FileResponseDto dto = FileResponseDto.builder()
-                        .fileId(drive.getId())
-                        .fileName(drive.getOriginName())
-                        .build();
-                fileResponseDto.add(dto);
-            }
+            FileResponseDto dto = FileResponseDto.builder()
+                    .fileId(drive.getId())
+                    .fileName(drive.getOriginName())
+                    .build();
+            fileResponseDto.add(dto);
 
         }
 
@@ -145,32 +129,11 @@ public class DriveServiceImpl implements DriveService{
 
     @Override
     public List<String> getFolderList(Long memberClientId, String path) {
-        log.info("absolutePath " +absolutePath);
-        log.info(new File("").getPath());
-        StringBuilder saveFolderBuilder = new StringBuilder();
-        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-        File rootFolder = new File(saveFolderBuilder.toString());
-        log.info("getFolderList " + rootFolder.getName());
-        log.info("루트 폴더 존재하나? " + rootFolder.exists() +" 절대 경로의 절대경로" + new File(absolutePath).getAbsolutePath());
-        log.info("절대 경로의 부모 폴더 " + new File(absolutePath).getParent());
-        if(!rootFolder.exists()){//존재x
-            rootFolder.mkdirs();
-        }
-        log.info( "루트 폴더는 폴더인가? " + new File(rootFolder.getAbsolutePath()).isDirectory());
-        log.info("루트 폴더 존재하나? " + rootFolder.exists() +" 루트 폴더의 절대경로" + new File(rootFolder.getAbsolutePath()).getAbsolutePath());
-        String savePath = extractPath(memberClientId, path);
-        File folder = new File(savePath);
-        String[] fileList = folder.list();
-        List<String> folderNameList = new ArrayList<>();
-        for(String str : fileList){
-            File file = new File(savePath,str);
-            //폴더인 경우
-            if(file.isDirectory()){
-                folderNameList.add(str);
 
-            }
-        }
-        return folderNameList;
+        String prefix = extractPath(memberClientId, path);
+        List<String> folderList = s3Uploader.getLevelFolderList(prefix);
+
+        return folderList;
 
     }
 
@@ -193,11 +156,9 @@ public class DriveServiceImpl implements DriveService{
 
     @Override
     public boolean deleteFile(Long memberClientId, Long id) {
-        Drive drive = driveRepository.findById(id).get();
-        File file = new File(drive.getPath());
+        Drive drive = driveRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("find drive fail"));
+        s3Uploader.delete(drive.getPath());
         driveRepository.deleteById(id);
-        file.delete();
-
         return true;
     }
 
