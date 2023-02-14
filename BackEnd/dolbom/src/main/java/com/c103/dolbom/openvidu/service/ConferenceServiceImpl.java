@@ -133,7 +133,6 @@ public class ConferenceServiceImpl implements ConferenceService {
             // 디렉토리가 없다면 디렉토리 생성
             StringBuilder saveFolderBuilder = new StringBuilder();
             saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-//            System.out.println("1: saveFolderBuilder: "+ saveFolderBuilder.toString());
             File folder = new File(saveFolderBuilder.toString());
             if(!folder.exists()){//존재x
                 folder.mkdir();
@@ -180,18 +179,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         return 1;
     }
 
-//    private String extractPath(Long memberClientId, String path) {
-//        String splitRegex = Pattern.quote(System.getProperty("file.separator"));
-//        String[] pathArr = path.split(splitRegex);
-//        StringBuilder saveFolderBuilder = new StringBuilder();
-//        saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-//
-//        for(int i=0; i<pathArr.length;i++){
-//            saveFolderBuilder.append(File.separator).append(pathArr[i]);
-//        }
-//        System.out.println("2: saveFolderBuilder: "+saveFolderBuilder.toString());
-//        return saveFolderBuilder.toString();
-//    }
+
 
 
 }

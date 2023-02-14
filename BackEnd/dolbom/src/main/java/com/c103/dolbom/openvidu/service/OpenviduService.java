@@ -123,13 +123,13 @@ public class OpenviduService {
             //STT 를 위한 API 전송
             String sttId = null;
             try {
-                System.out.println("녹음 URL = " + recording.getUrl());
+//                System.out.println("녹음 URL = " + recording.getUrl());
                 sttId = sttService.getSttId(recording.getUrl(), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             //ConferenceId에 해당하는 conferenceHistory 목록들
-            System.out.println(conferenceId);
+//            System.out.println(conferenceId);
             Conference entityConference = conferenceRepository.findById(conferenceId).get();
             List<ConferenceHistory> conferenceHistoryList
                     = conferenceHistoryRepository.findAllByConference(entityConference);
@@ -137,7 +137,7 @@ public class OpenviduService {
                 return new ResponseEntity<>("conferenceId fail", HttpStatus.NOT_FOUND);
             }
             for(ConferenceHistory ch : conferenceHistoryList){
-                System.out.println("히스토리 id: " + ch.getId());
+//                System.out.println("히스토리 id: " + ch.getId());
             }
             //stt api를 통해 받은 stt id 로 텍스트 불러오기
             sttContent = new StringBuilder();
@@ -219,7 +219,7 @@ public class OpenviduService {
                     .msg(utterance.getMsg())
                     .build()).collect(Collectors.toList());
             for(VitoResponseDto.Utterance utt : utterances) {
-                System.out.println(utt.getMsg());
+//                System.out.println(utt.getMsg());
                 sb.append(utt.getMsg());
             }
             return true;
