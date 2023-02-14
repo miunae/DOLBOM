@@ -23,15 +23,17 @@ import java.util.List;
 public class DriveController {
     private final DriveService driveService;
     //시큐리티 설정 : 들어올때 상담자만 들어올 수 있고, 내담자의 아이디가 존재해야한다.
-    //폴더 생성
+    //폴더 생성 - 완
     @PostMapping("/folder")
     public ResponseEntity<?> pathFolder(@RequestBody FolderPathRequestDto dto){
-        if(driveService.pathFolder(dto.getMemberClientId(), dto.getPath())){
+        try {
+            driveService.pathFolder(dto.getMemberClientId(), dto.getPath());
             return new ResponseEntity<>("create folder", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("already exist folder.", HttpStatus.BAD_REQUEST);
     }
-    //파일 업로드
+    //파일 업로드 - 완
     @PostMapping("/upload")
     public ResponseEntity<?> pathUploadFile(@RequestPart("file") MultipartFile file, @RequestPart("dto") FolderPathRequestDto dto) throws IOException {
         Long fileId = driveService.pathFileSave(dto.getMemberClientId(), dto.getPath(),file);
@@ -53,22 +55,19 @@ public class DriveController {
 
     }
 
-    //파일 및 폴더 보여주기
+    //해당 레벨 폴더들 보여주기 - 완
     @GetMapping("/folder")
     public ResponseEntity<?> getFolderList(@RequestParam("id") Long memberClientId,@RequestParam("path") String path){
         List<String> fileList = driveService.getFolderList(memberClientId, path);
 
         return new ResponseEntity<>(fileList, HttpStatus.OK);
-
-
     }
+    //해당 레벨 파일들 보여주기 - 완
     @GetMapping("/file")
     public ResponseEntity<?> getFileList(@RequestParam("id") Long memberClientId,@RequestParam("path") String path){
         List<FileResponseDto> fileList = driveService.getFileList(memberClientId, path);
 
         return new ResponseEntity<>(fileList, HttpStatus.OK);
-
-
     }
     //파일을 폴더 안에 넣기 ->실제 파일 이동 후 db에서 path변경
     @PatchMapping("/file")
@@ -76,14 +75,14 @@ public class DriveController {
         try {
             driveService.moveFile(memberClientId,path,fileId);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<>("file move fail : " + e.getMessage(), HttpStatus.OK);
         }
         return new ResponseEntity<>("file move success", HttpStatus.OK);
     }
-    //파일 삭제
+    //파일 삭제 - 완
     @DeleteMapping("/file")
-    public ResponseEntity<?> deleteFile(@RequestParam("id") Long memberClientId,@RequestParam("path") String path,@RequestParam("file_id") Long fileId){
-        driveService.deleteFile(memberClientId,path,fileId);
+    public ResponseEntity<?> deleteFile(@RequestParam("id") Long memberClientId,@RequestParam("file_id") Long fileId){
+        driveService.deleteFile(memberClientId,fileId);
         return new ResponseEntity<>("file delete success", HttpStatus.OK);
     }
 
