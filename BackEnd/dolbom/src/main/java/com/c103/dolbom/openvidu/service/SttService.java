@@ -4,6 +4,7 @@ import com.c103.dolbom.openvidu.dto.MultipartInputStreamFileResource;
 import com.c103.dolbom.openvidu.dto.VitoConfigDto;
 import com.c103.dolbom.openvidu.dto.VitoResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,14 +25,20 @@ public class SttService {
         getSttToken();
     }
 
+    @Value("${vitto.id}")
+    private String VITTO_ID;
+
+    @Value("${vitto.secret}")
+    private String VITTO_SECRET;
+
     //vito token 불러오기
     public void getSttToken(){
         System.out.println("getSttToken, " +STT_TOKEN+ " -> ");
         LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         HttpStatus httpStatus = HttpStatus.CREATED;
         RestTemplate restTemplate = new RestTemplate();
-        map.add("client_id", "_dQ4HfAjCDjj3oKfjhPQ");
-        map.add("client_secret", "53VJEWqhBSkkrBjScQzFiVBZ0M0ta4fNaYjlOlD4");
+        map.add("client_id", VITTO_ID);
+        map.add("client_secret", VITTO_SECRET);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         String url = "https://openapi.vito.ai/v1/authenticate";
