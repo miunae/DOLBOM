@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { axiosService } from '../../api/instance';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { openAnotherFolder, selectDashboard, setMemberClientId } from './dashboardSlice';
+import { clearPath, openAnotherFolder, setMemberClientId } from './dashboardSlice';
 
 // function createData(clientName: string, email: string, phone: string, detail: string) {
 //   return { clientName, email, phone, detail };
@@ -78,15 +78,15 @@ export const ClientTable = () => {
     axiosService
       .get(`/client/${clientId}`)
       .then((res) => dispatch(setMemberClientId({ memberClientId: res.data })));
-    dispatch(openAnotherFolder({ name: 'root', path: '//null' }));
+
+    dispatch(clearPath());
+    // dispatch(openAnotherFolder({ name: 'root', path: '' }));
     navigate(`/clientdetail/${clientName}/null`);
   };
   const [data, setData] = useState([]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
-      console.log(res);
       setData(res.data);
-      console.log(data);
       // data.map((item: any) => createData(item.name, item.email, item.phone, '더보기'));
     });
   }, []);
@@ -111,9 +111,7 @@ export const ClientTable = () => {
         >
           <OrderTableHead />
           <TableBody>
-            {data.map((row: ClientCardProps, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
-
+            {data.map((row: ClientCardProps) => {
               return (
                 <TableRow
                   hover
