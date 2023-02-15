@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -37,7 +39,7 @@ public class DriveController {
     }
     //파일 다운로드
     @GetMapping("/file/{id}")
-    public ResponseEntity<?> download(@PathVariable("id") Long fileId){
+    public ResponseEntity<?> download(@PathVariable("id") Long fileId, HttpServletResponse response) throws IOException {
         byte[] fileByte = new byte[0];
         try {
             fileByte = driveService.pahtFileDownload(fileId);
@@ -45,13 +47,22 @@ public class DriveController {
             return new ResponseEntity<>("byte화 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         Drive drive = driveRepository.findById(fileId).orElseThrow(() ->new IllegalArgumentException("파일을 찾을 수 없습니다."));
-        String fileName = URLEncoder.encode(drive.getOriginName(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        httpHeaders.setContentLength(fileByte.length);
-        httpHeaders.setContentDispositionFormData("attachment", fileName);
 
-        return new ResponseEntity<>(fileByte, httpHeaders, HttpStatus.OK);
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        httpHeaders.setContentLength(fileByte.length);
+//        String fileName = URLEncoder.encode(drive.getOriginName(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+//        httpHeaders.setContentDispositionFormData("attachment", fileName);
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode("tistory.png", "UTF-8")+"\";");
+        response.setHeader("Content-Transfer-Encoding", "binary");
+
+        response.getOutputStream().write(fileByte);
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
+
+        return new ResponseEntity<>("성공", HttpStatus.OK);
+//        return new ResponseEntity<>(fileByte, httpHeaders, HttpStatus.OK);
     }
 
     //해당 레벨 폴더들 보여주기 - 완
