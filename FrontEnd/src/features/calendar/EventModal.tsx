@@ -31,14 +31,12 @@ interface EventModalProps {
   eventInfos: any;
   clickInfos: any;
   isEditCard: boolean;
-  update: () => void;
 }
 export const EventModal = ({
   open,
   handleClose,
   eventInfos,
   isEditCard,
-  update,
 }: EventModalProps) => {
   //기존 내담자 리스트
   const [clientId, setClientId] = useState('');
@@ -74,14 +72,16 @@ export const EventModal = ({
         })
         .catch((e) => console.log(e));
     }
-  }, [eventInfos]);
+  }, [eventInfos, isEditCard]);
+
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
       setClientId(res.data);
     });
   }, []);
+
   //evet 추가 함수
-  const addEvent = async () => {
+  const addEvent = () => {
     const calendarApi = eventInfos.view.calendar;
     const utcStartTime = new Date(`${eventInfos.startStr} ${startTime}`).toISOString();
     const utcEndTime = new Date(`${eventInfos.startStr} ${endTime}`).toISOString();
@@ -93,10 +93,8 @@ export const EventModal = ({
       content,
     };
     calendarApi.addEvent(data);
-    axiosService.post('/schedule/', data).then((res) => {
-      console.log(res);
-      update();
-    });
+    axiosService.post('/schedule/', data).then((res) => console.log(res));
+
     setClient('');
     setContent('');
     handleClose();
