@@ -12,7 +12,7 @@ public interface DriveService {
     boolean memberClientFolder(Long memberClientId); //해당 상담자내담자의 폴더가 없으면 생성하는 로직 추가
     boolean pathFolder(Long memberClientId,String path) throws IOException;
     Long pathFileSave(Long memberClientId, String path, MultipartFile file) throws IOException;
-    File pahtFileDownload(Long fileId) throws IOException;
+    byte[] pahtFileDownload(Long fileId) throws IOException;
     List<FileResponseDto> getFileList(Long memberClientId, String path);
     List<String> getFolderList(Long memberClientId, String path);
     boolean moveFile(Long memberClientId,String path,Long id) throws IOException;

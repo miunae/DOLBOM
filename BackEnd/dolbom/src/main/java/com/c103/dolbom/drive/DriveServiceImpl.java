@@ -102,11 +102,11 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public File pahtFileDownload(Long fileId) throws IOException {
+    public byte[] pahtFileDownload(Long fileId) throws IOException {
         Drive drive = driveRepository.findById(fileId).get();
         File file = new File(drive.getPath());
 
-        return file;
+        return null;
     }
 
     @Override
