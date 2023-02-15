@@ -4,8 +4,8 @@ import IconButton from '@mui/material/IconButton';
 import { useRef, useState } from 'react';
 
 import { axiosService } from '../../api/instance';
-import { useAppSelector } from '../../app/hooks';
-import { selectDashboard } from './dashboardSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectDashboard, updateToggle } from './dashboardSlice';
 type folderInfo = {
   update: () => void;
 };
@@ -15,6 +15,7 @@ export const AddFileButton = ({ update }: folderInfo) => {
   const accessToken = sessionStorage.getItem('access-token');
   const refreshToken = sessionStorage.getItem('refresh-token');
   const currentPath = currentState.path;
+  const dispatch = useAppDispatch();
   const mcid = currentState.memberClientId;
   const handleFileChange = async (e: any) => {
     // Update chosen files
@@ -40,6 +41,7 @@ export const AddFileButton = ({ update }: folderInfo) => {
         'refresh-token': refreshToken,
       },
     });
+    dispatch(updateToggle());
     update();
   };
   return (

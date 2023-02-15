@@ -6,7 +6,7 @@ interface FolderState {
   memberClientId: any;
   name: string;
   pathStack: string[];
-  toggle: boolean;
+  toggle: number;
 }
 
 const initialState: FolderState = {
@@ -14,7 +14,7 @@ const initialState: FolderState = {
   path: '',
   memberClientId: 0,
   pathStack: ['root'],
-  toggle: false,
+  toggle: 1,
 };
 
 const dashBoardSlice = createSlice({
@@ -58,7 +58,7 @@ const dashBoardSlice = createSlice({
       state.path = '';
     },
     updateToggle: (state) => {
-      state.toggle = !state.toggle;
+      state.toggle += 1;
     },
   },
 });

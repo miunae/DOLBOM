@@ -16,7 +16,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { axiosService } from '../../api/instance';
 import { useAppSelector } from '../../app/hooks';
-import Spinner from '../Spinner/Spinner';
 import IDinput from './IDinput';
 import PwdInput from './PwdInput';
 import { selectSignup } from './signupSlice';
