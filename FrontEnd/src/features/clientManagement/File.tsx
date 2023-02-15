@@ -27,7 +27,8 @@ export const File = ({ fileName, fileId }: Filedata) => {
     });
   };
 
-  const Delete = () => {
+  const Delete = (e: any) => {
+    e.stopPropagation();
     axiosService.delete(`file/`, { params: { id: mcid, file_id: fileId } }).then(() => {
       console.log(`Deleted file with id ${fileId}`);
     });
@@ -62,7 +63,7 @@ export const File = ({ fileName, fileId }: Filedata) => {
           <Button
             variant="outlined"
             sx={{ width: '2rem', height: '2rem', minWidth: 0, minHeight: 0, p: 0 }}
-            onClick={Delete}
+            onClick={(e) => Delete(e)}
           >
             <DeleteIcon />
           </Button>
