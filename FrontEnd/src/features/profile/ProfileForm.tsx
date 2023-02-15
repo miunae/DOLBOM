@@ -39,7 +39,6 @@ const theme = createTheme();
 export const ProfileForm = () => {
   const { isLoading, data } = useQuery(['userinfo'], getUserInfo);
   const userInfo = data as UserInfo;
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -79,8 +78,8 @@ export const ProfileForm = () => {
                   id="userId"
                   label="ID"
                   name="userId"
-                  autoComplete="userId"
-                  defaultValue={userInfo.userId}
+                  // autoComplete="userId"
+                  // defaultValue={userInfo.userId}
                 />
               </Grid>
               <Grid item xs={12}>

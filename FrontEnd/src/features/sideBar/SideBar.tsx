@@ -13,7 +13,6 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Modal from '@mui/material/Modal';
 import Toolbar from '@mui/material/Toolbar';
@@ -267,11 +266,14 @@ export const SideBar = () => {
         </List>
 
         <List>
-          <Link to="/userprofile" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <ListItem key="userprofile" disablePadding>
+          <Link
+            to="/clientmanagement"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <ListItem key="ClientManagementPage" disablePadding>
               <ListItemButton>
                 <PersonSearchIcon />
-                <ListItemText primary="UserProfile" />
+                <ListItemText primary="ClientManagementPage" />
               </ListItemButton>
             </ListItem>
           </Link>
