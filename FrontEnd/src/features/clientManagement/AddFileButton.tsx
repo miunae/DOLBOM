@@ -1,10 +1,16 @@
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Button } from '@mui/material';
-import axios from 'axios';
 import { useRef, useState } from 'react';
+
+import { axiosService } from '../../api/instance';
+import { useAppSelector } from '../../app/hooks';
+import { selectDashboard } from './dashboardSlice';
 export const AddFileButton = () => {
-  const [filesToUpload, setFilesToUpload] = useState();
+  const currentState = useAppSelector(selectDashboard);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const URL = import.meta.env.VITE_ADD_FILE_URL;
+  const accessToken = sessionStorage.getItem('access-token');
+  const refreshToken = sessionStorage.getItem('refresh-token');
+  const mcid = currentState.memberClientId;
   const handleFileChange = async (e: any) => {
     // Update chosen files
     e.preventDefault();
@@ -12,26 +18,28 @@ export const AddFileButton = () => {
     // setFilesToUpload(files);
     const formData = new FormData();
     const data = {
-      name: files.name,
-      type: files.type,
+      member_client_id: mcid,
+      path: '', // 수정 필요
     };
-    formData.append('files', files);
     formData.append(
-      'data',
+      'dto',
       new Blob([JSON.stringify(data)], { type: 'application/json' }),
     );
+    formData.append('file', files);
 
-    await axios({
-      method: 'post',
-      url: URL,
-      data: formData,
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }).then((res) => console.log(res));
+    console.log(formData);
+    await axiosService.post('/file/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'access-token': accessToken,
+        'refresh-token': refreshToken,
+      },
+    });
   };
   return (
     <>
       <Button variant="contained" component="label">
-        Upload File
+        <UploadFileIcon />
         <input
           type="file"
           ref={fileInputRef}

@@ -2,7 +2,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import axios from 'axios';
+
+import { axiosService } from '../../api/instance';
 const style = {
   position: 'absolute' as const,
   top: '50%',
@@ -11,7 +12,6 @@ const style = {
   width: 500,
   height: 430,
   bgcolor: 'background.paper',
-  // border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
@@ -24,10 +24,11 @@ export const ChildModal = ({ childOpen, handleChildClose }: ChildModalProps) => 
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const clientdata = {
-      clientName: data.get('name')?.toString() ?? '',
-      clientEmail: data.get('email')?.toString() ?? '',
+      name: data.get('name')?.toString() ?? '',
+      email: data.get('email')?.toString() ?? '',
+      phone: data.get('phone')?.toString() ?? '',
     };
-    axios.post('http://localhost:3003/calendarEvents', clientdata);
+    axiosService.post('/client/', clientdata);
     handleChildClose();
   };
   return (
@@ -38,6 +39,13 @@ export const ChildModal = ({ childOpen, handleChildClose }: ChildModalProps) => 
           <Box component="form" onSubmit={handleSubmit}>
             <TextField margin="normal" label="이름" fullWidth id="name" name="name" />
             <TextField margin="normal" label="이메일" fullWidth id="email" name="email" />
+            <TextField
+              margin="normal"
+              label="전화번호"
+              fullWidth
+              id="phone"
+              name="phone"
+            />
             <Button type="submit">신규 등록</Button>
           </Box>
         </Box>

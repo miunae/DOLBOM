@@ -21,8 +21,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-@Service
+//로컬 저장
+//@Service
 @RequiredArgsConstructor
 @Slf4j
 public class DriveServiceImpl implements DriveService{
@@ -102,11 +102,11 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public File pahtFileDownload(Long fileId) throws IOException {
+    public byte[] pahtFileDownload(Long fileId) throws IOException {
         Drive drive = driveRepository.findById(fileId).get();
         File file = new File(drive.getPath());
 
-        return file;
+        return null;
     }
 
     @Override
@@ -192,10 +192,9 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public boolean deleteFile(Long memberClientId, String path, Long id) {
-        String savePath = extractPath(memberClientId, path);
+    public boolean deleteFile(Long memberClientId, Long id) {
         Drive drive = driveRepository.findById(id).get();
-        File file = new File(savePath,drive.getSavedName());
+        File file = new File(drive.getPath());
         driveRepository.deleteById(id);
         file.delete();
 
