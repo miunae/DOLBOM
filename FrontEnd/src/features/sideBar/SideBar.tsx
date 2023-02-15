@@ -47,10 +47,7 @@ export const SideBar = () => {
 
   const logOut = () => {
     dispatch(clearUser());
-    sessionStorage.removeItem('access-token');
-    sessionStorage.removeItem('refresh-token');
-    sessionStorage.removeItem('sessionId');
-    sessionStorage.removeItem('conferenceId');
+    sessionStorage.clear();
   };
 
   const [open, setOpen] = React.useState(false);
@@ -68,15 +65,10 @@ export const SideBar = () => {
     setSelectedClientId(e.target.value);
   };
 
-  // console.log(sessionStorage.getItem('access-token')) access-token 가져오는 코드
-
-  // const sessionId = sessionStorage.setItem('sessionId'); // userID를 Modal 창에서 클릭시 받아서 사용
-
   const accessToken = sessionStorage.getItem('access-token');
   const refreshToken = sessionStorage.getItem('refresh-token');
 
   function moveToVideo() {
-    // const sessionId = sessionStorage.getItem('sessionId');
     console.log(`세션 아이디 : ${sessionStorage.getItem('sessionId')}`);
     navigate(`/video/${sessionStorage.getItem('sessionId')}`);
   }
@@ -114,6 +106,7 @@ export const SideBar = () => {
       });
   }
 
+  // window.alert
   const useConfirm = (message = null, onConfirm, onCancel) => {
     if (!onConfirm || typeof onConfirm !== 'function') {
       return;

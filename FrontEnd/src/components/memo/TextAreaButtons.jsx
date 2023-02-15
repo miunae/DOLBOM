@@ -1,14 +1,17 @@
+import './TextAreaButtons.css';
+
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import React from 'react';
 
+import { axiosService } from '../../api/instance';
+
 // 전역적으로 담자 많이 쓰니깐.
 const accessToken = sessionStorage.getItem('access-token');
 const refreshToken = sessionStorage.getItem('refresh-token');
+const conferenceId = sessionStorage.getItem('conferenceId');
 
-// (28) memo에 대한 post conferid, memo 2개 post한다.
-
-export default function Buttons() {
+export default function TextAreaButtons() {
   // (31) openvidu 녹음 시작 버튼
   function sendText() {
     const body = JSON.stringify({
@@ -52,7 +55,7 @@ export default function Buttons() {
   // (32) openvidu 녹음 중지 버튼
   function recordstop() {
     axios
-      .get('http://localhost:8080/openvidu/api/recordings/stop/{conferenceId}', {
+      .get(`http://localhost:8080/openvidu/api/recordings/stop/${conferenceId}`, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
@@ -69,27 +72,15 @@ export default function Buttons() {
 
   return (
     <div className="buttons">
-      <Button
-        className="record-start"
-        variant="contained"
-        color="primary"
-        onClick={recordstart}
-      >
+      <Button id="record-start" variant="contained" color="primary" onClick={recordstart}>
         녹음 시작
       </Button>
-      <Button
-        className="record-stop"
-        variant="outlined"
-        color="secondary"
-        onClick={recordstop}
-      >
+      <Button id="record-stop" variant="outlined" color="secondary" onClick={recordstop}>
         녹음 중지
       </Button>
-      <Button className="text-save" variant="contained" onClick={sendText}>
+      <Button id="text-save" variant="contained" onClick={sendText}>
         메모 저장
       </Button>
     </div>
   );
 }
-
-// export default Buttons();

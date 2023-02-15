@@ -5,31 +5,45 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
-
 import axios from 'axios';
-import { access } from 'fs';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
+import JoinModal from './JoinModal';
 
 const theme = createTheme();
 
 export const ClientCheckForm = () => {
+  const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [clientSessionId, setClientSessionId] = useState('');
   const [conferenceId, setConferenceId] = useState('');
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  function openModal() {
+    setModalOpen(true);
+  }
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   // (27) 선택된 내담자들에 대한 정보를 post 한다.
   function sendToClientinfo() {
-    const navigate = useNavigate();
-
     const body = JSON.stringify({
+      name: name,
       email: email,
-      sessionid: clientSessionId,
+      sessionId: clientSessionId,
       conferenceId: conferenceId,
     });
+
+    function joinVideo() {
+      navigate(`/video/${clientSessionId}`);
+    }
+
     axios
       .post('http://localhost:8080/api/connections/conference/client', body, {
         headers: {
@@ -38,19 +52,14 @@ export const ClientCheckForm = () => {
           'refresh-token': sessionStorage.getItem('refresh-token'),
         },
       })
-      .then((res) => {
-        if (res.status === 200) {
-          console.log('200받아짐');
-          <Stack sx={{ width: '100%' }} spacing={2}>
-            <Alert severity="error"> 존재하지 않는 내담자입니다! </Alert>
-          </Stack>;
-        } else if (res.status === 401) {
-          console.log('200엘스이프');
-          navigate(-1);
-        }
+      .then(function (res) {
+        console.log(res.data + '고객정보 전달 성공!');
+        console.log(clientSessionId);
+        joinVideo();
       })
-      .catch(function (res) {
-        console.log('고객정보 전달 실패!');
+      .catch(function (err) {
+        console.log(err + '고객정보 전달 실패!');
+        alert('정보가 일치하지 않습니다. 다시 입력해주세요.');
       }); // 요청 응답값에 따라서, 입장 허가와 불허를 판단한다.
   }
   // sessionStorage.setItem('access-token', 'Bearer ' + accessToken);
@@ -112,18 +121,20 @@ export const ClientCheckForm = () => {
               value={conferenceId}
               onChange={(e) => setConferenceId(e.target.value)}
             />
-            <Link to={`/video/${clientSessionId}`}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={sendToClientinfo}
-              >
-                세션 입장
-              </Button>
-            </Link>
           </Box>
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={() => {
+              sendToClientinfo();
+              openModal();
+            }}
+          >
+            세션 입장
+          </Button>
         </Box>
       </Container>
     </ThemeProvider>
