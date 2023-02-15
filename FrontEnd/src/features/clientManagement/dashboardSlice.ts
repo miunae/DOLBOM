@@ -37,11 +37,19 @@ const dashBoardSlice = createSlice({
       state.name = action.payload.name;
     },
     appendPath: (state: any, action: PayloadAction<{ path: string }>) => {
+      if (state.pathStack.length - 1) {
+        state.path = state.path + '/' + action.payload.path;
+      } else {
+        state.path = state.path + action.payload.path;
+      }
       state.pathStack = [...state.pathStack, action.payload.path];
-      state.path = state.path + '/' + action.payload.path;
     },
     popPath: (state) => {
       state.pathStack.pop();
+      const exPath = state.path?.lastIndexOf('/');
+      if (state.path) {
+        state.path = state.path.substring(0, exPath);
+      }
     },
     clearPath: (state) => {
       state.pathStack = [state.pathStack[0]];

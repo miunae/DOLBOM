@@ -9,22 +9,15 @@ import { AddFileButton } from './AddFileButton';
 import { AddFolderButton } from './AddFolderButton';
 import { BackButton } from './BackButton';
 import { selectDashboard } from './dashboardSlice';
+import { DeleteButton } from './DeleteButton';
 import { File } from './File';
 import { Folder } from './Folder';
 export const Dashboard = () => {
   const [currentFolderName, setCurrentFolderName] = useState('root');
-  // const { folderId } = useParams() as { folderId: string };
-  // const slash: number = useLocation().pathname.lastIndexOf('null');
-  // const folderName = useLocation().pathname.substring(slash);
-  // const location = useLocation();
-  // const userParam = location.state.userParam;
-  // const parentPath = location.state.parantPath;
-  // const currentFolder = parentPath + '/' + folderName;
   const currentState = useAppSelector(selectDashboard);
   const currentPath = currentState.path;
   const pathStack = currentState.pathStack;
   const currentMemberClientId = currentState.memberClientId;
-  console.log(currentPath);
   const [isUpdate, setIsUpdate] = useState(false);
   const update = () => {
     setIsUpdate(!isUpdate);
@@ -32,8 +25,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     setCurrentFolderName(currentState.name);
-    const path =
-      pathStack[pathStack.length - 1] === 'root' ? '' : pathStack[pathStack.length - 1];
+    const path = pathStack[pathStack.length - 1] === 'root' ? '' : currentPath;
     axiosService
       .get('/folder/', { params: { id: currentMemberClientId, path: path } })
       .then((res) => {
@@ -45,27 +37,30 @@ export const Dashboard = () => {
       .then((res) => {
         setFileData(res.data);
         console.log(res.data);
-      });
+      })
+      .catch((err) => console.log(err));
   }, [isUpdate, currentPath, pathStack]);
   const [folderData, setFolderData] = useState([]);
   const [fileData, setFileData] = useState([]);
   return (
     <>
-      <Box sx={{ flexGrow: 1, width: 'auto' }}>
+      <Box sx={{ flexGrow: 1, width: 1 }}>
         <Box
           sx={{
+            flexGrow: 1,
             display: 'flex',
             flexDirection: 'row-reverse',
             bgcolor: 'background.paper',
             borderRadius: 1,
-            width: 'auto',
+            width: 1,
           }}
         >
-          {pathStack.length >= 1 ? <BackButton /> : null}
-          <AddFolderButton folderPath={currentPath} update={update} />
+          {pathStack.length > 1 ? <BackButton /> : null}
+          {pathStack.length > 1 ? <DeleteButton /> : null}
+          <AddFolderButton update={update} />
           <AddFileButton />
         </Box>
-        <Typography>folders</Typography>
+        <Typography sx={{ width: '100px', my: 0 }}>folders</Typography>
         <Divider sx={{ my: 1 }} />
         <Box sx={{ minHeight: '40vh' }}>
           {folderData.length ? (
