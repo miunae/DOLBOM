@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import Grid from '@mui/material/Grid';
+import * as React from 'react';
 
-import VideoRoomComponent from '../components/VideoRoomComponent.jsx';
-import TextareaDec from '../components/memo/TextareaDec'
-export function VideoPage() {
-  const refreshToken = sessionStorage.getItem('refresh-token');
+import { SideBar } from '../features/sideBar/SideBar';
 
-  // const TextOrUser = () => {
-  //   if (refreshToken) return <TextareaDec />;
-  //   return null;
-  // };
+export const VideoPage = () => {
   return (
     <>
-      <div>
-        <VideoRoomComponent />
-        {/* <TextOrUser/>   */}   
-        </div>
-
-      <div></div>
+      <Grid container spacing={2}>
+        <Grid item xs={2}>
+          <SideBar />
+        </Grid>
+        <Grid item xs={10}>
+          <h1>Viedo Conferencing</h1>
+        </Grid>
+      </Grid>
     </>
   );
-}
+};

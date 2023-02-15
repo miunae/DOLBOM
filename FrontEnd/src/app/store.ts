@@ -3,7 +3,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import userSlice from '../features/auth/userSlice';
 import dashboardSlice from '../features/clientManagement/dashboardSlice';
 import signupSlice from '../features/signup/signupSlice';
-
 export const store = configureStore({
   reducer: {
     user: userSlice,
