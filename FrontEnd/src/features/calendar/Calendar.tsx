@@ -15,10 +15,6 @@ export const Calendar = () => {
   const [eventInfos, setEventInfos] = useState();
   const [clickInfos, setClickInfos] = useState();
   const [isEditCard, setIsEditCard] = useState<boolean>(false);
-  const [toggle, setToggle] = useState(false);
-  const UpdateToggle = () => {
-    setToggle(!toggle);
-  };
   useEffect(() => {
     axiosService
       .get('/schedule/')
@@ -26,7 +22,7 @@ export const Calendar = () => {
         setEvents(res.data);
       })
       .catch((err) => console.log(`초기랜더링 에러${err}`));
-  }, [toggle]);
+  }, []);
   //드롭
   const eventDrop = (info: any) => {
     const updateId = info.event.extendedProps.scheduleId;
@@ -65,7 +61,6 @@ export const Calendar = () => {
         eventInfos={eventInfos}
         clickInfos={clickInfos}
         isEditCard={isEditCard}
-        update={UpdateToggle}
       />
       <div className="demo-app-main">
         <FullCalendar
