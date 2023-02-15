@@ -18,6 +18,7 @@ export const Dashboard = () => {
   const currentPath = currentState.path;
   const pathStack = currentState.pathStack;
   const currentMemberClientId = currentState.memberClientId;
+  const toggle = currentState.toggle;
   const [isUpdate, setIsUpdate] = useState(false);
   const update = () => {
     setIsUpdate(!isUpdate);
@@ -36,10 +37,11 @@ export const Dashboard = () => {
       .get('/file/', { params: { id: currentMemberClientId, path: path } })
       .then((res) => {
         setFileData(res.data);
+        console.log('파일');
         console.log(res.data);
       })
       .catch((err) => console.log(err));
-  }, [isUpdate, currentPath, pathStack]);
+  }, [isUpdate, currentPath, pathStack, toggle]);
   const [folderData, setFolderData] = useState([]);
   const [fileData, setFileData] = useState([]);
   return (
@@ -56,9 +58,9 @@ export const Dashboard = () => {
           }}
         >
           {pathStack.length > 1 ? <BackButton /> : null}
-          {pathStack.length > 1 ? <DeleteButton /> : null}
+          {pathStack.length > 1 ? <DeleteButton update={update} /> : null}
           <AddFolderButton update={update} />
-          <AddFileButton />
+          <AddFileButton update={update} />
         </Box>
         <Typography sx={{ width: '100px', my: 0 }}>folders</Typography>
         <Divider sx={{ my: 1 }} />
@@ -79,7 +81,7 @@ export const Dashboard = () => {
           {fileData.length ? (
             <Box>
               {fileData.map((prop: any, index) => (
-                <File key={index} fileName={prop.slice(1, -1)} />
+                <File key={index} fileName={prop.fileName} fileId={prop.fileId} />
               ))}
             </Box>
           ) : (

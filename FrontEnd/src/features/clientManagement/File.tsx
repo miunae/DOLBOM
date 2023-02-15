@@ -3,16 +3,29 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { Button } from '@mui/material';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+
+import { axiosService } from '../../api/instance';
 interface Filedata {
   fileName: string | undefined;
+  fileId: number;
 }
-export const File = ({ fileName }: Filedata) => {
+export const File = ({ fileName, fileId }: Filedata) => {
+  const Download = () => {
+    axiosService.get<Blob>(`file/${fileId}`, { responseType: 'blob' }).then((res) => {
+      console.log(res);
+      const url = URL.createObjectURL(res.data);
+      if (url != null) {
+        window.open(url);
+      }
+    });
+  };
   return (
     <>
       <Button
         variant="outlined"
         // onClick={toAnotherFolder}
         sx={{ m: 1, width: '10vh', minWidth: '18vh' }}
+        onClick={Download}
         // sx={{ width: 'auto', height: 'auto' }}
       >
         <Box
@@ -28,8 +41,8 @@ export const File = ({ fileName }: Filedata) => {
             margin: 0,
           }}
         >
-          <ArticleIcon sx={{ width: 4 / 5, height: '10vh' }} />
-          <Typography variant="h6" component="div" noWrap>
+          <ArticleIcon sx={{ width: 1 / 2, height: '10vh' }} />
+          <Typography component="div" noWrap>
             {fileName}
           </Typography>
         </Box>
