@@ -1,20 +1,17 @@
 package com.c103.dolbom.drive;
 
+import com.c103.dolbom.Entity.Drive;
 import com.c103.dolbom.drive.dto.FileResponseDto;
 import com.c103.dolbom.drive.dto.FolderPathRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -22,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DriveController {
     private final DriveService driveService;
+    private final DriveRepository driveRepository;
     //시큐리티 설정 : 들어올때 상담자만 들어올 수 있고, 내담자의 아이디가 존재해야한다.
     //폴더 생성 - 완
     @PostMapping("/folder")
@@ -41,18 +39,30 @@ public class DriveController {
     }
     //파일 다운로드
     @GetMapping("/file/{id}")
-    public ResponseEntity<?> download(@PathVariable("id") Long fileId){
+    public ResponseEntity<?> download(@PathVariable("id") Long fileId, HttpServletResponse response) throws IOException {
+        byte[] fileByte = new byte[0];
         try {
-            File file = driveService.pahtFileDownload(fileId);
-            Resource resource = new InputStreamResource(Files.newInputStream(file.toPath()));
-            HttpHeaders headers = new HttpHeaders();
-            // 다운로드 되거나 로컬에 저장되는 용도로 쓰이는지를 알려주는 헤더
-            headers.setContentDisposition((ContentDisposition.builder("attachment").filename(file.getName()).build()));
-            return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
+            fileByte = driveService.pahtFileDownload(fileId);
         } catch (IOException e) {
-            return new ResponseEntity<Object>(null, HttpStatus.CONFLICT);
+            return new ResponseEntity<>("byte화 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        Drive drive = driveRepository.findById(fileId).orElseThrow(() ->new IllegalArgumentException("파일을 찾을 수 없습니다."));
 
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        httpHeaders.setContentLength(fileByte.length);
+//        String fileName = URLEncoder.encode(drive.getOriginName(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+//        httpHeaders.setContentDispositionFormData("attachment", fileName);
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode("tistory.png", "UTF-8")+"\";");
+        response.setHeader("Content-Transfer-Encoding", "binary");
+
+        response.getOutputStream().write(fileByte);
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
+
+        return new ResponseEntity<>("성공", HttpStatus.OK);
+//        return new ResponseEntity<>(fileByte, httpHeaders, HttpStatus.OK);
     }
 
     //해당 레벨 폴더들 보여주기 - 완
@@ -69,7 +79,7 @@ public class DriveController {
 
         return new ResponseEntity<>(fileList, HttpStatus.OK);
     }
-    //파일을 폴더 안에 넣기 ->실제 파일 이동 후 db에서 path변경
+    //파일 이동 - 완
     @PatchMapping("/file")
     public ResponseEntity<?> moveFile(@RequestParam("id") Long memberClientId,@RequestParam("path") String path,@RequestParam("file_id") Long fileId){
         try {
@@ -86,7 +96,7 @@ public class DriveController {
         return new ResponseEntity<>("file delete success", HttpStatus.OK);
     }
 
-    //폴더 삭제 디렉토리 이하 리스트를 뽑은 후 UUID로 삭제,
+    //폴더 삭제 - 완
     @DeleteMapping("/folder")
     public ResponseEntity<?> deleteFolder(@RequestParam("id") Long memberClientId,@RequestParam("path") String path){
         try {

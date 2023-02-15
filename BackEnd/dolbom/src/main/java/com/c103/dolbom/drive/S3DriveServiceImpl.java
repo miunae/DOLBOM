@@ -1,5 +1,6 @@
 package com.c103.dolbom.drive;
 
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.c103.dolbom.Entity.Drive;
@@ -55,18 +56,7 @@ public class S3DriveServiceImpl implements DriveService{
         return true;
     }
 
-    private String extractPath(Long memberClientId, String path) {
-        String splitRegex = Pattern.quote(System.getProperty("user.home"));
-        String[] pathArr = path.split(splitRegex);
-        StringBuilder saveFolderBuilder = new StringBuilder();
-        saveFolderBuilder.append(absolutePath).append(memberClientId.toString());
 
-        for(int i=0; i<pathArr.length;i++){
-            saveFolderBuilder.append("/").append(pathArr[i]);
-        }
-        System.out.println(saveFolderBuilder.toString());
-        return saveFolderBuilder.toString();
-    }
 
     @Override
     public Long pathFileSave(Long memberClientId, String path, MultipartFile file) throws IOException {
@@ -98,11 +88,13 @@ public class S3DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public File pahtFileDownload(Long fileId) throws IOException {
+    public byte[] pahtFileDownload(Long fileId) throws IOException {
         Drive drive = driveRepository.findById(fileId).get();
-        File file = new File(drive.getPath());
 
-        return file;
+        byte[] bytes = s3Uploader.fileDownload(drive.getPath());
+
+
+        return bytes;
     }
 
     @Override
@@ -129,26 +121,23 @@ public class S3DriveServiceImpl implements DriveService{
 
     @Override
     public List<String> getFolderList(Long memberClientId, String path) {
-
         String prefix = extractPath(memberClientId, path);
         List<String> folderList = s3Uploader.getLevelFolderList(prefix);
 
         return folderList;
-
     }
 
     @Override
     public boolean moveFile(Long memberClientId, String path, Long id) throws IOException {
         Drive drive = driveRepository.findById(id).get();
 
-        Path oldPath = Paths.get(drive.getPath());
+        String oldPath = drive.getPath();
 
         String savePath = extractPath(memberClientId, path);
-        Path newPath = Paths.get(savePath + File.separator + drive.getSavedName());
+        String newPath = savePath + "/" + drive.getSavedName();
+        s3Uploader.moveFile(oldPath,newPath);
 
-        Files.move(oldPath,newPath, StandardCopyOption.ATOMIC_MOVE);
-
-        drive.changePath(savePath + File.separator + drive.getSavedName());
+        drive.changePath(newPath);
         driveRepository.save(drive);
 
         return true;
@@ -167,22 +156,28 @@ public class S3DriveServiceImpl implements DriveService{
     @Override
     @Transactional
     public boolean deleteFolder(Long memberClientId, String path) throws IOException {
-        String savePath = extractPath(memberClientId, path);
-        List<Drive> driveList = driveRepository.findByPathStartsWith(savePath);
-        driveRepository.deleteByPathStartsWith(savePath);
-
-        File baseDir = new File(savePath);
-        Files.walk(baseDir.toPath()).sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach((file) -> {
-                    file.delete();
-                });
-
-
-
+        String savedPath = extractPath(memberClientId, path);
+        List<Drive> driveList = driveRepository.findByPathStartsWith(savedPath);
+        s3Uploader.deleteFolder(savedPath);
+        driveRepository.deleteByPathStartsWith(savedPath);
         return true;
     }
 
+    private String extractPath(Long memberClientId, String path) {
+        String splitRegex = Pattern.quote(System.getProperty("user.home"));
+        String[] pathArr = path.split(splitRegex);
+        StringBuilder saveFolderBuilder = new StringBuilder();
+        saveFolderBuilder.append(absolutePath).append(memberClientId.toString());
 
+        if(pathArr.length==1 && pathArr[0].equals("")){
+            return saveFolderBuilder.toString();
+        }
+        for(int i=0; i<pathArr.length;i++){
+            saveFolderBuilder.append("/").append(pathArr[i]);
+        }
+
+        System.out.println(saveFolderBuilder.toString());
+        return saveFolderBuilder.toString();
+    }
 
 }

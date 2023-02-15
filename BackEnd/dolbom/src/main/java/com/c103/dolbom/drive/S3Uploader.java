@@ -1,9 +1,16 @@
 package com.c103.dolbom.drive;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.IOUtils;
+import com.c103.dolbom.Entity.Drive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +33,8 @@ public class S3Uploader {
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;  // S3 버킷
+    @Value("${cloud.aws.region.static}")
+    private String region;
 
     // S3 파일 업로드
     public String fileUpload(MultipartFile multipartFile, String path) throws IOException {
@@ -41,6 +50,15 @@ public class S3Uploader {
 
         return savedPath;
     }
+    // S3 파일 다운로드
+    public byte[] fileDownload(String path) throws IOException {
+        S3Object s3Object = amazonS3Client.getObject(bucket, path);
+
+        S3ObjectInputStream s3ObjectInputStream = s3Object.getObjectContent();
+        byte[] bytes = IOUtils.toByteArray(s3ObjectInputStream);
+        return bytes;
+
+    }
     // S3 폴더 업로드
     public String folderUpload(String path) throws IOException {
         // S3에 폴더 업로드
@@ -52,6 +70,39 @@ public class S3Uploader {
     // S3 파일 삭제
     public void delete(String path) {
         amazonS3Client.deleteObject(bucket, path);
+    }
+
+    //S3 폴더 삭제
+    public void deleteFolder(String prefix){
+        //하위 디렉토리 조회
+        List<String> fileNames = new ArrayList<>();
+        ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
+        listObjectsRequest.setBucketName(bucket);
+        if (!prefix.equals("")) {
+            listObjectsRequest.setPrefix(prefix);
+        }
+        ObjectListing s3Objects;
+        do {
+            s3Objects = amazonS3Client.listObjects(listObjectsRequest);
+            for (S3ObjectSummary s3ObjectSummary : s3Objects.getObjectSummaries()) {
+                fileNames.add(s3ObjectSummary.getKey());
+            }
+            listObjectsRequest.setMarker(s3Objects.getNextMarker());
+        } while (s3Objects.isTruncated());
+
+        //조회 목록 삭제
+        String[] pathArr = fileNames.toArray(new String[fileNames.size()]);
+
+        try {
+            DeleteObjectsRequest dor = new DeleteObjectsRequest(bucket)
+                    .withKeys(pathArr);
+            amazonS3Client.deleteObjects(dor);
+        } catch (AmazonServiceException e) {
+            System.err.println(e.getErrorMessage());
+            System.exit(1);
+        }
+
+
     }
 
     public List<String> getLevelFolderList(String prefix){
@@ -108,6 +159,10 @@ public class S3Uploader {
             listObjectsRequest.setMarker(s3Objects.getNextMarker());
         }while (s3Objects.isTruncated());
         return fileNames;
+    }
+    public void moveFile(String oldPath, String newPath){
+        amazonS3Client.copyObject(bucket,oldPath,bucket,newPath);
+        amazonS3Client.deleteObject(bucket,oldPath);
     }
     // 파일 convert 후 로컬에 업로드
     private Optional<File> convert(MultipartFile file) {
