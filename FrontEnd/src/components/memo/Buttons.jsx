@@ -1,17 +1,15 @@
-import './TextAreaButtons.css';
-
 import { Button } from '@material-ui/core';
 import axios from 'axios';
 import React from 'react';
-
-import { axiosService } from '../../api/instance';
+import { renderMatches } from 'react-router-dom';
 
 // 전역적으로 담자 많이 쓰니깐.
 const accessToken = sessionStorage.getItem('access-token');
 const refreshToken = sessionStorage.getItem('refresh-token');
-const conferenceId = sessionStorage.getItem('conferenceId');
 
-export default function TextAreaButtons() {
+// (28) memo에 대한 post conferid, memo 2개 post한다.
+
+function Buttons() {
   // (31) openvidu 녹음 시작 버튼
   function sendText() {
     const body = JSON.stringify({
@@ -20,7 +18,7 @@ export default function TextAreaButtons() {
     });
 
     axios
-      .post('http://localhost:8080/api/conference/client', body, {
+      .post('http://localhost:8080/api/conference/memo', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
@@ -72,15 +70,27 @@ export default function TextAreaButtons() {
 
   return (
     <div className="buttons">
-      <Button id="record-start" variant="contained" color="primary" onClick={recordstart}>
+      <Button
+        className="record-start"
+        variant="contained"
+        color="primary"
+        onClick={recordstart}
+      >
         녹음 시작
       </Button>
-      <Button id="record-stop" variant="outlined" color="secondary" onClick={recordstop}>
+      <Button
+        className="record-stop"
+        variant="outlined"
+        color="secondary"
+        onClick={recordstop}
+      >
         녹음 중지
       </Button>
-      <Button id="text-save" variant="contained" onClick={sendText}>
+      <Button className="text-save" variant="contained" onClick={sendText}>
         메모 저장
       </Button>
     </div>
   );
 }
+
+export default Buttons();

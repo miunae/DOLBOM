@@ -5,6 +5,7 @@ import com.c103.dolbom.Entity.MemberClient;
 import com.c103.dolbom.client.MemberClientRepository;
 import com.c103.dolbom.drive.dto.FileResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,17 +21,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-@Service
+//로컬 저장
+//@Service
 @RequiredArgsConstructor
+@Slf4j
 public class DriveServiceImpl implements DriveService{
     private final MemberClientRepository memberClientRepository;
     private final DriveRepository driveRepository;
-//    @Value("${file.dir}")
-//    String absolutePath;
-    //로컬
-//    private final String absolutePath = "C:"+ File.separator +"test";
-//    ec2
     private final String absolutePath = File.separator + "home" + File.separator + "ubuntu" + File.separator + "Dolbom";
     @Override
     public boolean memberClientFolder(Long memberClientId) {
@@ -105,11 +102,11 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public File pahtFileDownload(Long fileId) throws IOException {
+    public byte[] pahtFileDownload(Long fileId) throws IOException {
         Drive drive = driveRepository.findById(fileId).get();
         File file = new File(drive.getPath());
 
-        return file;
+        return null;
     }
 
     @Override
@@ -119,7 +116,6 @@ public class DriveServiceImpl implements DriveService{
         File rootFolder = new File(saveFolderBuilder.toString());
         if(!rootFolder.exists()){//존재x
             rootFolder.mkdir();
-            return null;
         }
 
         String savePath = extractPath(memberClientId, path);
@@ -149,14 +145,19 @@ public class DriveServiceImpl implements DriveService{
 
     @Override
     public List<String> getFolderList(Long memberClientId, String path) {
+        log.info("absolutePath " +absolutePath);
+        log.info(new File("").getPath());
         StringBuilder saveFolderBuilder = new StringBuilder();
         saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
         File rootFolder = new File(saveFolderBuilder.toString());
+        log.info("getFolderList " + rootFolder.getName());
+        log.info("루트 폴더 존재하나? " + rootFolder.exists() +" 절대 경로의 절대경로" + new File(absolutePath).getAbsolutePath());
+        log.info("절대 경로의 부모 폴더 " + new File(absolutePath).getParent());
         if(!rootFolder.exists()){//존재x
-            rootFolder.mkdir();
-            return null;
+            rootFolder.mkdirs();
         }
-
+        log.info( "루트 폴더는 폴더인가? " + new File(rootFolder.getAbsolutePath()).isDirectory());
+        log.info("루트 폴더 존재하나? " + rootFolder.exists() +" 루트 폴더의 절대경로" + new File(rootFolder.getAbsolutePath()).getAbsolutePath());
         String savePath = extractPath(memberClientId, path);
         File folder = new File(savePath);
         String[] fileList = folder.list();
@@ -191,10 +192,9 @@ public class DriveServiceImpl implements DriveService{
     }
 
     @Override
-    public boolean deleteFile(Long memberClientId, String path, Long id) {
-        String savePath = extractPath(memberClientId, path);
+    public boolean deleteFile(Long memberClientId, Long id) {
         Drive drive = driveRepository.findById(id).get();
-        File file = new File(savePath,drive.getSavedName());
+        File file = new File(drive.getPath());
         driveRepository.deleteById(id);
         file.delete();
 

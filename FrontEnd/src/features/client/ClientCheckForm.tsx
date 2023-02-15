@@ -7,9 +7,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
-import JoinModal from './JoinModal';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -21,17 +19,7 @@ export const ClientCheckForm = () => {
   const [clientSessionId, setClientSessionId] = useState('');
   const [conferenceId, setConferenceId] = useState('');
 
-  const [modalOpen, setModalOpen] = useState(false);
-
-  function openModal() {
-    setModalOpen(true);
-  }
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
-  // (27) 선택된 내담자들에 대한 정보를 post 한다.
+  // (27) 선택된 내담자들에 대한 정보를 post 한다. 일치여부 확인
   function sendToClientinfo() {
     const body = JSON.stringify({
       name: name,
@@ -39,11 +27,6 @@ export const ClientCheckForm = () => {
       sessionId: clientSessionId,
       conferenceId: conferenceId,
     });
-
-    function joinVideo() {
-      navigate(`/video/${clientSessionId}`);
-    }
-
     axios
       .post('http://localhost:8080/api/connections/conference/client', body, {
         headers: {
@@ -62,9 +45,14 @@ export const ClientCheckForm = () => {
         alert('정보가 일치하지 않습니다. 다시 입력해주세요.');
       }); // 요청 응답값에 따라서, 입장 허가와 불허를 판단한다.
   }
-  // sessionStorage.setItem('access-token', 'Bearer ' + accessToken);
 
+  // 방을 만들기 위한 sessionId 설정
   sessionStorage.setItem('sessionId', clientSessionId);
+
+  // videoPage로 넘어가기 위한 함수
+  function joinVideo() {
+    navigate(`/video/${clientSessionId}`);
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -130,7 +118,6 @@ export const ClientCheckForm = () => {
             sx={{ mt: 3, mb: 2 }}
             onClick={() => {
               sendToClientinfo();
-              openModal();
             }}
           >
             세션 입장
