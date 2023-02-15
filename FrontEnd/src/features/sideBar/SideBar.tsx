@@ -1,7 +1,5 @@
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LogoutIcon from '@mui/icons-material/Logout';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import AppBar from '@mui/material/AppBar';
@@ -15,10 +13,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Modal from '@mui/material/Modal';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import axios, { AxiosError } from 'axios';
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
@@ -46,10 +43,7 @@ export const SideBar = () => {
 
   const logOut = () => {
     dispatch(clearUser());
-    sessionStorage.removeItem('access-token');
-    sessionStorage.removeItem('refresh-token');
-    sessionStorage.removeItem('sessionId');
-    sessionStorage.removeItem('conferenceId');
+    sessionStorage.clear();
   };
 
   const [open, setOpen] = React.useState(false);
@@ -67,15 +61,10 @@ export const SideBar = () => {
     setSelectedClientId(e.target.value);
   };
 
-  // console.log(sessionStorage.getItem('access-token')) access-token 가져오는 코드
-
-  // const sessionId = sessionStorage.setItem('sessionId'); // userID를 Modal 창에서 클릭시 받아서 사용
-
   const accessToken = sessionStorage.getItem('access-token');
   const refreshToken = sessionStorage.getItem('refresh-token');
 
   function moveToVideo() {
-    // const sessionId = sessionStorage.getItem('sessionId');
     console.log(`세션 아이디 : ${sessionStorage.getItem('sessionId')}`);
     navigate(`/video/${sessionStorage.getItem('sessionId')}`);
   }
@@ -113,6 +102,7 @@ export const SideBar = () => {
       });
   }
 
+  // window.alert
   const useConfirm = (message = null, onConfirm, onCancel) => {
     if (!onConfirm || typeof onConfirm !== 'function') {
       return;
@@ -266,14 +256,11 @@ export const SideBar = () => {
         </List>
 
         <List>
-          <Link
-            to="/clientmanagement"
-            style={{ textDecoration: 'none', color: 'inherit' }}
-          >
-            <ListItem key="ClientManagementPage" disablePadding>
+          <Link to="/userprofile" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <ListItem key="userprofile" disablePadding>
               <ListItemButton>
                 <PersonSearchIcon />
-                <ListItemText primary="ClientManagementPage" />
+                <ListItemText primary="UserProfile" />
               </ListItemButton>
             </ListItem>
           </Link>

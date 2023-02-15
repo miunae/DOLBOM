@@ -9,26 +9,27 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
-import { CalendarPage } from './pages/CalendarPage';
+import { CalendPage } from './pages/CalendarPage';
 import { ClientCheckPage } from './pages/ClientCheckPage';
-import { ClientDetailPage } from './pages/ClientDetailPage';
-import { ClientManagementPage } from './pages/ClientManagementPage';
+// import { ClientDetailPage } from './pages/ClientDetailPage';
+// import { ClientManagementPage } from './pages/ClientManagementPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SignupPage } from './pages/SignupPage';
+import { UserProfilePage } from './pages/UserProfilePage';
 import { VideoPage } from './pages/VideoPage';
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
       <>
         <AxiosSetup />
-        <LoginPage />
+        <HomePage />
       </>
     ),
   },
@@ -46,19 +47,15 @@ const router = createBrowserRouter([
   },
   {
     path: '/calendar',
-    element: <CalendarPage />,
+    element: <CalendPage />,
   },
   {
     path: '/video/:id',
     element: <VideoPage />,
   },
   {
-    path: '/clientmanagement',
-    element: <ClientManagementPage />,
-  },
-  {
-    path: '/clientdetail/:userName/:folderPath/',
-    element: <ClientDetailPage />,
+    path: '/userprofile',
+    element: <UserProfilePage />,
   },
   {
     path: '/clientcheck',
@@ -91,17 +88,6 @@ ReactDOM.render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-        <ToastContainer
-          position="top-left"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Provider>

@@ -5,7 +5,6 @@ import axios from 'axios';
 import propTypes from 'prop-types';
 import React, { useState } from 'react';
 
-import { axiosService } from '../../api/instance';
 const IDinput = ({
   setIdValidate,
   setUserId,
@@ -23,7 +22,7 @@ const IDinput = ({
     if (id.length <= 0) {
       window.alert('이메일은 필수 입력항목입니다.');
     } else {
-      axiosService.get(`/user/email/${id}`).then((res) => {
+      axios.get(`${import.meta.env.VITE_URL}api/user/email/${id}`).then((res) => {
         if (res.data.isExist) {
           setDupCheck(true);
           setIdHelperText('중복이메일 입니다.');

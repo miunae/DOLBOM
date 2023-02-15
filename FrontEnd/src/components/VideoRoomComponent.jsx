@@ -12,24 +12,12 @@ import TextareaDec from './memo/TextareaDec';
 import StreamComponent from './stream/StreamComponent';
 import ToolbarComponent from './toolbar/ToolbarComponent';
 
-// console.log(this.props);
-
-// makeSessionData = makeSessionData;
-
-// console.log(makeSessionData);
 var localUser = new UserModel();
-
-// function Hello(props) {
-//   const APPLICATION_SERVER_URL =
-//     process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/{props.id}';
-// }
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/';
 
 class VideoRoomComponent extends React.Component {
-  // let test = this.props.makeSessionData
-  // console.log(test)
   constructor(props) {
     super(props);
     this.hasBeenUpdated = false;
@@ -589,9 +577,7 @@ class VideoRoomComponent extends React.Component {
             </div>
           )}
           <div>
-            {/* if (sessionStorage.getItem('refresh-token')) return <TextareaDec /> */}
             <TextareaDec />
-            {/* console.log(sessionStorage.getItem('refresh-token')) */}
           </div>
         </div>
       </div>
@@ -615,7 +601,6 @@ class VideoRoomComponent extends React.Component {
    */
 
   async getToken() {
-    // const sessionId = await this.createSession(this.state.mySessionId);
     const sessionId = await this.createSession(sessionStorage.getItem('sessionId'));
     console.log(sessionStorage.getItem('sessionId'));
     console.log('세션 아이디: ' + sessionId);
@@ -634,8 +619,6 @@ class VideoRoomComponent extends React.Component {
     return response.data; // The sessionId
   }
 
-  // console.log(response.data.conferenceId);
-
   async createToken(sessionId) {
     const response = await axios.post(
       APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections',
@@ -646,13 +629,5 @@ class VideoRoomComponent extends React.Component {
     );
     return response.data; // The token
   }
-
-  // conferenceid 보내기 위한 함수
-  //   sendConferenceid() {
-  //     axios
-  //       .post('http://localhost:8080/api/conference/memo')
-  //       .then((res) => console.log(res))
-  //       .catch((err) => console.log(err));
-  //   }
 }
 export default VideoRoomComponent;

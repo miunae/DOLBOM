@@ -5,26 +5,16 @@ import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-import Buttons from './Buttons';
-
-// import buttons from
 
 export default function TextareaDec() {
   const [text, setText] = React.useState(''); // textarea의 값은 text로 담는다.
   const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
 
-  // const LoginOrMemo = ({ userId }: { userId?: string }) => {
-  //   if (userId) return <></>;
-  // };
-
   // 전역적으로 담자 많이 쓰니깐.
   const accessToken = sessionStorage.getItem('access-token');
   const refreshToken = sessionStorage.getItem('refresh-token');
-  const conferenceId = sessionStorage.getItem('conferenceId');
 
   // (28) memo에 대한 post conferid, memo 2개 post한다.
   function sendText() {
@@ -43,6 +33,7 @@ export default function TextareaDec() {
       })
       .then(function (res) {
         console.log(res + '메모 저장 성공!');
+        alert('메모가 저장되었습니다.');
       })
       .catch(function (res) {
         console.log(res + '메모 저장 실패!');
@@ -61,16 +52,17 @@ export default function TextareaDec() {
       })
       .then(function (res) {
         console.log(res + '녹음 시작 성공!');
+        alert('녹음이 시작되었습니다.');
       })
       .catch(function (res) {
         console.log(res + '녹음 시작 실패!');
       });
   }
 
-  // (32) openvidu 녹음 중지 버튼
+  // (32) openvidu 녹음 시작 버튼
   function recordstop() {
     axios
-      .get(`http://localhost:8080/openvidu/api/recordings/stop/${conferenceId}`, {
+      .get('http://localhost:8080/openvidu/api/recordings/stop/{conferenceId}', {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
@@ -79,6 +71,7 @@ export default function TextareaDec() {
       })
       .then(function (res) {
         console.log(res + '녹음 중지 성공!');
+        alert('녹음이 저장되었습니다.');
       })
       .catch(function (res) {
         console.log(res + '녹음 중지 실패!');
@@ -91,8 +84,8 @@ export default function TextareaDec() {
         placeholder="메모장"
         value={text}
         onChange={(event) => setText(event.target.value)}
-        minRows={6} // 처음 보이는 메모장 크기
-        maxRows={8} // 15줄을 넘어가면 스크롤로 표시될거야.
+        minRows={6}
+        maxRows={8}
         startDecorator={
           <Box sx={{ display: 'flex', gap: 0.5 }}>
             <IconButton variant="outlined" color="neutral" onClick={addEmoji('👍')}>
@@ -113,32 +106,27 @@ export default function TextareaDec() {
         }
         sx={{ minWidth: 200 }}
       />
-      <Link>
-        <div className="buttons">
-          <Button
-            className="record-start"
-            variant="contained"
-            color="primary"
-            onClick={recordstart}
-          >
-            녹음 시작
-          </Button>
-          <Button
-            className="record-stop"
-            variant="outlined"
-            color="secondary"
-            onClick={recordstop}
-          >
-            녹음 중지
-          </Button>
-          <Button className="text-save" variant="contained" onClick={sendText}>
-            메모 저장
-          </Button>
-        </div>
-        {/* <Buttons /> */}
-      </Link>
+      <div className="buttons">
+        <Button
+          id="record-start"
+          variant="contained"
+          color="primary"
+          onClick={recordstart}
+        >
+          녹음 시작
+        </Button>
+        <Button
+          id="record-stop"
+          variant="outlined"
+          color="secondary"
+          onClick={recordstop}
+        >
+          녹음 중지
+        </Button>
+        <Button id="text-save" variant="contained" onClick={sendText}>
+          메모 저장
+        </Button>
+      </div>
     </div>
   );
 }
-
-// 하림님 코드를 이용해서 user.id에 여부에 따라 메모창을 보여주고 안 보여주고를 결정할예정!
