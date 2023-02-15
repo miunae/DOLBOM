@@ -22,7 +22,13 @@ interface ClientCardProps {
   phone: string;
   email: string;
 }
-const headCells = [
+interface headCells {
+  id: string;
+  align: 'right' | 'left' | 'inherit' | 'center' | 'justify' | undefined;
+  disablePadding: boolean;
+  label: string;
+}
+const headCells: headCells[] = [
   {
     id: 'clientName',
     align: 'left',
