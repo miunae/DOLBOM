@@ -72,17 +72,14 @@ export const EventModal = ({
         })
         .catch((e) => console.log(e));
     }
-<<<<<<< HEAD
   }, [eventInfos, isEditCard]);
 
-=======
-  }, [eventInfos]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
       setClientId(res.data);
     });
   }, []);
->>>>>>> Front-feature-clientmanage
+
   //evet 추가 함수
   const addEvent = () => {
     const calendarApi = eventInfos.view.calendar;
