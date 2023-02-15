@@ -84,7 +84,6 @@ public class ClientController { //프로필 이미지 미완, 권한 ADMIN,COUNS
     //상담사 내담자 관계 아이디 조회
     @GetMapping("/{client_id}")
     public ResponseEntity<?> getClientCounselorId(@PathVariable("client_id") Long clientId,@AuthenticationPrincipal PrincipalDetails principalDetails){
-        System.out.println(principalDetails.getMember().toString());
         Long id = clientService.getClientMemberId(clientId,principalDetails.getMember().getId());
         return new ResponseEntity<>(id, HttpStatus.OK);
     }

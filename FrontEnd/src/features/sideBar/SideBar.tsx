@@ -13,6 +13,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useAppSelector } from '../../app/hooks';
 import { useAppDispatch } from '../../app/hooks';
@@ -24,11 +25,13 @@ const drawerWidth = 240;
 export const SideBar = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const navigate = useNavigate();
 
   const logOut = () => {
     dispatch(clearUser());
     sessionStorage.removeItem('access-token');
     sessionStorage.removeItem('refresh-token');
+    navigate('/login');
   };
   return (
     <Box sx={{ display: 'flex' }}>

@@ -1,9 +1,16 @@
-import axios from 'axios';
-
+import { axiosService } from '../api/instance';
+interface clientList {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+}
 export const useFetchData = async () => {
   try {
-    const res = await axios.get('http://localhost:3003/users/');
-    return res.data.map((item: any) => item.userName);
+    const res = await axiosService.get('/client/');
+    console.log(res);
+    return res.data.map((item: clientList) => item.name);
+    // return res.data.map((item: any) => item.userName);
   } catch (error) {
     console.log(error);
   }
