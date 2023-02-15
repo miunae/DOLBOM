@@ -20,6 +20,5 @@
   "paths": {
     "~/*": ["./*"]
   },
-  "references": [{ "path": "./tsconfig.node.json" }],
-  "types": ["vite/client"]
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

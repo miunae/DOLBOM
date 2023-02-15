@@ -1,20 +1,24 @@
+import CloseIcon from '@mui/icons-material/Close';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { DialogContent } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import axios from 'axios';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { axiosService } from '../../api/instance';
 import { useAppSelector } from '../../app/hooks';
 import Spinner from '../Spinner/Spinner';
 import IDinput from './IDinput';
@@ -61,8 +65,8 @@ const Signup = () => {
   };
   const sendAxios = () => {
     setLoading(true);
-    axiosService
-      .post('/user', {
+    axios
+      .post(`${import.meta.env.VITE_URL}api/user`, {
         email: userId,
         password: userPassword,
         name: name,

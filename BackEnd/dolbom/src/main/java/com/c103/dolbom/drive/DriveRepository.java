@@ -13,4 +13,6 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
     List<Drive> findByPathStartsWith(String path);
     List<Drive> deleteByPathStartsWith(String path);
 
+    Drive findDriveByMemberClientId(Long memberClientId);
+
 }
