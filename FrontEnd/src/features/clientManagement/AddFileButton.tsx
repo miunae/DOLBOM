@@ -1,5 +1,6 @@
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { Button } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import { useRef, useState } from 'react';
 
 import { axiosService } from '../../api/instance';
@@ -27,7 +28,6 @@ export const AddFileButton = () => {
     );
     formData.append('file', files);
 
-    console.log(formData);
     await axiosService.post('/file/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -38,7 +38,7 @@ export const AddFileButton = () => {
   };
   return (
     <>
-      <Button variant="contained" component="label">
+      <IconButton component="label" color="primary" sx={{ mx: 1 }}>
         <UploadFileIcon />
         <input
           type="file"
@@ -46,7 +46,7 @@ export const AddFileButton = () => {
           onChange={(e) => handleFileChange(e)}
           hidden
         />
-      </Button>
+      </IconButton>
     </>
   );
 };

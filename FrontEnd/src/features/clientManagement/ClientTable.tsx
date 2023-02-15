@@ -74,22 +74,20 @@ function OrderTableHead() {
 export const ClientTable = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const goDetail = (clientName: string, clientId: number | string) => {
-    axiosService
-      .get(`/client/${clientId}`)
-      .then((res) => dispatch(setMemberClientId({ memberClientId: res.data })));
-
-    dispatch(clearPath());
-    // dispatch(openAnotherFolder({ name: 'root', path: '' }));
-    navigate(`/clientdetail/${clientName}/null`);
-  };
-  const [data, setData] = useState([]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
       setData(res.data);
       // data.map((item: any) => createData(item.name, item.email, item.phone, '더보기'));
     });
   }, []);
+  const goDetail = (clientName: string, clientId: number | string) => {
+    axiosService.get(`/client/${clientId}`).then((res) => {
+      dispatch(setMemberClientId({ memberClientId: res.data }));
+      dispatch(clearPath());
+      navigate(`/clientdetail/${clientName}/null`);
+    });
+  };
+  const [data, setData] = useState([]);
   return (
     <Box>
       <TableContainer

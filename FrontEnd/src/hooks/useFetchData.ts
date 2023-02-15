@@ -8,10 +8,10 @@ interface clientList {
 export const useFetchData = async () => {
   try {
     const res = await axiosService.get('/client/');
-    console.log(res);
+
     return res.data.map((item: clientList) => item.name);
     // return res.data.map((item: any) => item.userName);
-  } catch (error) {
-    console.log(error);
+  } catch {
+    console.log('dataFetchingerr');
   }
 };
