@@ -7,6 +7,6 @@ RUN npm run build
 FROM nginx:stable-alpine as production-stage
 
 COPY --from=build-stage /var/jenkins_home/workspace/deploydolbom/FrontEnd/dist /usr/share/nginx/html
-#COPY --from=build-stage /var/jenkins_home/workspace/deploy/FrontEnd/deploy_conf/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+COPY --from=build-stage /var/jenkins_home/workspace/deploydolbom/FrontEnd/deploy_conf/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 3000
 CMD ["nginx", "-g","daemon off;"]
