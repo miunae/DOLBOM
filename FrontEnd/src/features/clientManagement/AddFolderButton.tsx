@@ -8,12 +8,13 @@ import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 
 import { axiosService } from '../../api/instance';
-import { useAppSelector } from '../../app/hooks';
-import { selectDashboard } from './dashboardSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectDashboard, updateToggle } from './dashboardSlice';
 type folderInfo = {
   update: () => void;
 };
 export const AddFolderButton = ({ update }: folderInfo) => {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const currentState = useAppSelector(selectDashboard);
   const currentPath = currentState.path;
@@ -42,6 +43,7 @@ export const AddFolderButton = ({ update }: folderInfo) => {
       .then((res) => console.log(res))
       .catch((error) => console.log(error));
     update();
+    dispatch(updateToggle());
     setOpen(false);
     //폴더 생성 매서드
   };

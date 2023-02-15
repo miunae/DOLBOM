@@ -1,19 +1,47 @@
 import ArticleIcon from '@mui/icons-material/Article';
+import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { Button } from '@mui/material';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+
+import { axiosService } from '../../api/instance';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectDashboard } from './dashboardSlice';
+import { updateToggle } from './dashboardSlice';
 interface Filedata {
   fileName: string | undefined;
+  fileId: number;
 }
-export const File = ({ fileName }: Filedata) => {
+
+export const File = ({ fileName, fileId }: Filedata) => {
+  const currentState = useAppSelector(selectDashboard);
+  const dispatch = useAppDispatch();
+  const mcid = currentState.memberClientId;
+  const Download = () => {
+    axiosService.get<Blob>(`file/${fileId}`, { responseType: 'blob' }).then((res) => {
+      console.log(res);
+      const url = URL.createObjectURL(res.data);
+      if (url != null) {
+        window.open(url);
+      }
+    });
+  };
+
+  const Delete = (e: any) => {
+    e.stopPropagation();
+    axiosService.delete(`file/`, { params: { id: mcid, file_id: fileId } }).then(() => {
+      console.log(`Deleted file with id ${fileId}`);
+      dispatch(updateToggle());
+    });
+  };
+
   return (
-    <>
+    <Box sx={{ position: 'relative' }}>
       <Button
         variant="outlined"
-        // onClick={toAnotherFolder}
         sx={{ m: 1, width: '10vh', minWidth: '18vh' }}
-        // sx={{ width: 'auto', height: 'auto' }}
+        onClick={Download}
       >
         <Box
           sx={{
@@ -28,12 +56,21 @@ export const File = ({ fileName }: Filedata) => {
             margin: 0,
           }}
         >
-          <ArticleIcon sx={{ width: 4 / 5, height: '10vh' }} />
-          <Typography variant="h6" component="div" noWrap>
+          <ArticleIcon sx={{ width: 1 / 2, height: '10vh' }} />
+          <Typography component="div" noWrap>
             {fileName}
           </Typography>
         </Box>
+        <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
+          <Button
+            variant="outlined"
+            sx={{ width: '2rem', height: '2rem', minWidth: 0, minHeight: 0, p: 0 }}
+            onClick={(e) => Delete(e)}
+          >
+            <DeleteIcon />
+          </Button>
+        </Box>
       </Button>
-    </>
+    </Box>
   );
 };

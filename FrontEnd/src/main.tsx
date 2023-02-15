@@ -10,6 +10,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
@@ -18,7 +19,6 @@ import { ClientDetailPage } from './pages/ClientDetailPage';
 import { ClientManagementPage } from './pages/ClientManagementPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
-import { ProfilePage } from './pages/ProfilePage';
 import { SignupPage } from './pages/SignupPage';
 import { VideoPage } from './pages/VideoPage';
 const router = createBrowserRouter([
@@ -34,10 +34,6 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: store.getState().user?.id ? <HomePage /> : <LoginPage />,
-  },
-  {
-    path: '/profile',
-    element: <ProfilePage />,
   },
   {
     path: '/signup',
@@ -78,6 +74,17 @@ ReactDOM.render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <ToastContainer
+          position="top-left"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Provider>

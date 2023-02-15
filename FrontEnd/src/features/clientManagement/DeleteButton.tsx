@@ -10,8 +10,11 @@ import { useState } from 'react';
 
 import { axiosService } from '../../api/instance';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { popPath, selectDashboard } from './dashboardSlice';
-export const DeleteButton = () => {
+import { popPath, selectDashboard, updateToggle } from './dashboardSlice';
+type folderInfo = {
+  update: () => void;
+};
+export const DeleteButton = ({ update }: folderInfo) => {
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
   const currentState = useAppSelector(selectDashboard);
@@ -21,10 +24,11 @@ export const DeleteButton = () => {
     if (currentPath !== null) {
       dispatch(popPath());
     }
-    console.log(currentPath);
     axiosService
       .delete('/folder', { params: { id: mci, path: currentPath } })
       .then((res) => console.log(res));
+    update();
+    dispatch(updateToggle());
     handleClose();
   };
   const handleClickOpen = () => {
