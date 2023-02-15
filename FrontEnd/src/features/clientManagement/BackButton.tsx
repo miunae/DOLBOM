@@ -2,7 +2,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import IconButton from '@mui/material/IconButton';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { openAnotherFolder, popPath, selectDashboard } from './dashboardSlice';
+import { popPath, selectDashboard, updateToggle } from './dashboardSlice';
 export const BackButton = () => {
   const dispatch = useAppDispatch();
   const currentState = useAppSelector(selectDashboard);
@@ -10,6 +10,7 @@ export const BackButton = () => {
   const Back = () => {
     if (currentPath !== null) {
       dispatch(popPath());
+      dispatch(updateToggle());
     }
   };
   return (
