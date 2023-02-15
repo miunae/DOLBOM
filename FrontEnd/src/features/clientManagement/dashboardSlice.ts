@@ -6,6 +6,8 @@ interface FolderState {
   memberClientId: any;
   name: string;
   pathStack: string[];
+  toggle: number;
+  loading: boolean;
 }
 
 const initialState: FolderState = {
@@ -13,6 +15,8 @@ const initialState: FolderState = {
   path: '',
   memberClientId: 0,
   pathStack: ['root'],
+  toggle: 1,
+  loading: true,
 };
 
 const dashBoardSlice = createSlice({
@@ -55,10 +59,22 @@ const dashBoardSlice = createSlice({
       state.pathStack = [state.pathStack[0]];
       state.path = '';
     },
+    updateToggle: (state) => {
+      state.toggle += 1;
+    },
+    // setLoading: (state) => {
+    //   state.loading = !state.loading;
+    // },
   },
 });
 
-export const { openAnotherFolder, setMemberClientId, appendPath, popPath, clearPath } =
-  dashBoardSlice.actions;
+export const {
+  openAnotherFolder,
+  setMemberClientId,
+  appendPath,
+  popPath,
+  clearPath,
+  updateToggle,
+} = dashBoardSlice.actions;
 export const selectDashboard = (state: RootState) => state.dashboard;
 export default dashBoardSlice.reducer;

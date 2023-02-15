@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { DialogContent } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -6,17 +7,16 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { axiosService } from '../../api/instance';
 import { useAppSelector } from '../../app/hooks';
-import Spinner from '../Spinner/Spinner';
 import IDinput from './IDinput';
 import PwdInput from './PwdInput';
 import { selectSignup } from './signupSlice';
@@ -162,7 +162,7 @@ const Signup = () => {
                   setUserPassword={setUserPassword}
                 />
               </Grid>
-              <Grid sm={12} justifyContent="flex-end">
+              <Grid justifyContent="flex-end">
                 <Button
                   disabled={!nameValidate || !idValidate || !pwdValidate}
                   onClick={sendAxios}
