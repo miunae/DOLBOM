@@ -1,15 +1,22 @@
 import ArticleIcon from '@mui/icons-material/Article';
+import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { Button } from '@mui/material';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import { axiosService } from '../../api/instance';
+import { useAppSelector } from '../../app/hooks';
+import { selectDashboard } from './dashboardSlice';
+
 interface Filedata {
   fileName: string | undefined;
   fileId: number;
 }
+
 export const File = ({ fileName, fileId }: Filedata) => {
+  const currentState = useAppSelector(selectDashboard);
+  const mcid = currentState.memberClientId;
   const Download = () => {
     axiosService.get<Blob>(`file/${fileId}`, { responseType: 'blob' }).then((res) => {
       console.log(res);
@@ -19,14 +26,19 @@ export const File = ({ fileName, fileId }: Filedata) => {
       }
     });
   };
+
+  const Delete = () => {
+    axiosService.delete(`file/`, { params: { id: mcid, file_id: fileId } }).then(() => {
+      console.log(`Deleted file with id ${fileId}`);
+    });
+  };
+
   return (
-    <>
+    <Box sx={{ position: 'relative' }}>
       <Button
         variant="outlined"
-        // onClick={toAnotherFolder}
         sx={{ m: 1, width: '10vh', minWidth: '18vh' }}
         onClick={Download}
-        // sx={{ width: 'auto', height: 'auto' }}
       >
         <Box
           sx={{
@@ -46,7 +58,16 @@ export const File = ({ fileName, fileId }: Filedata) => {
             {fileName}
           </Typography>
         </Box>
+        <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
+          <Button
+            variant="outlined"
+            sx={{ width: '2rem', height: '2rem', minWidth: 0, minHeight: 0, p: 0 }}
+            onClick={Delete}
+          >
+            <DeleteIcon />
+          </Button>
+        </Box>
       </Button>
-    </>
+    </Box>
   );
 };

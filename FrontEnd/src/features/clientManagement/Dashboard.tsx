@@ -72,7 +72,7 @@ export const Dashboard = () => {
               ))}
             </Box>
           ) : (
-            <Typography> 빈폴더입니다.</Typography>
+            <Typography> 하위 폴더가 없습니다.</Typography>
           )}
         </Box>
         <Typography>files</Typography>
@@ -85,7 +85,7 @@ export const Dashboard = () => {
               ))}
             </Box>
           ) : (
-            <Typography> 파일이 없습니다.</Typography>
+            <Typography> 하위 파일이 없습니다.</Typography>
           )}
         </Box>
       </Box>

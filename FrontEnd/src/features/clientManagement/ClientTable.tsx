@@ -12,12 +12,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { axiosService } from '../../api/instance';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { clearPath, openAnotherFolder, setMemberClientId } from './dashboardSlice';
+import { useAppDispatch } from '../../app/hooks';
+import { clearPath, setMemberClientId } from './dashboardSlice';
 
-// function createData(clientName: string, email: string, phone: string, detail: string) {
-//   return { clientName, email, phone, detail };
-// }
 interface ClientCardProps {
   id: number | string;
   clientId: number;
@@ -25,7 +22,13 @@ interface ClientCardProps {
   phone: string;
   email: string;
 }
-const headCells = [
+interface headCells {
+  id: string;
+  align: 'right' | 'left' | 'inherit' | 'center' | 'justify' | undefined;
+  disablePadding: boolean;
+  label: string;
+}
+const headCells: headCells[] = [
   {
     id: 'clientName',
     align: 'left',
