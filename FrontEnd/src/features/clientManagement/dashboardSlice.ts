@@ -10,7 +10,7 @@ interface FolderState {
 
 const initialState: FolderState = {
   name: 'root',
-  path: null,
+  path: '',
   memberClientId: 0,
   pathStack: ['root'],
 };
@@ -30,18 +30,35 @@ const dashBoardSlice = createSlice({
         path?: string;
       }>,
     ) => {
-      state.path = action.payload.path;
+      state.path = state.path + '/' + action.payload.path;
       if (action.payload.memberClientId) {
         state.memberClientId = action.payload.memberClientId;
       }
       state.name = action.payload.name;
     },
     appendPath: (state: any, action: PayloadAction<{ path: string }>) => {
-      state.pathStack.append(action.payload.path);
+      if (state.pathStack.length - 1) {
+        state.path = state.path + '/' + action.payload.path;
+      } else {
+        state.path = state.path + action.payload.path;
+      }
+      state.pathStack = [...state.pathStack, action.payload.path];
+    },
+    popPath: (state) => {
+      state.pathStack.pop();
+      const exPath = state.path?.lastIndexOf('/');
+      if (state.path) {
+        state.path = state.path.substring(0, exPath);
+      }
+    },
+    clearPath: (state) => {
+      state.pathStack = [state.pathStack[0]];
+      state.path = '';
     },
   },
 });
 
-export const { openAnotherFolder, setMemberClientId } = dashBoardSlice.actions;
+export const { openAnotherFolder, setMemberClientId, appendPath, popPath, clearPath } =
+  dashBoardSlice.actions;
 export const selectDashboard = (state: RootState) => state.dashboard;
 export default dashBoardSlice.reducer;

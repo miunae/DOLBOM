@@ -120,7 +120,6 @@ export const SideBar2 = () => {
   // const { pageTitle } = useLocation;
   const location = useLocation();
   const pageTitle = location.pathname.split('/');
-  console.log(pageTitle);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

@@ -71,19 +71,15 @@ export const EventModal = ({
           setEndTime(endString.substring(endtmid - 2, endtmid + 3));
         })
         .catch((e) => console.log(e));
-      // setClient(eventInfos?.event?.title);
     }
-<<<<<<< HEAD
   }, [eventInfos, isEditCard]);
 
-=======
-  }, [eventInfos]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
       setClientId(res.data);
     });
   }, []);
->>>>>>> Front-feature-clientmanage
+
   //evet 추가 함수
   const addEvent = () => {
     const calendarApi = eventInfos.view.calendar;
@@ -119,10 +115,7 @@ export const EventModal = ({
       content,
     };
     axiosService.put('/schedule/', data).then((res) => console.log(res));
-    console.log('전송된 데이터');
-    console.log(data);
     if (currentEvent) {
-      console.log('있긴함');
       currentEvent.setProp('title', client);
       currentEvent.setExtendedProp('title', data.title);
       currentEvent.setExtendedProp('content', data.content);
@@ -208,8 +201,6 @@ export const EventModal = ({
               sx={{ width: 200 }}
               onChange={(e) => {
                 setStartTime(e.target.value);
-                console.log(startTime);
-                console.log(e.target.value);
               }}
               // eventInfos.startStr
             />

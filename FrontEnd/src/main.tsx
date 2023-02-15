@@ -6,30 +6,28 @@ import '@fontsource/roboto/700.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
-import { CalendPage } from './pages/CalendarPage';
-import { ClientCheckPage } from './pages/ClientCheckPage';
-// import { ClientDetailPage } from './pages/ClientDetailPage';
-// import { ClientManagementPage } from './pages/ClientManagementPage';
+import { CalendarPage } from './pages/CalendarPage';
+import { ClientDetailPage } from './pages/ClientDetailPage';
+import { ClientManagementPage } from './pages/ClientManagementPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SignupPage } from './pages/SignupPage';
-import { UserProfilePage } from './pages/UserProfilePage';
 import { VideoPage } from './pages/VideoPage';
-
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
       <>
         <AxiosSetup />
-        <HomePage />
+        <LoginPage />
       </>
     ),
   },
@@ -47,28 +45,20 @@ const router = createBrowserRouter([
   },
   {
     path: '/calendar',
-    element: <CalendPage />,
+    element: <CalendarPage />,
   },
   {
-    path: '/video/:id',
+    path: '/video',
     element: <VideoPage />,
   },
   {
-    path: '/userprofile',
-    element: <UserProfilePage />,
+    path: '/clientmanagement',
+    element: <ClientManagementPage />,
   },
   {
-    path: '/clientcheck',
-    element: <ClientCheckPage />,
+    path: '/clientdetail/:userName/:folderPath/',
+    element: <ClientDetailPage />,
   },
-  // {
-  //   path: '/clientmanagement',
-  //   element: <ClientManagementPage />,
-  // },
-  // {
-  //   path: '/clientdetail/:userName/:folderPath/',
-  //   element: <ClientDetailPage />,
-  // },
 ]);
 
 const queryClient = new QueryClient({

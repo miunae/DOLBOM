@@ -1,26 +1,20 @@
 import {
   Box,
-  Link,
-  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { axiosService } from '../../api/instance';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { openAnotherFolder, selectDashboard, setMemberClientId } from './dashboardSlice';
+import { useAppDispatch } from '../../app/hooks';
+import { clearPath, setMemberClientId } from './dashboardSlice';
 
-// function createData(clientName: string, email: string, phone: string, detail: string) {
-//   return { clientName, email, phone, detail };
-// }
 interface ClientCardProps {
   id: number | string;
   clientId: number;
@@ -28,7 +22,13 @@ interface ClientCardProps {
   phone: string;
   email: string;
 }
-const headCells = [
+interface headCells {
+  id: string;
+  align: 'right' | 'left' | 'inherit' | 'center' | 'justify' | undefined;
+  disablePadding: boolean;
+  label: string;
+}
+const headCells: headCells[] = [
   {
     id: 'clientName',
     align: 'left',
@@ -74,22 +74,20 @@ function OrderTableHead() {
 export const ClientTable = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const goDetail = (clientName: string, clientId: number | string) => {
-    axiosService
-      .get(`/client/${clientId}`)
-      .then((res) => dispatch(setMemberClientId({ memberClientId: res.data })));
-    dispatch(openAnotherFolder({ name: 'root', path: '//null' }));
-    navigate(`/clientdetail/${clientName}/null`);
-  };
-  const [data, setData] = useState([]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
-      console.log(res);
       setData(res.data);
-      console.log(data);
       // data.map((item: any) => createData(item.name, item.email, item.phone, '더보기'));
     });
   }, []);
+  const goDetail = (clientName: string, clientId: number | string) => {
+    axiosService.get(`/client/${clientId}`).then((res) => {
+      dispatch(setMemberClientId({ memberClientId: res.data }));
+      dispatch(clearPath());
+      navigate(`/clientdetail/${clientName}/null`);
+    });
+  };
+  const [data, setData] = useState([]);
   return (
     <Box>
       <TableContainer
@@ -111,9 +109,7 @@ export const ClientTable = () => {
         >
           <OrderTableHead />
           <TableBody>
-            {data.map((row: ClientCardProps, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
-
+            {data.map((row: ClientCardProps) => {
               return (
                 <TableRow
                   hover

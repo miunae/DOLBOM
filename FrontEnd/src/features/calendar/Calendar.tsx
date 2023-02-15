@@ -20,13 +20,11 @@ export const Calendar = () => {
       .get('/schedule/')
       .then((res) => {
         setEvents(res.data);
-        console.log(res.data);
       })
       .catch((err) => console.log(`초기랜더링 에러${err}`));
   }, []);
   //드롭
   const eventDrop = (info: any) => {
-    console.log(info.event);
     const updateId = info.event.extendedProps.scheduleId;
     axiosService.get(`schedule/${updateId}`).then((res) => {
       const DropData = {
@@ -37,7 +35,6 @@ export const Calendar = () => {
         end: new Date(info.event.endStr).toISOString(),
         content: res.data.content,
       };
-      console.log(res.data);
       axiosService.put(`/schedule/`, DropData).then((res) => console.log(res));
     });
   };

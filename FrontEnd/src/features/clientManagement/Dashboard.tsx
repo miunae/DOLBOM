@@ -1,4 +1,5 @@
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
+import Divider from '@mui/material/Divider';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -8,21 +9,15 @@ import { AddFileButton } from './AddFileButton';
 import { AddFolderButton } from './AddFolderButton';
 import { BackButton } from './BackButton';
 import { selectDashboard } from './dashboardSlice';
+import { DeleteButton } from './DeleteButton';
+import { File } from './File';
 import { Folder } from './Folder';
 export const Dashboard = () => {
   const [currentFolderName, setCurrentFolderName] = useState('root');
-  // const { folderId } = useParams() as { folderId: string };
-  // const slash: number = useLocation().pathname.lastIndexOf('null');
-  // const folderName = useLocation().pathname.substring(slash);
-  // const location = useLocation();
-  // const userParam = location.state.userParam;
-  // const parentPath = location.state.parantPath;
-  // const currentFolder = parentPath + '/' + folderName;
   const currentState = useAppSelector(selectDashboard);
   const currentPath = currentState.path;
-  const currentName = currentState.name;
+  const pathStack = currentState.pathStack;
   const currentMemberClientId = currentState.memberClientId;
-  console.log(currentPath);
   const [isUpdate, setIsUpdate] = useState(false);
   const update = () => {
     setIsUpdate(!isUpdate);
@@ -30,34 +25,68 @@ export const Dashboard = () => {
 
   useEffect(() => {
     setCurrentFolderName(currentState.name);
-    // axiosService
-    //   .get('/folder/', { params: { id: currentMemberClientId, path: '' } })
-    //   .then((res) => {
-    //     setData(res.data);
-    //     console.log(data);
-    //   });
-    axios
-      .get('http://localhost:3003/RootFolder')
-      .then((res) => setData(res.data[0].folderList));
-  }, [isUpdate, currentPath]);
-  const [data, setData] = useState([]);
+    const path = pathStack[pathStack.length - 1] === 'root' ? '' : currentPath;
+    axiosService
+      .get('/folder/', { params: { id: currentMemberClientId, path: path } })
+      .then((res) => {
+        setFolderData(res.data);
+        console.log(res.data);
+      });
+    axiosService
+      .get('/file/', { params: { id: currentMemberClientId, path: path } })
+      .then((res) => {
+        setFileData(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, [isUpdate, currentPath, pathStack]);
+  const [folderData, setFolderData] = useState([]);
+  const [fileData, setFileData] = useState([]);
   return (
     <>
-      <h1>{currentFolderName}</h1>
-      <AddFolderButton folderPath={currentPath} update={update} />
-      <AddFileButton />
-      <BackButton />
-      {data.length ? (
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {data.map((prop: any, index) => (
-            <Grid item xs={2} key={index}>
-              <Folder key={index} folderName={prop} />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <Typography> 빈폴더입니다.</Typography>
-      )}
+      <Box sx={{ flexGrow: 1, width: 1 }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            width: 1,
+          }}
+        >
+          {pathStack.length > 1 ? <BackButton /> : null}
+          {pathStack.length > 1 ? <DeleteButton /> : null}
+          <AddFolderButton update={update} />
+          <AddFileButton />
+        </Box>
+        <Typography sx={{ width: '100px', my: 0 }}>folders</Typography>
+        <Divider sx={{ my: 1 }} />
+        <Box sx={{ minHeight: '40vh' }}>
+          {folderData.length ? (
+            <Box>
+              {folderData.map((prop: any, index) => (
+                <Folder key={index} folderName={prop.slice(1, -1)} />
+              ))}
+            </Box>
+          ) : (
+            <Typography> 빈폴더입니다.</Typography>
+          )}
+        </Box>
+        <Typography>files</Typography>
+        <Divider sx={{ my: 1 }} />
+        <Box sx={{ minHeight: '20vh' }}>
+          {fileData.length ? (
+            <Box>
+              {fileData.map((prop: any, index) => (
+                <File key={index} fileName={prop.slice(1, -1)} />
+              ))}
+            </Box>
+          ) : (
+            <Typography> 파일이 없습니다.</Typography>
+          )}
+        </Box>
+      </Box>
     </>
   );
 };
