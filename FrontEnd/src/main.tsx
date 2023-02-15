@@ -6,6 +6,7 @@ import '@fontsource/roboto/700.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -14,7 +15,6 @@ import { ToastContainer } from 'react-toastify';
 import { store } from './app/store';
 import { AxiosSetup } from './features/axios-setup/AxiosSetup';
 import { CalendarPage } from './pages/CalendarPage';
-import { ClientCheckPage } from './pages/ClientCheckPage';
 import { ClientDetailPage } from './pages/ClientDetailPage';
 import { ClientManagementPage } from './pages/ClientManagementPage';
 import { HomePage } from './pages/HomePage';
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     element: <CalendarPage />,
   },
   {
-    path: '/video/:id',
+    path: '/video',
     element: <VideoPage />,
   },
   {
@@ -55,18 +55,6 @@ const router = createBrowserRouter([
     path: '/clientdetail/:userName/:folderPath/',
     element: <ClientDetailPage />,
   },
-  {
-    path: '/clientcheck',
-    element: <ClientCheckPage />,
-  },
-  // {
-  //   path: '/clientmanagement',
-  //   element: <ClientManagementPage />,
-  // },
-  // {
-  //   path: '/clientdetail/:userName/:folderPath/',
-  //   element: <ClientDetailPage />,
-  // },
 ]);
 
 const queryClient = new QueryClient({
