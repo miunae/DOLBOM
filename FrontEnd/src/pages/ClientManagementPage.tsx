@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 
 import { axiosService } from '../api/instance';
 import { ClientTable } from '../features/clientManagement/ClientTable';
-import { SideBar } from '../features/sideBar/SideBar';
 import { SideBar2 } from '../features/sideBar/SideBar2';
 interface ClientCardProps {
   id: number | string;

@@ -3,7 +3,6 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { Calendar } from '../features/calendar/Calendar';
-import { SideBar } from '../features/sideBar/SideBar';
 import { SideBar2 } from '../features/sideBar/SideBar2';
 export const CalendarPage = () => {
   return (
