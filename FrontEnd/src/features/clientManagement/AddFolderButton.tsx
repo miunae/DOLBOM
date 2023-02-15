@@ -3,6 +3,7 @@ import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 
@@ -10,10 +11,9 @@ import { axiosService } from '../../api/instance';
 import { useAppSelector } from '../../app/hooks';
 import { selectDashboard } from './dashboardSlice';
 type folderInfo = {
-  folderPath: string | null;
   update: () => void;
 };
-export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
+export const AddFolderButton = ({ update }: folderInfo) => {
   const [open, setOpen] = useState(false);
   const currentState = useAppSelector(selectDashboard);
   const currentPath = currentState.path;
@@ -27,11 +27,13 @@ export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const path = currentPath?.length
-      ? currentPath.slice(1) + '/' + folderName
-      : folderName;
-    console.log('루트 생성');
-    console.log(path);
+    let path = currentPath;
+    if (!path) {
+      path = folderName;
+    } else {
+      path += '/' + folderName;
+    }
+    console.log(`현재 주소 : ${path}`);
     axiosService
       .post('/folder/', {
         member_client_id: currentMemberClientId,
@@ -45,9 +47,9 @@ export const AddFolderButton = ({ folderPath, update }: folderInfo) => {
   };
   return (
     <>
-      <Button onClick={openModal} variant="contained">
+      <IconButton onClick={openModal} color="primary" sx={{ mx: 1 }}>
         <CreateNewFolderIcon />
-      </Button>
+      </IconButton>
       <Dialog open={open} onClose={closeModal}>
         <DialogTitle>폴더 추가</DialogTitle>
         <Box

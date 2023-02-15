@@ -13,11 +13,9 @@ import { SideBar2 } from '../features/sideBar/SideBar2';
 export const ClientDetailPage = () => {
   const currentState = useAppSelector(selectDashboard);
   const currentPath = currentState.path;
-  const currentName = currentState.name;
-  console.log(currentName);
   console.log(currentPath);
   const { userName } = useParams();
-  console.log(currentState.memberClientId);
+  console.log(` 현재 mcI :${currentState.memberClientId}`);
   return (
     <>
       <Box sx={{ display: 'flex' }}>
