@@ -6,9 +6,9 @@ import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 
 import { axiosService } from '../../api/instance';
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectDashboard } from './dashboardSlice';
-
+import { updateToggle } from './dashboardSlice';
 interface Filedata {
   fileName: string | undefined;
   fileId: number;
@@ -16,6 +16,7 @@ interface Filedata {
 
 export const File = ({ fileName, fileId }: Filedata) => {
   const currentState = useAppSelector(selectDashboard);
+  const dispatch = useAppDispatch();
   const mcid = currentState.memberClientId;
   const Download = () => {
     axiosService.get<Blob>(`file/${fileId}`, { responseType: 'blob' }).then((res) => {
@@ -31,6 +32,7 @@ export const File = ({ fileName, fileId }: Filedata) => {
     e.stopPropagation();
     axiosService.delete(`file/`, { params: { id: mcid, file_id: fileId } }).then(() => {
       console.log(`Deleted file with id ${fileId}`);
+      dispatch(updateToggle());
     });
   };
 
