@@ -1,11 +1,13 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
-// import { MainAppBar } from '../features/main-app-bar/MainAppBar';
+import { MainAppBar } from '../features/main-app-bar/MainAppBar';
 import { SideBar } from '../features/sideBar/SideBar';
+
 export function HomePage() {
   return (
     <>
-      <SideBar />
+      {/* <MainAppBar /> */}
+      {/* <SideBar /> */}
       <h1>HomePage</h1>
     </>
   );
