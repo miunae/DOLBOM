@@ -143,13 +143,7 @@ public class ConferenceServiceImpl implements ConferenceService {
             Long memberClientId = entityMemberClient.getId();
             // 파일이 저장될 path
             String savePath = extractPath(memberClientId,"memo");
-            // 디렉토리가 없다면 디렉토리 생성
-//            StringBuilder saveFolderBuilder = new StringBuilder();
-//            saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-//            File folder = new File(saveFolderBuilder.toString());
-//            if(!folder.exists()){//존재x
-//                folder.mkdir();
-//            }
+
             // 회의memo -> txt 파일 저장
             File file = new File(System.getProperty("user.home") + "/"+
                     dateBuilder.toString()+"memo.txt");
@@ -209,7 +203,5 @@ public class ConferenceServiceImpl implements ConferenceService {
         System.out.println(saveFolderBuilder.toString());
         return saveFolderBuilder.toString();
     }
-
-
 
 }

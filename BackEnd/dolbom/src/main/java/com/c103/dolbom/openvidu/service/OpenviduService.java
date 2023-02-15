@@ -1,5 +1,8 @@
 package com.c103.dolbom.openvidu.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.c103.dolbom.Entity.Conference;
 import com.c103.dolbom.Entity.ConferenceHistory;
 import com.c103.dolbom.Entity.Drive;
@@ -31,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,19 +53,27 @@ public class OpenviduService {
     @Autowired
     private ConferenceRepository conferenceRepository;
 
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
-    // Secret shared with our OpenVidu server
-    @Value("${OPENVIDU_SECRET}")
-    private String SECRET;
-    private OpenVidu openVidu;
-    private Map<String, String> sessionRecordingMap = new ConcurrentHashMap<>();
-    static StringBuilder sttContent;
     @Autowired
     DriveRepository driveRepository;
 
-//    private final String absolutePath = File.separator+"home" + File.separator + "ubuntu" + File.separator + "Dolbom";
-    private final String absolutePath = "C:"+ File.separator+"test";
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
+    @Value("${OPENVIDU_SECRET}")
+    private String SECRET;
+    @Value("${cloud.aws.s3.dir}")
+    public String absolutePath;
+    @Value("${cloud.aws.s3.bucket}")
+    public String bucket;  // S3 버킷
+
+    private final AmazonS3Client amazonS3Client;
+
+
+    private OpenVidu openVidu;
+
+    private Map<String, String> sessionRecordingMap = new ConcurrentHashMap<>();
+
+    static StringBuilder sttContent;
+
     @PostConstruct
     private void init() {
         //openvidu 서버와 연결
@@ -123,22 +135,18 @@ public class OpenviduService {
             //STT 를 위한 API 전송
             String sttId = null;
             try {
-//                System.out.println("녹음 URL = " + recording.getUrl());
                 sttId = sttService.getSttId(recording.getUrl(), true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             //ConferenceId에 해당하는 conferenceHistory 목록들
-//            System.out.println(conferenceId);
             Conference entityConference = conferenceRepository.findById(conferenceId).get();
             List<ConferenceHistory> conferenceHistoryList
                     = conferenceHistoryRepository.findAllByConference(entityConference);
             if(conferenceHistoryList.isEmpty()){
                 return new ResponseEntity<>("conferenceId fail", HttpStatus.NOT_FOUND);
             }
-            for(ConferenceHistory ch : conferenceHistoryList){
-//                System.out.println("히스토리 id: " + ch.getId());
-            }
+
             //stt api를 통해 받은 stt id 로 텍스트 불러오기
             sttContent = new StringBuilder();
             getSttUtterance(sttId, sttContent);
@@ -156,17 +164,11 @@ public class OpenviduService {
                 MemberClient entityMemberClient =
                         memberClientRepository.findByMemberIdAndClientId(memberId,clientId).get();
                 Long memberClientId = entityMemberClient.getId();
-                // 디렉토리가 없다면 디렉토리 생성
-                StringBuilder saveFolderBuilder = new StringBuilder();
-                saveFolderBuilder.append(absolutePath).append(File.separator).append(memberClientId.toString());
-                System.out.println("1: saveFolderBuilder: "+ saveFolderBuilder.toString());
-                File folder = new File(saveFolderBuilder.toString());
-                if(!folder.exists()){//존재x
-                    folder.mkdir();
-                }
+                // 파일이 저장될 path
+                String savePath = extractPath(memberClientId,"STT");
                 // 대화기록 -> txt 파일 저장
-                File file = new File(saveFolderBuilder.toString()+File.separator+
-                        dateBuilder.toString()+"대화기록.txt");
+                File file = new File(System.getProperty("user.home") + "/"+
+                        dateBuilder.toString()+"STT.txt");
                 try (
                         BufferedWriter bw = new BufferedWriter(new FileWriter(file))
                 ) {
@@ -183,10 +185,13 @@ public class OpenviduService {
                 //확장자
                 String extension = originName.substring(originName.lastIndexOf("."));
                 String savedName = uuid+extension;
+                String resultPath = savePath+"/"+savedName;
+                amazonS3Client.putObject(new PutObjectRequest(bucket, resultPath, file).withCannedAcl(CannedAccessControlList.PublicRead));
+                file.delete();
                 SaveMemoDto saveSttDto = SaveMemoDto.builder()
                         .originName(originName)
                         .savedName(savedName)
-                        .path(saveFolderBuilder.toString()+File.separator+savedName)
+                        .path(resultPath)
                         .saveTime(LocalDateTime.now())
                         .build();
                 history.saveStt(saveSttDto);
@@ -228,6 +233,23 @@ public class OpenviduService {
             getSttUtterance(sttId,sb);
         }
         return false;
+    }
+
+    private String extractPath(Long memberClientId, String path) {
+        String splitRegex = Pattern.quote(System.getProperty("user.home"));
+        String[] pathArr = path.split(splitRegex);
+        StringBuilder saveFolderBuilder = new StringBuilder();
+        saveFolderBuilder.append(absolutePath).append(memberClientId.toString());
+
+        if(pathArr.length==1 && pathArr[0].equals("")){
+            return saveFolderBuilder.toString();
+        }
+        for(int i=0; i<pathArr.length;i++){
+            saveFolderBuilder.append("/").append(pathArr[i]);
+        }
+
+        System.out.println(saveFolderBuilder.toString());
+        return saveFolderBuilder.toString();
     }
 
 }
