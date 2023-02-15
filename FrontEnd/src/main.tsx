@@ -21,6 +21,13 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { VideoPage } from './pages/VideoPage';
+
+import { ClientCheckPage } from './pages/ClientCheckPage';
+
+
+import { ProfilePage } from './pages/ProfilePage';
+
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -44,7 +51,7 @@ const router = createBrowserRouter([
     element: <CalendarPage />,
   },
   {
-    path: '/video',
+    path: '/video/:id',
     element: <VideoPage />,
   },
   {

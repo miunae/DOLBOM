@@ -1,5 +1,6 @@
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { DialogContent } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
