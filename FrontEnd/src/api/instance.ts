@@ -49,8 +49,6 @@ export const setAxiosConfig = (navigate: NavigateFunction) => {
 
         instance.defaults.headers['access-token'] = accessToken;
         instance.defaults.headers['refresh-token'] = refreshToken;
-        console.log(accessToken);
-        console.log(refreshToken);
 
         try {
           const result = await instance.get('users/token/refresh');

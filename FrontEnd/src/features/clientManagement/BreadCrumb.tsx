@@ -11,7 +11,6 @@ export const BreadCrum = () => {
       {value}
     </Typography>
   ));
-  console.log(pathStack);
   return (
     <Breadcrumbs
       separator={<NavigateNextIcon fontSize="small" />}

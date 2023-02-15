@@ -39,7 +39,6 @@ const theme = createTheme();
 export const ProfileForm = () => {
   const { isLoading, data } = useQuery(['userinfo'], getUserInfo);
   const userInfo = data as UserInfo;
-  console.log(userInfo);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
