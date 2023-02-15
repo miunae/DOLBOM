@@ -123,11 +123,8 @@ public class S3DriveServiceImpl implements DriveService{
     public List<String> getFolderList(Long memberClientId, String path) {
         String prefix = extractPath(memberClientId, path);
         List<String> folderList = s3Uploader.getLevelFolderList(prefix);
-        List<String> slashCutList = new ArrayList<>();
-        for(String str : folderList){
-            slashCutList.add(str.substring(1,str.length()-1));
-        }
-        return slashCutList;
+
+        return folderList;
     }
 
     @Override
