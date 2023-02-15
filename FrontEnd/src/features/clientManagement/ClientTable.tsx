@@ -1,26 +1,20 @@
 import {
   Box,
-  Link,
-  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { axiosService } from '../../api/instance';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { clearPath, openAnotherFolder, setMemberClientId } from './dashboardSlice';
+import { useAppDispatch } from '../../app/hooks';
+import { clearPath, setMemberClientId } from './dashboardSlice';
 
-// function createData(clientName: string, email: string, phone: string, detail: string) {
-//   return { clientName, email, phone, detail };
-// }
 interface ClientCardProps {
   id: number | string;
   clientId: number;
