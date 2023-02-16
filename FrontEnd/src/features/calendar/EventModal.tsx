@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -78,7 +77,7 @@ export const EventModal = ({
           setStartTime(startString.substring(startmid - 2, startmid + 3));
           setEndTime(endString.substring(endtmid - 2, endtmid + 3));
         })
-        .catch((e) => console.log(e));
+        .catch((e) => console.log(`여기 에러${e}`));
     }
   }, [eventInfos, isEditCard]);
 
@@ -103,9 +102,7 @@ export const EventModal = ({
     calendarApi.addEvent(data);
     axiosService.post('/schedule/', data).then((res) => {
       console.log(res);
-      setTimeout(() => {
-        update();
-      }, 1000);
+      update();
     });
     setClient('');
     setContent('');
