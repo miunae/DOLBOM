@@ -52,19 +52,13 @@ export const EventModal = ({
   //종료 시간
   const [endTime, setEndTime] = useState('13:00');
   // autocomplete 목록 불러오기
-  const [toggle, setToggle] = useState(false);
-  const Toggle = () => {
-    setToggle(!toggle);
-  };
   useEffect(() => {
     useFetchData().then((res) => setList(res));
-  }, [toggle]);
+  }, []);
   //isEdit => true 일때 정보 불러오기
   useEffect(() => {
     if (isEditCard) {
-      console.log(eventInfos);
       const scheduleId = eventInfos?.event.extendedProps.scheduleId;
-      console.log(scheduleId);
       axiosService
         .get(`/schedule/${scheduleId}`)
         .then((res) => {
@@ -80,14 +74,12 @@ export const EventModal = ({
         })
         .catch((e) => console.log(e));
     }
-  }, [eventInfos, isEditCard]);
-
+  }, [eventInfos]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
       setClientId(res.data);
     });
   }, []);
-
   //evet 추가 함수
   const addEvent = async () => {
     const calendarApi = eventInfos.view.calendar;
@@ -103,9 +95,7 @@ export const EventModal = ({
     calendarApi.addEvent(data);
     axiosService.post('/schedule/', data).then((res) => {
       console.log(res);
-      setTimeout(() => {
-        update();
-      }, 1000);
+      update();
     });
     setClient('');
     setContent('');
@@ -163,11 +153,7 @@ export const EventModal = ({
 
   return (
     <>
-      <ChildModal
-        childOpen={childOpen}
-        handleChildClose={handleChildClose}
-        Toggle={Toggle}
-      />
+      <ChildModal childOpen={childOpen} handleChildClose={handleChildClose} />
       <Modal open={open} onClose={onCloseandReset}>
         <Box sx={style}>
           <Box
