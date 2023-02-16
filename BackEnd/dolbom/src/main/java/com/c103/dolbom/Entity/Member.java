@@ -13,10 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Entity
-<<<<<<< HEAD
-=======
 @EntityListeners(value = AuditingEntityListener.class)
->>>>>>> origin/frontshelter2
 @Builder
 public class Member extends BaseTimeEntity{
     @Column(nullable = false, updatable = false, length = 45,unique = true)
