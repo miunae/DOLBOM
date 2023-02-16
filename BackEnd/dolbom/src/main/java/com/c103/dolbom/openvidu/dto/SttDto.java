@@ -3,7 +3,8 @@ package com.c103.dolbom.openvidu.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
+
+@NoArgsConstructor
 @Getter
 public class SttDto {
 
