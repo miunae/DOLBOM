@@ -103,8 +103,7 @@ class VideoRoomComponent extends Component {
         } else {
             try {
                 var token = await this.getToken();
-                console("token : " + token);
-                console.log(token);
+                console.log("token : " + token);
                 this.connect(token);
             } catch (error) {
                 console.error('There was an error getting the token:', error.code, error.message);
