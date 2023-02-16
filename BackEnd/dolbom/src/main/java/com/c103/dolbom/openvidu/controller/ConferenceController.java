@@ -46,7 +46,7 @@ public class ConferenceController {
                 .email(client.getEmail())
                 .title("DOLBOM 화상회의 초대 링크 전송")
                 .conferenceId(conferenceId)
-                .link("http://localhost:3000/clientcheck")
+                .link("https://i8c103.p.ssafy.io/clientcheck")
                 .sessionId(sessionId)
                 .build();
         // 내담자에게 이메일 발송
