@@ -84,8 +84,9 @@ class VideoRoomComponent extends Component {
     }
 
     joinSession() {
+        console.log("1");
         this.OV = new OpenVidu();
-
+        console.log("2");
         this.setState(
             {
                 session: this.OV.initSession(),
@@ -179,6 +180,7 @@ class VideoRoomComponent extends Component {
     }
 
     updateSubscribers() {
+        console.log("13");
         var subscribers = this.remotes;
         this.setState(
             {
@@ -186,6 +188,7 @@ class VideoRoomComponent extends Component {
             },
             () => {
                 if (this.state.localUser) {
+                    console.log("14");
                     this.sendSignalUserChanged({
                         isAudioActive: this.state.localUser.isAudioActive(),
                         isVideoActive: this.state.localUser.isVideoActive(),
@@ -193,6 +196,7 @@ class VideoRoomComponent extends Component {
                         isScreenShareActive: this.state.localUser.isScreenShareActive(),
                     });
                 }
+                console.log("15");
                 this.updateLayout();
             },
         );
@@ -252,20 +256,30 @@ class VideoRoomComponent extends Component {
     }
 
     subscribeToStreamCreated() {
+        console.log("3");
         this.state.session.on('streamCreated', (event) => {
             const subscriber = this.state.session.subscribe(event.stream, undefined);
+            console.log("4");
             // var subscribers = this.state.subscribers;
             subscriber.on('streamPlaying', (e) => {
                 this.checkSomeoneShareScreen();
                 subscriber.videos[0].video.parentElement.classList.remove('custom-class');
             });
+            console.log("5");
             const newUser = new UserModel();
+            console.log("6");
             newUser.setStreamManager(subscriber);
+            console.log("7");
             newUser.setConnectionId(event.stream.connection.connectionId);
+            console.log("8");
             newUser.setType('remote');
+            console.log("9");
             const nickname = event.stream.connection.data.split('%')[0];
+            console.log("10");
             newUser.setNickname(JSON.parse(nickname).clientData);
+            console.log("11");
             this.remotes.push(newUser);
+            console.log("12");
             if(this.localUserAccessAllowed) {
                 this.updateSubscribers();
             }
@@ -316,9 +330,12 @@ class VideoRoomComponent extends Component {
     }
 
     updateLayout() {
+        console.log("16");
         setTimeout(() => {
+            console.log("17");
             this.layout.updateLayout();
         }, 20);
+        
     }
 
     sendSignalUserChanged(data) {
