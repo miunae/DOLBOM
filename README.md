@@ -46,7 +46,7 @@
 - DB: MySQL Ver 8.0.32, Redis Ver 7.0.8
 - WAS: Gradle
 - JVM: OpenJDK version 11
-- WebRTC: openVidu 2.20.0
+- WebRTC: openVidu 2.25.0
 
 <br>
 
