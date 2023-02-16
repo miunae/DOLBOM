@@ -122,6 +122,7 @@ class VideoRoomComponent extends Component {
                 { clientData: this.state.myUserName },
             )
             .then(() => {
+                console.log("connect 진입");
                 this.connectWebCam();
             })
             .catch((error) => {
@@ -135,6 +136,8 @@ class VideoRoomComponent extends Component {
 
     async connectWebCam() {
         await this.OV.getUserMedia({ audioSource: undefined, videoSource: undefined });
+        console.log("openvidu객체");
+        console.log(this.OV);
         var devices = await this.OV.getDevices();
         var videoDevices = devices.filter(device => device.kind === 'videoinput');
 
@@ -147,7 +150,8 @@ class VideoRoomComponent extends Component {
             frameRate: 30,
             insertMode: 'APPEND',
         });
-
+        console.log("publisher");
+        console.log(publisher);
         if (this.state.session.capabilities.publish) {
             publisher.on('accessAllowed' , () => {
                 this.state.session.publish(publisher).then(() => {
