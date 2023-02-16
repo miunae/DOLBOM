@@ -47,7 +47,7 @@ const router = createBrowserRouter([
     element: <CalendarPage />,
   },
   {
-    path: '/video/:id',
+    path: '/:id',
     element: <VideoPage />,
   },
   {

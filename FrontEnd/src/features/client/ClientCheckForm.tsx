@@ -51,7 +51,7 @@ export const ClientCheckForm = () => {
 
   // videoPage로 넘어가기 위한 함수
   function joinVideo() {
-    navigate(`/video/${clientSessionId}`);
+    navigate(`/${clientSessionId}`);
   }
 
   return (

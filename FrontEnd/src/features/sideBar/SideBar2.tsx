@@ -154,7 +154,7 @@ export const SideBar2 = () => {
 
   function moveToVideo() {
     console.log(`세션 아이디 : ${sessionStorage.getItem('sessionId')}`);
-    navigate(`/video/${sessionStorage.getItem('sessionId')}`);
+    navigate(`/${sessionStorage.getItem('sessionId')}`);
   }
 
   // (25) user에 대한 client를 받기 위한 axios 요청, header에 토큰을 보내고 back에서 user에 대한 client를 받는다.
