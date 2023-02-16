@@ -9,5 +9,9 @@ RUN ./gradlew bootJAR
 
 FROM adoptopenjdk/openjdk11
 COPY --from=builder build/libs/*.jar app.jar
+<<<<<<< HEAD
 EXPOSE 5000
+=======
+EXPOSE 8080
+>>>>>>> origin/frontshelter2
 ENTRYPOINT ["java", "-jar", "/app.jar"]

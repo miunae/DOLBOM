@@ -15,7 +15,7 @@ import ToolbarComponent from './toolbar/ToolbarComponent';
 var localUser = new UserModel();
 
 const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080/';
+  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
 
 class VideoRoomComponent extends React.Component {
   constructor(props) {
