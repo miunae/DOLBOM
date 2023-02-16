@@ -11,7 +11,7 @@ import UserModel from '../models/user-model';
 import ToolbarComponent from './toolbar/ToolbarComponent';
 
 var localUser = new UserModel();
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://i8c103.p.ssafy.io/';
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
 
 
 class VideoRoomComponent extends Component {
@@ -103,7 +103,7 @@ class VideoRoomComponent extends Component {
         } else {
             try {
                 var token = await this.getToken();
-                console.log("token : " + token);
+                console.log(token);
                 this.connect(token);
             } catch (error) {
                 console.error('There was an error getting the token:', error.code, error.message);
@@ -116,14 +116,12 @@ class VideoRoomComponent extends Component {
     }
 
     connect(token) {
-        console.log("120 token : " + token);
         this.state.session
             .connect(
                 token,
                 { clientData: this.state.myUserName },
             )
             .then(() => {
-                console.log("connect 진입");
                 this.connectWebCam();
             })
             .catch((error) => {
@@ -137,8 +135,6 @@ class VideoRoomComponent extends Component {
 
     async connectWebCam() {
         await this.OV.getUserMedia({ audioSource: undefined, videoSource: undefined });
-        console.log("openvidu객체");
-        console.log(this.OV);
         var devices = await this.OV.getDevices();
         var videoDevices = devices.filter(device => device.kind === 'videoinput');
 
@@ -151,8 +147,7 @@ class VideoRoomComponent extends Component {
             frameRate: 30,
             insertMode: 'APPEND',
         });
-        console.log("publisher");
-        console.log(publisher);
+
         if (this.state.session.capabilities.publish) {
             publisher.on('accessAllowed' , () => {
                 this.state.session.publish(publisher).then(() => {
