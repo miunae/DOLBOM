@@ -28,27 +28,30 @@
 - 로그인
 <br>
 ![로그인gif](/uploads/ebc378513afd92908a1125298849c666/로그인gif.gif)
-<br>
-<br>
-<br>
+
+<br><br><br>
 - 내담자 신규생성
 <br>
 ![내담자생성](/uploads/1db419bd0ea92e7e13006e6cbd13d24a/내담자생성.gif)
 
 <br><br><br>
 - 스케줄 신규 생성
+<br>
 ![스케줄생성](/uploads/067a268553ccead7132c69da45e44f40/스케줄생성.gif)
 
 <br><br><br>
 - 스케줄 수정
+<br>
 ![스케줄수정](/uploads/52147de1abcbe6f7cbe1bebf34fac022/스케줄수정.gif)
 
 <br><br><br>
 - 스케줄 조회(월,주,일) + 드래그앤드롭으로 수정 
+<br>
 ![주_일_스케줄조회_드래그앤드롭](/uploads/07f80bcf97e9e5b521c798b3091b5ed6/주_일_스케줄조회_드래그앤드롭.gif)
 
 <br><br><br>
 - 스케줄 삭제
+<br>
 ![스케줄삭제](/uploads/ea55d0dd510e9583392ac33a861847a2/스케줄삭제.gif)
 
 <br><br><br>
