@@ -22,7 +22,7 @@ public class OpenViduController {
     private final OpenviduService openviduService;
 
 //    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL = "https://i8c103.p.ssafy.io:8443/";
+    private String OPENVIDU_URL = "http://i8c103.p.ssafy.io:5443/";
 
 //    @Value("${OPENVIDU_SECRET}")
     private String OPENVIDU_SECRET="MY_SECRET";
