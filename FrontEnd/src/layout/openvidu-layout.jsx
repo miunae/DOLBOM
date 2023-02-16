@@ -282,6 +282,7 @@ class OpenViduLayout {
   }
 
   updateLayout() {
+    console.log("18");
     if (this.layoutContainer.style.display === 'none') {
       return;
     }
