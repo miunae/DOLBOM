@@ -99,7 +99,7 @@ const Signup = () => {
             >
               <img
                 src={`${process.env.PUBLIC_URL}/public/public_assets/DOLBOM.png`}
-                alt="https://dolbom-user.s3.ap-northeast-2.amazonaws.com/DOLBOM.png"
+                alt="https://user-images.githubusercontent.com/101924720/219480708-0000ccca-6844-4226-b87d-179275c96f2d.png"
                 width="450"
                 height="250"
               />
