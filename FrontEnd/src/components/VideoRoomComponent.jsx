@@ -36,7 +36,6 @@ class VideoRoomComponent extends React.Component {
       subscribers: [],
       chatDisplay: 'none',
       currentVideoDevice: undefined,
-      conferenceId: undefined,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -54,14 +53,8 @@ class VideoRoomComponent extends React.Component {
     this.toggleChat = this.toggleChat.bind(this);
     this.checkNotification = this.checkNotification.bind(this);
     this.checkSize = this.checkSize.bind(this);
-    this.updateConferenceId = this.updateConferenceId.bind(this);
   }
 
-  updateConferenceId() {
-    this.setState({
-      conferenceId: this.conferenceId,
-    });
-  }
 
   componentDidMount() {
     const openViduLayoutOptions = {
@@ -85,7 +78,6 @@ class VideoRoomComponent extends React.Component {
     window.addEventListener('resize', this.updateLayout);
     window.addEventListener('resize', this.checkSize);
     this.joinSession();
-    this.updateConferenceId();
   }
 
   componentWillUnmount() {
@@ -124,7 +116,7 @@ class VideoRoomComponent extends React.Component {
         this.connect(token);
       } catch (error) {
         console.error('There was an error getting the token:', error.code, error.message);
-        if (this.props.error) {
+        if (this.props.error) { 
           this.props.error({
             error: error.error,
             messgae: error.message,
