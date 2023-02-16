@@ -98,7 +98,7 @@ const Signup = () => {
               }}
             >
               <img
-                src="public\public_assets\DOLBOM.png"
+                src={`${process.env.PUBLIC_URL}/public/public_assets/DOLBOM.png`}
                 alt="https://dolbom-user.s3.ap-northeast-2.amazonaws.com/DOLBOM.png"
                 width="450"
                 height="250"
