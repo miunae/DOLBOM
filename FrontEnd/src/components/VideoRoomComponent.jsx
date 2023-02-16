@@ -103,6 +103,7 @@ class VideoRoomComponent extends Component {
         } else {
             try {
                 var token = await this.getToken();
+                console("token : " + token);
                 console.log(token);
                 this.connect(token);
             } catch (error) {
@@ -116,6 +117,7 @@ class VideoRoomComponent extends Component {
     }
 
     connect(token) {
+        console.log("120 token : " + token);
         this.state.session
             .connect(
                 token,
