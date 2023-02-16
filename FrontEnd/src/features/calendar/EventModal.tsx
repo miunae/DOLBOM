@@ -59,25 +59,28 @@ export const EventModal = ({
     useFetchData().then((res) => setList(res));
   }, [toggle]);
   //isEdit => true 일때 정보 불러오기
+  const dataFetch = () => {
+    console.log(eventInfos);
+    const scheduleId = eventInfos?.event.extendedProps.scheduleId;
+    console.log(scheduleId);
+    axiosService
+      .get(`/schedule/${scheduleId}`)
+      .then((res) => {
+        setClientId(res.data.clientId);
+        setClient(res.data?.title);
+        setContent(res.data?.content);
+        const startString: any = new Date(res.data?.start).toString();
+        const startmid = startString.indexOf(':');
+        const endString: any = new Date(res.data?.end).toString();
+        const endtmid: number = startString.indexOf(':');
+        setStartTime(startString.substring(startmid - 2, startmid + 3));
+        setEndTime(endString.substring(endtmid - 2, endtmid + 3));
+      })
+      .catch((e) => console.log(`여기 에러${e}`));
+  };
   useEffect(() => {
     if (isEditCard) {
-      console.log(eventInfos);
-      const scheduleId = eventInfos?.event.extendedProps.scheduleId;
-      console.log(scheduleId);
-      axiosService
-        .get(`/schedule/${scheduleId}`)
-        .then((res) => {
-          setClientId(res.data.clientId);
-          setClient(res.data?.title);
-          setContent(res.data?.content);
-          const startString: any = new Date(res.data?.start).toString();
-          const startmid = startString.indexOf(':');
-          const endString: any = new Date(res.data?.end).toString();
-          const endtmid: number = startString.indexOf(':');
-          setStartTime(startString.substring(startmid - 2, startmid + 3));
-          setEndTime(endString.substring(endtmid - 2, endtmid + 3));
-        })
-        .catch((e) => console.log(`여기 에러${e}`));
+      dataFetch();
     }
   }, [eventInfos, isEditCard]);
 
