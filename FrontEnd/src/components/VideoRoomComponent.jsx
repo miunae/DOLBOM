@@ -128,6 +128,7 @@ class VideoRoomComponent extends Component {
                 if(this.props.error){
                     this.props.error({ error: error.error, messgae: error.message, code: error.code, status: error.status });
                 }
+                console.log(this);
                 alert('There was an error connecting to the session:', error.message);
                 console.log('There was an error connecting to the session:', error.code, error.message);
             });
