@@ -59,7 +59,7 @@ export const EventModal = ({
     useFetchData().then((res) => setList(res));
   }, [toggle]);
   //isEdit => true 일때 정보 불러오기
-  const dataFetch = () => {
+  const dataFetch = async () => {
     console.log(eventInfos);
     const scheduleId = eventInfos?.event.extendedProps.scheduleId;
     console.log(scheduleId);
