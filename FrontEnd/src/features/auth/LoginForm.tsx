@@ -71,7 +71,12 @@ export const LoginForm = () => {
             alignItems: 'center',
           }}
         >
-          <img src="src\assets\images\DOLBOM.png" alt="/" width="450" height="250" />
+          <img
+            src="public\public_assets\DOLBOM.png"
+            alt="https://dolbom-user.s3.ap-northeast-2.amazonaws.com/DOLBOM.png"
+            width="450"
+            height="250"
+          />
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
