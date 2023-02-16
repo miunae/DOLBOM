@@ -61,7 +61,7 @@ export const EventModal = ({
   //isEdit => true 일때 정보 불러오기
   const dataFetch = async () => {
     console.log(eventInfos);
-    const scheduleId = eventInfos?.event.extendedProps.scheduleId;
+    const scheduleId: number = eventInfos?.event.extendedProps.scheduleId;
     console.log(scheduleId);
     axiosService
       .get(`/schedule/${scheduleId}`)
