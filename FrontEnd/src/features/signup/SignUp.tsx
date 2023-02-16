@@ -1,4 +1,3 @@
-import CloseIcon from '@mui/icons-material/Close';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { DialogContent } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
@@ -20,13 +19,6 @@ import { useAppSelector } from '../../app/hooks';
 import IDinput from './IDinput';
 import PwdInput from './PwdInput';
 import { selectSignup } from './signupSlice';
-// {
-//   ”email” : “aa@ss.com”,
-//   ”password” : “1234”,
-//   ”name” : “홍길동”,
-//   ”phone” : “01012345678”,
-//   ”birth” : “991111”
-//   }
 const Signup = () => {
   const signupState = useAppSelector(selectSignup);
   const [nameValidate, setNameValidate] = useState(false);
@@ -162,7 +154,7 @@ const Signup = () => {
                   setUserPassword={setUserPassword}
                 />
               </Grid>
-              {/* <Grid justifyContent="flex-end"> */}
+
               <Button
                 disabled={!nameValidate || !idValidate || !pwdValidate}
                 onClick={sendAxios}
@@ -172,7 +164,6 @@ const Signup = () => {
               >
                 회원 가입
               </Button>
-              {/* </Grid> */}
             </Box>
           </Grid>
         </Container>

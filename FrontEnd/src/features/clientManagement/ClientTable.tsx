@@ -104,7 +104,8 @@ export const ClientTable = () => {
           aria-labelledby="tableTitle"
           sx={{
             pl: 2,
-            pe: 2,
+            pe: 3,
+            my: 6,
           }}
         >
           <OrderTableHead />
