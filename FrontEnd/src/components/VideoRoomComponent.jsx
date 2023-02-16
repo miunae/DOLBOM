@@ -68,6 +68,7 @@ class VideoRoomComponent extends Component {
         window.addEventListener('beforeunload', this.onbeforeunload);
         window.addEventListener('resize', this.updateLayout);
         window.addEventListener('resize', this.checkSize);
+        console.log("조인세션 시작");
         this.joinSession();
     }
 
