@@ -227,7 +227,7 @@ export const SideBar2 = () => {
   function OpenVidu() {
     const body = JSON.stringify({ customSessionId: sessionStorage.getItem('sessionId') });
     axios
-      .post('https://i8c103.p.ssafy.io/api/sessions', body, {
+      .post('https://i8c103.p.ssafy.io/api/conference', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
