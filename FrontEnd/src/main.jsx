@@ -22,6 +22,7 @@ import { LoginPage } from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SignupPage } from './pages/SignupPage';
 import { VideoPage } from './pages/VideoPage';
+
 const router = createBrowserRouter([
   {
     path: '/',
