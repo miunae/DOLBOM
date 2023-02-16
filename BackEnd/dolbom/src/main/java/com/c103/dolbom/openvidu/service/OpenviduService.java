@@ -55,11 +55,15 @@ public class OpenviduService {
 
     @Autowired
     DriveRepository driveRepository;
+    //    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL = "https://i8c103.p.ssafy.io:8443/";
 
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
-    @Value("${OPENVIDU_SECRET}")
-    private String SECRET;
+    //    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET="MY_SECRET";
+//    @Value("${OPENVIDU_URL}")
+//    private String OPENVIDU_URL;
+//    @Value("${OPENVIDU_SECRET}")
+//    private String SECRET;
     @Value("${cloud.aws.s3.dir}")
     public String absolutePath;
     @Value("${cloud.aws.s3.bucket}")
@@ -77,7 +81,7 @@ public class OpenviduService {
     @PostConstruct
     private void init() {
         //openvidu 서버와 연결
-        this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
+        this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
     //녹음 시작
