@@ -12,7 +12,7 @@ import ToolbarComponent from './toolbar/ToolbarComponent';
 
 var localUser = new UserModel();
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://i8c103.p.ssafy.io:8443/';
-const OPENVIDU_SERVER_URL = 'https://i8c103.p.ssafy.io:8443';
+const OPENVIDU_SERVER_URL = 'http://i8c103.p.ssafy.io:8081';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
 class VideoRoomComponent extends Component {
