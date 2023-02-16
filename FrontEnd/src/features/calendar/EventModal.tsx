@@ -50,46 +50,39 @@ export const EventModal = ({
   const [startTime, setStartTime] = useState('10:00');
   //종료 시간
   const [endTime, setEndTime] = useState('13:00');
-  // autocomplete 목록 불러오기
   const [toggle, setToggle] = useState(false);
-  const Toggle = () => {
+  const listUpdate = () => {
     setToggle(!toggle);
   };
+  // autocomplete 목록 불러오기
   useEffect(() => {
     useFetchData().then((res) => setList(res));
   }, [toggle]);
   //isEdit => true 일때 정보 불러오기
-  const dataFetch = async () => {
-    console.log(eventInfos);
-    const scheduleId: number = eventInfos?.event?.extendedProps?.scheduleId;
-    console.log(scheduleId);
-    axiosService
-      .get(`/schedule/${eventInfos?.event?.extendedProps?.scheduleId}`)
-      .then((res) => {
-        setClientId(res.data.clientId);
-        setClient(res.data?.title);
-        setContent(res.data?.content);
-        const startString: any = new Date(res.data?.start).toString();
-        const startmid = startString.indexOf(':');
-        const endString: any = new Date(res.data?.end).toString();
-        const endtmid: number = startString.indexOf(':');
-        setStartTime(startString.substring(startmid - 2, startmid + 3));
-        setEndTime(endString.substring(endtmid - 2, endtmid + 3));
-      })
-      .catch((e) => console.log(`여기 에러${e}`));
-  };
   useEffect(() => {
     if (isEditCard) {
-      dataFetch();
+      const scheduleId = eventInfos?.event.extendedProps.scheduleId;
+      axiosService
+        .get(`/schedule/${scheduleId}`)
+        .then((res) => {
+          setClientId(res.data.clientId);
+          setClient(res.data?.title);
+          setContent(res.data?.content);
+          const startString: any = new Date(res.data?.start).toString();
+          const startmid = startString.indexOf(':');
+          const endString: any = new Date(res.data?.end).toString();
+          const endtmid: number = startString.indexOf(':');
+          setStartTime(startString.substring(startmid - 2, startmid + 3));
+          setEndTime(endString.substring(endtmid - 2, endtmid + 3));
+        })
+        .catch((e) => console.log(e));
     }
-  }, [eventInfos, isEditCard]);
-
+  }, [eventInfos]);
   useEffect(() => {
     axiosService.get('/client/').then((res) => {
       setClientId(res.data);
     });
   }, []);
-
   //evet 추가 함수
   const addEvent = async () => {
     const calendarApi = eventInfos.view.calendar;
@@ -166,7 +159,7 @@ export const EventModal = ({
       <ChildModal
         childOpen={childOpen}
         handleChildClose={handleChildClose}
-        Toggle={Toggle}
+        listUpdate={listUpdate}
       />
       <Modal open={open} onClose={onCloseandReset}>
         <Box sx={style}>

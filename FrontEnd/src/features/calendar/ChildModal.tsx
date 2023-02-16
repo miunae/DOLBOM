@@ -18,9 +18,13 @@ const style = {
 interface ChildModalProps {
   childOpen: boolean;
   handleChildClose: () => void;
-  Toggle: () => void;
+  listUpdate: () => void;
 }
-export const ChildModal = ({ childOpen, handleChildClose, Toggle }: ChildModalProps) => {
+export const ChildModal = ({
+  childOpen,
+  handleChildClose,
+  listUpdate,
+}: ChildModalProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -29,9 +33,8 @@ export const ChildModal = ({ childOpen, handleChildClose, Toggle }: ChildModalPr
       email: data.get('email')?.toString() ?? '',
       phone: data.get('phone')?.toString() ?? '',
     };
-    axiosService.post('/client/', clientdata).then(() => {
-      Toggle();
-    });
+    axiosService.post('/client/', clientdata);
+    listUpdate();
     handleChildClose();
   };
   return (

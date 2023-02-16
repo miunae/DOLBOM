@@ -20,7 +20,6 @@ export const Calendar = () => {
     setToggle(!toggle);
   };
   useEffect(() => {
-    console.log('업뎃됨');
     axiosService
       .get('/schedule/')
       .then((res) => {
