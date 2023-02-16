@@ -76,7 +76,7 @@ interface AppBarProps extends MuiAppBarProps {
 }
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
+  shouldForwardProp: (prop: string) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
   transition: theme.transitions.create(['width', 'margin'], {
@@ -93,7 +93,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop: string) => prop !== 'open' })(
   ({ theme, open }) => ({
     width: drawerWidth,
     flexShrink: 0,
@@ -145,7 +145,7 @@ export const SideBar2 = () => {
   const [selectedClientId, setSelectedClientId] = React.useState(0);
 
   // selected한 client에 대한 useState를 위해서 (e type 설정하기)
-  const handleSelect = (e) => {
+  const handleSelect = (e: { target: { value: any; }; }) => {
     setSelectedClientId(e.target.value);
   };
 
@@ -166,7 +166,7 @@ export const SideBar2 = () => {
           'refresh-token': refreshToken,
         },
       })
-      .then((response) => setClientData(response.data));
+      .then((response: { data: any; }) => setClientData(response.data));
   }
 
   console.log(clientData); // client all data 확인
@@ -183,15 +183,15 @@ export const SideBar2 = () => {
           'refresh-token': refreshToken,
         },
       })
-      .then(function (res) {
+      .then(function (res: { data: { sessionId: string; conferenceId: string; }; }) {
         sessionStorage.setItem('sessionId', res.data.sessionId), // 함수형으로 2개 전달
           sessionStorage.setItem('conferenceId', res.data.conferenceId),
           OpenVidu();
       });
   }
 
-  // window.alert
-  const useConfirm = (message = null, onConfirm, onCancel) => {
+   // window.alert
+   const useConfirm = (message: any, onConfirm: any, onCancel: any) => {
     if (!onConfirm || typeof onConfirm !== 'function') {
       return;
     }
@@ -212,7 +212,12 @@ export const SideBar2 = () => {
 
   const deleteConfirm = () => console.log('삭제했습니다.');
   const cancelConfirm = () => console.log('취소했습니다.');
-  const confirmDelete = useConfirm(
+  interface itType {
+    id: number;
+    name: string;
+    phone: string;
+  }
+  const confirmDelete: any = useConfirm(
     '상담실로 이동하시겠습니까?',
     moveToVideo,
     cancelConfirm,
@@ -229,7 +234,7 @@ export const SideBar2 = () => {
           'refresh-token': refreshToken,
         },
       })
-      .then(function (response) {
+      .then(function (response: any) {
         confirmDelete();
       });
   }
@@ -319,7 +324,7 @@ export const SideBar2 = () => {
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         <select onChange={handleSelect}>
                           <option value={'default'}>내담자를 선택해주세요.</option>
-                          {clientData.map((it, idx) => (
+                          {clientData.map((it: { id: any; name: any; phone: any; }, idx: any) => (
                             <option key={idx} value={it.id}>
                               {it.name} : {it.phone}
                             </option>
