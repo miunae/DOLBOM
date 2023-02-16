@@ -28,7 +28,7 @@ export const Dashboard = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 3000);
     const path = pathStack[pathStack.length - 1] === 'root' ? '' : currentPath;
     axiosService
       .get('/folder/', { params: { id: currentMemberClientId, path: path } })

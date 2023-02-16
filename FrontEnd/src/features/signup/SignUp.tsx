@@ -162,17 +162,17 @@ const Signup = () => {
                   setUserPassword={setUserPassword}
                 />
               </Grid>
-              <Grid justifyContent="flex-end">
-                <Button
-                  disabled={!nameValidate || !idValidate || !pwdValidate}
-                  onClick={sendAxios}
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  회원 가입
-                </Button>
-              </Grid>
+              {/* <Grid justifyContent="flex-end"> */}
+              <Button
+                disabled={!nameValidate || !idValidate || !pwdValidate}
+                onClick={sendAxios}
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                회원 가입
+              </Button>
+              {/* </Grid> */}
             </Box>
           </Grid>
         </Container>
