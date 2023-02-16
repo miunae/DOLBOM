@@ -15,16 +15,17 @@ export default function TextareaDec() {
   // 전역적으로 담자 많이 쓰니깐.
   const accessToken = sessionStorage.getItem('access-token');
   const refreshToken = sessionStorage.getItem('refresh-token');
+  const conferenceId = sessionStorage.getItem('conferenceId');
 
   // (28) memo에 대한 post conferid, memo 2개 post한다.
   function sendText() {
     const body = JSON.stringify({
       memo: text,
-      conferenceId: sessionStorage.getItem('conferenceId'),
+      conferenceId: conferenceId,
     });
 
     axios
-      .post('http://localhost:8080/api/conference/memo', body, {
+      .post('http://i8c103.p.ssafy.io:5000/api/conference/memo', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
@@ -43,7 +44,7 @@ export default function TextareaDec() {
   // (31) openvidu 녹음 시작 버튼
   function recordstart() {
     axios
-      .get('http://localhost:8080/openvidu/api/recordings/start', {
+      .get('http://localhost:5000/api/openvidu/recordings/start', {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
@@ -62,7 +63,7 @@ export default function TextareaDec() {
   // (32) openvidu 녹음 시작 버튼
   function recordstop() {
     axios
-      .get('http://localhost:8080/openvidu/api/recordings/stop/{conferenceId}', {
+      .get(`http://localhost:5000/api/openvidu/recordings/stop/${conferenceId}`, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,

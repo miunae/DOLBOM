@@ -160,7 +160,7 @@ export const SideBar2 = () => {
   // (25) user에 대한 client를 받기 위한 axios 요청, header에 토큰을 보내고 back에서 user에 대한 client를 받는다.
   function getClientData() {
     axios
-      .get('http://localhost:8080/api/client', {
+      .get('http://localhost:5000/api/client', {
         headers: {
           'access-token': accessToken,
           'refresh-token': refreshToken,
@@ -176,7 +176,7 @@ export const SideBar2 = () => {
   function sendToSelected() {
     const body = JSON.stringify({ clientId: selectedClientId });
     axios
-      .post('http://localhost:8080/api/conference', body, {
+      .post('http://localhost:5000/api/conference', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
@@ -222,7 +222,7 @@ export const SideBar2 = () => {
   function OpenVidu() {
     const body = JSON.stringify({ customSessionId: sessionStorage.getItem('sessionId') });
     axios
-      .post('http://localhost:8080/api/sessions', body, {
+      .post('http://localhost:5000/api/sessions', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,

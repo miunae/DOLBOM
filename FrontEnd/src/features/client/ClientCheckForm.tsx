@@ -28,7 +28,7 @@ export const ClientCheckForm = () => {
       conferenceId: conferenceId,
     });
     axios
-      .post('http://localhost:8080/api/connections/conference/client', body, {
+      .post('http://localhost:5000/api/connections/conference/client', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': sessionStorage.getItem('access-token'),
