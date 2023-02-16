@@ -85,7 +85,7 @@ export const Dashboard = () => {
             </Box>
             <Typography>files</Typography>
             <Divider sx={{ my: 1 }} />
-            <Box sx={{ minHeight: '20vh' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', minHeight: '20vh' }}>
               {fileData.length ? (
                 <Box>
                   {fileData.map((prop: any, index) => (

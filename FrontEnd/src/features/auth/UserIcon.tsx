@@ -14,13 +14,13 @@ import { clearUser } from './userSlice';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'] as const;
 
-type Settings = typeof settings[number];
+type Settings = (typeof settings)[number];
 
 const createEventMapper: (
   dispatch: AppDispatch,
   navigate: NavigateFunction,
 ) => {
-  [T in typeof settings[number]]?: () => void;
+  [T in (typeof settings)[number]]?: () => void;
 } = (dispatch, navigate) => ({
   Profile: () => {
     navigate('/profile');

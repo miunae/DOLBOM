@@ -1,9 +1,11 @@
 import ArticleIcon from '@mui/icons-material/Article';
-import DeleteIcon from '@mui/icons-material/Delete';
+import ClearIcon from '@mui/icons-material/Clear';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { Button } from '@mui/material';
 import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+import { pink } from '@mui/material/colors';
+import IconButton from '@mui/material/IconButton';
 
 import { axiosService } from '../../api/instance';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -62,13 +64,12 @@ export const File = ({ fileName, fileId }: Filedata) => {
           </Typography>
         </Box>
         <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
-          <Button
-            variant="outlined"
+          <IconButton
             sx={{ width: '2rem', height: '2rem', minWidth: 0, minHeight: 0, p: 0 }}
             onClick={(e) => Delete(e)}
           >
-            <DeleteIcon />
-          </Button>
+            <ClearIcon sx={{ color: pink[500] }} />
+          </IconButton>
         </Box>
       </Button>
     </Box>
