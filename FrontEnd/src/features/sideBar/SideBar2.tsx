@@ -226,17 +226,18 @@ export const SideBar2 = () => {
   // (29) 세션 생성 누를때, post 요청 한개 더 why? 하나는 storage에 id 저장, 하나는 userid 로 설정, 이거 무조건 sessionid.
   function OpenVidu() {
     const body = JSON.stringify({ customSessionId: sessionStorage.getItem('sessionId') });
-    axios
-      .post('https://i8c103.p.ssafy.io/api/conference', body, {
-        headers: {
-          'Content-Type': 'application/json',
-          'access-token': accessToken,
-          'refresh-token': refreshToken,
-        },
-      })
-      .then(function (response: any) {
-        confirmDelete();
-      });
+    // axios
+    //   .post('https://i8c103.p.ssafy.io/api/conference', body, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'access-token': accessToken,
+    //       'refresh-token': refreshToken,
+    //     },
+    //   })
+    //   .then(function (response: any) {
+    //     confirmDelete();
+    //   });
+      confirmDelete();
   }
 
   return (
