@@ -67,7 +67,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -210,7 +209,6 @@ export const SideBar2 = () => {
     return confirmAction;
   };
 
-  const deleteConfirm = () => console.log('삭제했습니다.');
   const cancelConfirm = () => console.log('취소했습니다.');
   interface itType {
     id: number;
@@ -237,7 +235,7 @@ export const SideBar2 = () => {
     //   .then(function (response: any) {
     //     confirmDelete();
     //   });
-      confirmDelete();
+    confirmDelete();
   }
 
   return (
@@ -312,48 +310,6 @@ export const SideBar2 = () => {
                       getClientData(); // 모달 열릴 때 axios로 counselor에 해당하는 client 호출
                     }}
                   />
-                  <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                        내담자 정보 입력 및 세션 생성
-                      </Typography>
-                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <select onChange={handleSelect}>
-                          <option value={'default'}>내담자를 선택해주세요.</option>
-                          {clientData.map(
-                            (it: { id: any; name: any; phone: any }, idx: any) => (
-                              <option key={idx} value={it.id}>
-                                {it.name} : {it.phone}
-                              </option>
-                            ),
-                          )}
-                        </select>
-                      </Typography>
-
-                      <div>
-                        <Typography id="modal-modal-button" variant="h6" component="h2">
-                          {/* 링크 타고 들어 갈때 Video number는 sessionID로 한다.  */}
-                          <Button
-                            color="secondary"
-                            onClick={async () => {
-                              sendToSelected(); // selected된 데이터 넘기고
-                              // OpenVidu(); // openvidu할 때 쓸 id 넘긴다.
-                              // confirmDelete();
-                            }}
-                          >
-                            세션 생성
-                          </Button>
-
-                          <button onClick={() => navigate(-1)}>뒤로가기</button>
-                        </Typography>
-                      </div>
-                    </Box>
-                  </Modal>
                 </div>
                 <ListItemText primary="Video" sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>

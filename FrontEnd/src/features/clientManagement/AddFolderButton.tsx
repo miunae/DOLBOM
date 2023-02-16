@@ -40,10 +40,13 @@ export const AddFolderButton = ({ update }: folderInfo) => {
         member_client_id: currentMemberClientId,
         path,
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        update();
+        dispatch(updateToggle());
+      })
       .catch((error) => console.log(error));
-    update();
-    dispatch(updateToggle());
+
     setOpen(false);
     //폴더 생성 매서드
   };

@@ -33,8 +33,10 @@ export const ChildModal = ({
       email: data.get('email')?.toString() ?? '',
       phone: data.get('phone')?.toString() ?? '',
     };
-    axiosService.post('/client/', clientdata);
-    listUpdate();
+    axiosService.post('/client/', clientdata).then(() => {
+      listUpdate();
+    });
+
     handleChildClose();
   };
   return (

@@ -97,12 +97,7 @@ const Signup = () => {
                 alignItems: 'center',
               }}
             >
-              <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                <PersonAddIcon />
-              </Avatar>
-              <Typography component="h1" variant="h5" sx={{ mb: 4 }}>
-                Sign Up
-              </Typography>
+              <img src="src\assets\images\DOLBOM.png" alt="/" width="450" height="250" />
               {/* Content */}
               <Grid>
                 {/* birth */}

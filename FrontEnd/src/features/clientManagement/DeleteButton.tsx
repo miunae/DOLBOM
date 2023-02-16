@@ -51,7 +51,9 @@ export const DeleteButton = ({ update }: folderInfo) => {
       >
         <DialogTitle id="alert-dialog-title">현재 폴더를 삭제하시겠습니까?</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description"></DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            내부의 폴더, 파일이 모두 삭제 됩니다.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={Delete}>폴더 삭제</Button>
