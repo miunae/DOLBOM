@@ -28,7 +28,7 @@ export const ClientCheckForm = () => {
       conferenceId: conferenceId,
     });
     axios
-      .post('http://localhost:8080/api/connections/conference/client', body, {
+      .post('https://i8c103.p.ssafy.io/api/connections/conference/client', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': sessionStorage.getItem('access-token'),
@@ -51,7 +51,7 @@ export const ClientCheckForm = () => {
 
   // videoPage로 넘어가기 위한 함수
   function joinVideo() {
-    navigate(`/video/${clientSessionId}`);
+    navigate(`/${clientSessionId}`);
   }
 
   return (

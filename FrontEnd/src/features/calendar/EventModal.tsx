@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
@@ -51,10 +50,14 @@ export const EventModal = ({
   const [startTime, setStartTime] = useState('10:00');
   //종료 시간
   const [endTime, setEndTime] = useState('13:00');
+  const [toggle, setToggle] = useState(false);
+  const listUpdate = () => {
+    setToggle(!toggle);
+  };
   // autocomplete 목록 불러오기
   useEffect(() => {
     useFetchData().then((res) => setList(res));
-  }, []);
+  }, [toggle]);
   //isEdit => true 일때 정보 불러오기
   useEffect(() => {
     if (isEditCard) {
@@ -153,7 +156,11 @@ export const EventModal = ({
 
   return (
     <>
-      <ChildModal childOpen={childOpen} handleChildClose={handleChildClose} />
+      <ChildModal
+        childOpen={childOpen}
+        handleChildClose={handleChildClose}
+        listUpdate={listUpdate}
+      />
       <Modal open={open} onClose={onCloseandReset}>
         <Box sx={style}>
           <Box

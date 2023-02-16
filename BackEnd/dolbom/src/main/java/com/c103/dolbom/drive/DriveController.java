@@ -47,22 +47,22 @@ public class DriveController {
             return new ResponseEntity<>("byte화 실패 : " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         Drive drive = driveRepository.findById(fileId).orElseThrow(() ->new IllegalArgumentException("파일을 찾을 수 없습니다."));
+        String extension = drive.getOriginName().substring(drive.getOriginName().lastIndexOf("."));
+       HttpHeaders httpHeaders = new HttpHeaders();
+       httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+       httpHeaders.setContentLength(fileByte.length);
+       String fileName = URLEncoder.encode(drive.getOriginName(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+       httpHeaders.setContentDispositionFormData("attachment", fileName+extension);
+        // response.setContentType("application/octet-stream");
+        // response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode("tistory.png", "UTF-8")+"\";");
+        // response.setHeader("Content-Transfer-Encoding", "binary");
 
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        httpHeaders.setContentLength(fileByte.length);
-//        String fileName = URLEncoder.encode(drive.getOriginName(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-//        httpHeaders.setContentDispositionFormData("attachment", fileName);
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode("tistory.png", "UTF-8")+"\";");
-        response.setHeader("Content-Transfer-Encoding", "binary");
+        // response.getOutputStream().write(fileByte);
+        // response.getOutputStream().flush();
+        // response.getOutputStream().close();
 
-        response.getOutputStream().write(fileByte);
-        response.getOutputStream().flush();
-        response.getOutputStream().close();
-
-        return new ResponseEntity<>("성공", HttpStatus.OK);
-//        return new ResponseEntity<>(fileByte, httpHeaders, HttpStatus.OK);
+        // return new ResponseEntity<>("성공", HttpStatus.OK);
+       return new ResponseEntity<>(fileByte, httpHeaders, HttpStatus.OK);
     }
 
     //해당 레벨 폴더들 보여주기 - 완

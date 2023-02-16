@@ -1,6 +1,5 @@
 import { Box, Grid, Typography } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import { axiosService } from '../../api/instance';
@@ -28,7 +27,7 @@ export const Dashboard = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 3000);
+    }, 1000);
     const path = pathStack[pathStack.length - 1] === 'root' ? '' : currentPath;
     axiosService
       .get('/folder/', { params: { id: currentMemberClientId, path: path } })
@@ -63,14 +62,25 @@ export const Dashboard = () => {
                 bgcolor: 'background.paper',
                 borderRadius: 1,
                 width: 1,
+                mt: 3,
               }}
             >
               {pathStack.length > 1 ? <BackButton /> : null}
               {pathStack.length > 1 ? <DeleteButton update={update} /> : null}
               <AddFolderButton update={update} />
               <AddFileButton update={update} />
+              <Typography
+                sx={{
+                  width: '100px',
+                  my: 0,
+                  alignSelf: 'end',
+                  flexGrow: 1,
+                  display: 'inline',
+                }}
+              >
+                Folders
+              </Typography>
             </Box>
-            <Typography sx={{ width: '100px', my: 0 }}>folders</Typography>
             <Divider sx={{ my: 1 }} />
             <Box sx={{ minHeight: '40vh' }}>
               {folderData.length ? (
@@ -83,11 +93,25 @@ export const Dashboard = () => {
                 <Typography> 하위 폴더가 없습니다.</Typography>
               )}
             </Box>
-            <Typography>files</Typography>
+            <Typography>Files</Typography>
             <Divider sx={{ my: 1 }} />
-            <Box sx={{ minHeight: '20vh' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                minHeight: '40vh',
+              }}
+            >
               {fileData.length ? (
-                <Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    minHeight: '40vh',
+                  }}
+                >
                   {fileData.map((prop: any, index) => (
                     <File key={index} fileName={prop.fileName} fileId={prop.fileId} />
                   ))}
@@ -102,5 +126,3 @@ export const Dashboard = () => {
     </>
   );
 };
-// addFolder 에 path 넣어줘야함
-// dashboard 업데이트 매서드 추가
