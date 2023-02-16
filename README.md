@@ -16,6 +16,7 @@
 ![dolbom_erd.png](./dolbom_erd.png)
 
 <br>
+
 # 프로젝트 소개
 ## 기획 배경
 - 코로나로 인해 증가한 온라인 상담
@@ -32,10 +33,12 @@
 > 비대면 상담 진행
 
 <br>
+
 # 아키텍처
 ![dolbom_architecture.PNG](./dolbom_architecture.PNG)
 
 <br>
+
 # 개발환경
 - OS: Windows10
 - Backend Framework: Spring Boot 2.7.8
@@ -46,10 +49,12 @@
 - WebRTC: openVidu 2.20.0
 
 <br>
+
 # 배포환경
 - exec 폴더 참조
 
 <br>
+
 # 팀원
 - 이충무 : 팀장 Backend
 - 이재훈 : Backend
