@@ -26,7 +26,7 @@
 ## 스케줄링
 > 스케줄을 편하게 관리
 - 로그인
-<img src="https://clipchamp.com/watch/JvNWHgiNP08">
+![로그인gif](/uploads/ebc378513afd92908a1125298849c666/로그인gif.gif)
 
 ## 내담자 관리
 > 내담자를 한 곳에서 관리
