@@ -130,6 +130,7 @@ class VideoRoomComponent extends Component {
                 if(this.props.error){
                     this.props.error({ error: error.error, messgae: error.message, code: error.code, status: error.status });
                 }
+                console.log("this");
                 console.log(this);
                 alert('There was an error connecting to the session:', error.message);
                 console.log('There was an error connecting to the session:', error.code, error.message);
@@ -257,6 +258,7 @@ class VideoRoomComponent extends Component {
 
     subscribeToStreamCreated() {
         console.log("3");
+        console.log(this.state.session)
         this.state.session.on('streamCreated', (event) => {
             const subscriber = this.state.session.subscribe(event.stream, undefined);
             console.log("4");
