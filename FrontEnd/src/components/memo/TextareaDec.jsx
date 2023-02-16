@@ -44,7 +44,7 @@ export default function TextareaDec() {
   // (31) openvidu 녹음 시작 버튼
   function recordstart() {
     axios
-      .get('http://localhost:5000/api/openvidu/recordings/start', {
+      .get('http://i8c103.p.ssafy.io:5000/api/openvidu/recordings/start', {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
@@ -63,7 +63,7 @@ export default function TextareaDec() {
   // (32) openvidu 녹음 시작 버튼
   function recordstop() {
     axios
-      .get(`http://localhost:5000/api/openvidu/recordings/stop/${conferenceId}`, {
+      .get(`http://i8c103.p.ssafy.io:5000/api/openvidu/recordings/stop/${conferenceId}`, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': accessToken,
