@@ -600,7 +600,7 @@ class VideoRoomComponent extends Component {
                 
               let error = { ...response };
               if (error?.response?.status === 409) {
-                this.leaveSession();
+                // this.leaveSession();
                 resolve(sessionId);
               } else if (
                 window.confirm(
