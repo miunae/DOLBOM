@@ -14,7 +14,6 @@ import { useMutation } from '@tanstack/react-query';
 import jwtDecode from 'jwt-decode';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import { useAppDispatch } from '../../app/hooks';
 import { login } from './authApi';
