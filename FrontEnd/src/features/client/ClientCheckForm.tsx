@@ -28,7 +28,7 @@ export const ClientCheckForm = () => {
       conferenceId: conferenceId,
     });
     axios
-      .post('http://i8c103.p.ssafy.io:5000/api/connections/conference/client', body, {
+      .post('https://i8c103.p.ssafy.io/api/connections/conference/client', body, {
         headers: {
           'Content-Type': 'application/json',
           'access-token': sessionStorage.getItem('access-token'),
