@@ -71,13 +71,7 @@ export const LoginForm = () => {
             alignItems: 'center',
           }}
         >
-          <img
-            // src={require('srcassetsimagesDOLBOM.png').default}
-            src={process.env.PUBLIC_URL + './public_assets/DOLBOM.png'}
-            alt="https://user-images.githubusercontent.com/101924720/219480708-0000ccca-6844-4226-b87d-179275c96f2d.png"
-            width="450"
-            height="250"
-          />
+          <h1>DOLBOM</h1>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
