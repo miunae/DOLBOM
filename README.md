@@ -95,7 +95,7 @@
 <br>
 
 # 아키텍처
-![dolbom_architecture.PNG](./dolbom_architecture.PNG)
+![image.png](./image.png)
 
 <br>
 
