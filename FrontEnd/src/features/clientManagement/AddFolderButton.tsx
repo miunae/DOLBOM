@@ -76,10 +76,10 @@ export const AddFolderButton = ({ update }: folderInfo) => {
           />
           <Box sx={{ display: 'flex', flexDirection: 'row-reverse', mt: 2 }}>
             <Button onClick={closeModal} sx={{ ml: 2 }}>
-              Cancel
+              취소
             </Button>
             <Button type="submit" variant="contained">
-              Subscribe
+              폴더 추가
             </Button>
           </Box>
         </Box>
