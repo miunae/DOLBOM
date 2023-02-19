@@ -27,64 +27,64 @@
 > 스케줄을 편하게 관리
 - 로그인
 <br>
-![로그인gif](https://lab.ssafy.com/s08-webmobile1-sub2/S08P12C103/uploads/ebc378513afd92908a1125298849c666/%EB%A1%9C%EA%B7%B8%EC%9D%B8gif.gif)
+![로그인gif](https://user-images.githubusercontent.com/61579596/219950712-b9bbca11-cbc3-4107-8071-92750e34016c.gif)
 
 <br><br><br><br>
 - 내담자 신규생성
 <br>
-![내담자생성](/uploads/1db419bd0ea92e7e13006e6cbd13d24a/내담자생성.gif)
+![내담자생성](https://user-images.githubusercontent.com/61579596/219950728-8d8a13f6-ba54-4656-80c8-daf5b1f89e37.gif)
 
 <br><br><br><br>
 - 스케줄 신규 생성
 <br>
-![스케줄생성](/uploads/067a268553ccead7132c69da45e44f40/스케줄생성.gif)
+![스케줄생성](https://user-images.githubusercontent.com/61579596/219951027-86218baa-6ae6-4fd0-9585-c6e8f961ca12.gif)
 
 <br><br><br><br>
 - 스케줄 수정
 <br>
-![스케줄수정](/uploads/52147de1abcbe6f7cbe1bebf34fac022/스케줄수정.gif)
+![스케줄수정](https://user-images.githubusercontent.com/61579596/219950766-e6919989-b8f8-4d4d-9d4e-ad04e8b0a4ef.gif)
 
 <br><br><br><br>
 - 스케줄 조회(월,주,일) + 드래그앤드롭으로 수정 
 <br>
-![주_일_스케줄조회_드래그앤드롭](/uploads/07f80bcf97e9e5b521c798b3091b5ed6/주_일_스케줄조회_드래그앤드롭.gif)
+![주_일_스케줄조회_드래그앤드롭](https://user-images.githubusercontent.com/61579596/219950781-12d119d9-ec6a-4790-a42d-4e0e4b301cdc.gif)
 
 <br><br><br><br>
 - 스케줄 삭제
 <br>
-![스케줄삭제](/uploads/ea55d0dd510e9583392ac33a861847a2/스케줄삭제.gif)
+![스케줄삭제](https://user-images.githubusercontent.com/61579596/219951098-031985bc-71d8-44a7-b2da-e34ef582da52.gif)
 
 <br><br><br><br>
 ## 파일 관리
 > 내담자 별로 상담 자료 편리하게 저장 가능
 - 폴더 생성 + 접속
 <br>
-![폴더저장+접속](/uploads/87803d0d8eb9810326ad3e4cb5201bac/폴더저장+접속.gif)
+![폴더저장+접속](https://user-images.githubusercontent.com/61579596/219950796-2a8df9e9-7626-4f80-bb58-da7149ff302c.gif)
 
 <br><br><br><br>
 - 폴더 이동
 <br>
-![내담자폴더이동](/uploads/86bb4e028e5d32bbf445fdd0dc29baa8/내담자폴더이동.gif)
+![내담자폴더이동](https://user-images.githubusercontent.com/61579596/219950725-90b5901e-6c8c-4ab1-8403-e66397259bd3.gif)
 
 <br><br><br><br>
 - 폴더 삭제
 <br>
-![폴더삭제](/uploads/8d0981824680d6b1d48f68060c3bc8de/폴더삭제.gif)
+![폴더삭제](https://user-images.githubusercontent.com/61579596/219950792-0a6e81b9-0d26-4681-91dc-c8261efeda2f.gif)
 
 <br><br><br><br>
 - 파일 서버에 저장
 <br>
-![파일저장](/uploads/222f206d7a6556f696e80126e73e1928/파일저장.gif)
+![파일저장](https://user-images.githubusercontent.com/61579596/219950958-19a2ceb0-f466-40c0-870d-26c0c48ad722.gif)
 
 <br><br><br><br>
 - 서버에 저장된 파일 다운로드
 <br>
-![저장된파일다운로드](/uploads/a51bb35d1379f96557bb28b72d2fbb42/저장된파일다운로드.gif)
+![저장된파일다운로드](https://user-images.githubusercontent.com/61579596/219951170-145599b3-d101-4300-9b96-14ba048f2206.gif)
 
 <br><br><br><br>
 - 서버에 저장된 파일 삭제
 <br>
-![s3에저장된파일삭제](/uploads/f94564615aa413fd38f35dcf2982b513/s3에저장된파일삭제.gif)
+![s3에저장된파일삭제](https://user-images.githubusercontent.com/61579596/219951276-e1195204-c8ea-4082-b1ba-1ce872672609.gif)
 
 <br><br><br><br>
 ## 내담자 관리
