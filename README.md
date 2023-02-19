@@ -27,7 +27,7 @@
 > 스케줄을 편하게 관리
 - 로그인
 <br>
-![login gif](https://user-images.githubusercontent.com/61579596/219950712-b9bbca11-cbc3-4107-8071-92750e34016c.gif)
+![alt text] (https://user-images.githubusercontent.com/61579596/219950712-b9bbca11-cbc3-4107-8071-92750e34016c.gif)
 
 <br><br><br><br>
 - 내담자 신규생성
